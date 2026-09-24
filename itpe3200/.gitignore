@@ -480,3 +480,17 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Local SQLite database – created by DbInit on startup
+*.db
+*.db-shm
+*.db-wal
+
+# VS Code: keep only the shared debug configuration
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# OS-generated files
+.DS_Store
+Thumbs.db
