@@ -5,7 +5,7 @@
     ViewData["Title"] = "Create Group";
 }
 
-<h1>Create Group</h1>
+<h1>@ViewData["Title"]</h1>
 
 <form asp-action="Create">
     <div class="form-group">
@@ -30,7 +30,4 @@
 
     <button type="submit" class="btn btn-primary">Create Group</button>
     
-    <!-- Gå tilbake til hjemmesiden senere
-    <a asp-action="Table" class="btn btn-secondary">Back to Table View</a>
-    -->
 </form>
