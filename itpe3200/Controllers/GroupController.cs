@@ -1,6 +1,6 @@
 using itpe3200.DAL;
 using itpe3200.Models;
-using itpe3200.ViewModel;
+using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +25,7 @@ public class GroupController : Controller
         //henter kursøktene fra databasen og legger det til i listen 'CourseSession' i viewmodellen 'GroupCreateViewModel'.
         foreach (var courseSession in _appDbContext.CourseSessions)
         {
-            model.CourseSession.Add(new CourseSessionViewModel
+            model.CourseSessions.Add(new CourseSessionViewModel
             {
                 Id = courseSession.Id,
                 Name = courseSession.Name

@@ -1,0 +1,36 @@
+@model itpe3200.ViewModels.GroupCreateViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@{
+    ViewData["Title"] = "Create Group";
+}
+
+<h1>Create Group</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name"></label><span class="text-danger">*</span>
+        <input asp-for="Name" class="form-control"> 
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaxSize"></label><span class="text-danger">*</span>
+        <input asp-for="MaxSize" class="form-control" type="number"> 
+        <span asp-validation-for="MaxSize" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CourseSessionId">Course Session</label><span class="text-danger">*</span>
+
+        <select asp-for="CourseSessionId" 
+                asp-items="@(new SelectList(Model.CourseSessions, "Id", "Name"))" class="form-control">
+                <option value="">Choose Course Session</option>
+        </select>
+        <span asp-validation-for="CourseSessionId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Group</button>
+    
+    <!-- Gå tilbake til hjemmesiden senere
+    <a asp-action="Table" class="btn btn-secondary">Back to Table View</a>
+    -->
+</form>

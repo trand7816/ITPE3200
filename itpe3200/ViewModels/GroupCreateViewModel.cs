@@ -1,11 +1,13 @@
-namespace itpe3200.ViewModel;
+namespace itpe3200.ViewModels;
 
 public class GroupCreateViewModel
 {
     public string Name { get; set; } = "";
     public int MaxSize { get; set; }
+    
     public int CourseSessionId { get; set; }
-    public List<CourseSessionViewModel> CourseSession { get; set; } = new();
+    
+    public List<CourseSessionViewModel> CourseSessions { get; set; } = new();
 }
 
 public class CourseSessionViewModel
