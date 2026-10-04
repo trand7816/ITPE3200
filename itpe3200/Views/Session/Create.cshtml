@@ -1,0 +1,36 @@
+@model itpe3200.ViewModels.SessionCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Course Session";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="MaxGroups">Maximum groups</label>
+        <input asp-for="MaxGroups" class="form-control" type="number" min="0" />
+        <span asp-validation-for="MaxGroups" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="RandomAssignment" class="form-check-input" />
+        <label asp-for="RandomAssignment" class="form-check-label">
+            Randomly assign students to groups
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create session</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Find Course Session";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Join" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group mb-3">
+        <label for="joinCode">Join code</label>
+        <input id="joinCode" name="joinCode" class="form-control" maxlength="6" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Continue</button>
+</form>

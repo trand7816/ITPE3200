@@ -1,0 +1,36 @@
+@model IEnumerable<itpe3200.Models.CourseSession>
+
+@{
+    ViewData["Title"] = "Course Sessions";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-primary">Create session</a>
+</div>
+
+@if (!Model.Any())
+{
+    <p>No course sessions have been created yet.</p>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var session in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h5 card-title">@session.Name</h2>
+                        <p class="card-text mb-1">
+                            Join code: <strong>@session.JoinCode</strong>
+                        </p>
+                        <p class="card-text">
+                            Created: @session.CreatedAt.ToLocalTime().ToString("g")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
