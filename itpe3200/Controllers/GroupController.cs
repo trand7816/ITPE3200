@@ -11,10 +11,15 @@ namespace itpe3200.Controllers;
 public class GroupController : Controller
 {
     private readonly AppDbContext _appDbContext;
+    private readonly ICourseRepository _repo;
+    private readonly ILogger<GroupController> _logger;
+
     //gir tilgang til database
-    public GroupController(AppDbContext appDbContext)
+    public GroupController(AppDbContext appDbContext, ICourseRepository repo, ILogger<GroupController> logger)
     {
         _appDbContext = appDbContext;
+        _repo = repo;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -112,6 +117,31 @@ public class GroupController : Controller
         return View(model);
     }
 
-    
+    // GET: Group/Delete/5 – shows a confirmation page before deleting
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var group = await _repo.GetGroupById(id);
+        if (group == null)
+        {
+            _logger.LogError("[GroupController] Group not found for GroupId {GroupId:0000}", id);
+            return NotFound("Group not found");
+        }
+        return View(group);
+    }
+
+    // POST: Group/DeleteConfirmed/5 – performs the delete
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        bool ok = await _repo.DeleteGroup(id);
+        if (!ok)
+        {
+            _logger.LogError("[GroupController] Group deletion failed for GroupId {GroupId:0000}", id);
+            return BadRequest("Group deletion failed");
+        }
+        _logger.LogInformation("[GroupController] Group {GroupId:0000} deleted", id);
+        return RedirectToAction("Table");
+    }
 }
 
