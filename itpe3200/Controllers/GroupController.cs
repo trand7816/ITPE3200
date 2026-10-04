@@ -1,6 +1,7 @@
 using itpe3200.DAL;
 using itpe3200.Models;
 using itpe3200.ViewModels;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ namespace itpe3200.Controllers;
 public class GroupController : Controller
 {
     private readonly AppDbContext _appDbContext;
-
+    //gir tilgang til database
     public GroupController(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;
@@ -22,7 +23,7 @@ public class GroupController : Controller
 
         var model = new GroupCreateViewModel();
 
-        //henter kursøktene fra databasen og legger det til i listen 'CourseSession' i viewmodellen 'GroupCreateViewModel'.
+        //henter kursøktene fra databasen og legger det til i listen 'CourseSessions' i viewmodellen 'GroupCreateViewModel'.
         foreach (var courseSession in _appDbContext.CourseSessions)
         {
             model.CourseSessions.Add(new CourseSessionViewModel
@@ -32,8 +33,55 @@ public class GroupController : Controller
             });
 
         }
-    //sender objektet til Create.cshtml slik at det kan vises i en dropdown-meny
+    //sender objektet til Create.cshtml slik at groupsessions kan vises i en dropdown-meny
     return View(model);
     }
 
+    [HttpPost]
+    public IActionResult Create(GroupCreateViewModel model)
+    {
+        //Validerer at input fra skjemaet samsvarer med viewmodellen
+        if (ModelState.IsValid)
+        {
+            //Validering basert på om course session ID finnes i databasen
+            var courseSession = _appDbContext.CourseSessions.Find(model.CourseSessionId);
+            if(courseSession == null)
+            {
+                ModelState.AddModelError("CourseSessionId", "Invalid course session ID");
+            }
+            else
+            {
+                //lagrer ny gruppe i databasen
+                var group = new Group
+                {
+                    Name = model.Name,
+                    MaxSize = model.MaxSize,
+                    CourseSessionId = model.CourseSessionId
+                };
+                _appDbContext.Groups.Add(group);
+                _appDbContext.SaveChanges();
+
+                //forblir i create group-siden etter gruppen har blitt laget
+                return RedirectToAction("Create");
+            }
+        }   
+        //Henter course session-data til dropdown-menyen på nytt hvis forrige innsending feilet
+        foreach(var courseSession in _appDbContext.CourseSessions)
+        {
+            model.CourseSessions.Add(new CourseSessionViewModel
+            {
+                Id = courseSession.Id,
+                Name = courseSession.Name
+
+            });
+        }
+        
+        return View(model);
+    }
+    /**public IActionResult Join
+    {
+        
+    }
+    **/
 }
+
