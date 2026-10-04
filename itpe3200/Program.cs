@@ -12,10 +12,8 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    scope.ServiceProvider.GetRequiredService<AppDbContext>();
-}
+// Create the database and add test data (session, group, student)
+DbInit.Seed(app);   
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
