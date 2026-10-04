@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
 using itpe3200.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace itpe3200.DAL;
 
-public class GroupDbContext : DbContext
+public class AppDbContext : DbContext
 {
-    public GroupDbContext(DbContextOptions<GroupDbContext> options) : base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
+        Database.EnsureCreated();
     }
 
     public DbSet<CourseSession> CourseSessions { get; set; }
