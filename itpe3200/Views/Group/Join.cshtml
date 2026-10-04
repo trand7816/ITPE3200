@@ -1,0 +1,23 @@
+@model itpe3200.ViewModels.JoinViewModel
+
+
+@{
+    ViewData["Title"] = "Join Session";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Join" method="post">
+    <div class="form-group">
+        <label asp-for="Name">Student Name</label><span class="text-danger">*</span>
+        <input asp-for="Name" class="form-control"> 
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="JoinCode"></label><span class="text-danger">*</span>
+        <input asp-for="JoinCode" class="form-control"> 
+        <span asp-validation-for="JoinCode" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Join</button>
+</form>
