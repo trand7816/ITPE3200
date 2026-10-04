@@ -63,13 +63,24 @@ public class GroupController : Controller
                     MaxSize = model.MaxSize,
                     CourseSessionId = model.CourseSessionId
                 };
-                _appDbContext.Groups.Add(group);
-                _appDbContext.SaveChanges();
+                try
+                {
+                    _appDbContext.Groups.Add(group);
+                    _appDbContext.SaveChanges();
+                    _logger.LogInformation("[GroupController] Group {GroupName} created", group.Name);
 
-                //forblir i create group-siden etter gruppen har blitt laget
-                return RedirectToAction("Create");
+                    //forblir i create group-siden etter gruppen har blitt laget
+                    return RedirectToAction("Create");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("[GroupController] Group creation failed for group {@group}, error message: {e}", group, e.Message);
+                    ModelState.AddModelError("", "Could not save the group. Please try again.");                
+                }
             }
-        }   
+        }
+        _logger.LogWarning("[GroupController] Group creation failed {@model}", model);
+
         //Henter course session-data til dropdown-menyen på nytt hvis forrige innsending feilet
         foreach(var courseSession in _appDbContext.CourseSessions)
         {
@@ -108,12 +119,22 @@ public class GroupController : Controller
                     Name = model.Name,
                     CourseSessionId = courseSession.Id
                 };
-                _appDbContext.Students.Add(student);
-                _appDbContext.SaveChanges();
+                try
+                {
+                    _appDbContext.Students.Add(student);
+                    _appDbContext.SaveChanges();
+                    _logger.LogInformation("[GroupController] Student {StudentName} joined session {SessionId:0000}", student.Name, courseSession.Id);
 
-                return RedirectToAction("Create");
+                    return RedirectToAction("Create");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError("[GroupController] Student join failed for student {@student}, error message: {e}", student, e.Message);
+                    ModelState.AddModelError("", "Could not join the session. Please try again.");
+                }
             }
         }
+        _logger.LogWarning("[GroupController] Join failed for JoinCode {JoinCode}", model.JoinCode);
         return View(model);
     }
 
