@@ -78,10 +78,40 @@ public class GroupController : Controller
         
         return View(model);
     }
-    /**public IActionResult Join
+
+    [HttpGet]
+    public IActionResult Join()
     {
-        
+        return View();
     }
-    **/
+
+    [HttpPost]
+    public IActionResult Join(JoinViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            //Sjekker om input-koden er lik JoinCode i databasen, returnerer null dersom den ikke finnes i db
+            var courseSession = _appDbContext.CourseSessions.FirstOrDefault(c => c.JoinCode == model.JoinCode);
+            if(courseSession == null)
+            {
+                ModelState.AddModelError("JoinCode", "Invalid join code");
+            }
+            else
+            {
+                var student = new Student
+                {
+                    Name = model.Name,
+                    CourseSessionId = courseSession.Id
+                };
+                _appDbContext.Students.Add(student);
+                _appDbContext.SaveChanges();
+
+                return RedirectToAction("Create");
+            }
+        }
+        return View(model);
+    }
+
+    
 }
 
