@@ -199,3 +199,23 @@ p, .p {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/*FOOTER AND MUTED TEXT*/
+/* Bootstrap's text-muted is dark grey with !important, which is unreadable on the dark background */
+.text-muted {
+    color: var(--labels) !important;
+}
+
+.footer {
+    border-top-color: var(--dividers) !important;
+}
+
+/*CARDS*/
+/* Bootstrap gives .card dark text by default, so set light text for the dark theme */
+.card {
+    color: var(--heading);
+}
+
+.card a:not(.btn) {
+    color: var(--accent3);
+}
