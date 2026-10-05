@@ -8,10 +8,6 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-   box-shadow: 0 0 0 0.25rem rgba(145, 132, 217, 0.35);
-}
-
 html {
   position: relative;
   min-height: 100%;
@@ -57,20 +53,6 @@ body {
 body {
     background: var(--bg);
     color: var(--heading);
-} 
-
-button{
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 7px;
-    background-color: transparent;
-    color: var(--accent2);
-}
-
-button :hover{
-    color: var(--accent2);
-    background-color: #7f72c7;
-    border-color: #7f72c7;
 }
 
 p, .p {
@@ -78,8 +60,58 @@ p, .p {
 }
 
 .subheading {
-        color: var(--subheading); /*Change to apply to all h2,h3 etc.?*/
-    }
+    color: var(--subheading);
+}
+
+.card{
+    padding: 20px;
+    padding-bottom: 70px;
+    margin: 10px;
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    justify-content: center;
+}
+
+.table,
+.table th,
+.table td {
+    background-color: var(--card-bg);
+    color: var(--body-text);
+}
+
+.btn {
+    margin-top: 7px;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 7px;
+    background-color: transparent;
+    color: var(--accent2);
+}
+
+.btn-primary {
+    color: var(--accent2);
+    background-color: var(--bg);
+    border-color: var(--primary-accent);
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+   box-shadow: 0 0 0 0.25rem rgba(145, 132, 217, 0.35);
+}
+
+.btn-primary:hover {
+    color: var(--accent3);
+    background-color: #10121D;
+    border-color: var(--primary-accent);
+}
+
+.btn-primary:focus,
+.btn-primary:active:focus {
+    color: var(--accent2);
+    background-color: var(--bg);
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.35);
+}
 
 .label {
     background-color: var(--dividers);
@@ -114,7 +146,7 @@ p, .p {
     margin-left: 15px;
 }
 
-/*For Hero section only*/
+/*CAROUSEL SECTION*/
 .carousel-indicators {
     position: static;
     margin-top: 1rem;
@@ -127,6 +159,7 @@ p, .p {
 
 .carousel-inner {
     margin-top: 30px;
+    border-radius: 15px;
 }
 .carousel-item {
   background-color: var(--card-bg);
@@ -146,40 +179,6 @@ p, .p {
 .item-content p {
     margin-bottom: 1rem;
 }
-
-.btn {
-    margin-top: 7px;
-    padding: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 7px;
-    background-color: transparent;
-    color: var(--accent2);
-  
-}
-.btn-primary {
-    color: var(--accent2);
-    background-color: var(--bg);
-    border-color: var(--primary-accent);
-}
-
-.btn-primary:hover {
-    color: var(--accent3);
-    background-color: #10121D;
-    border-color: var(--primary-accent);
-}
-
-.btn-primary:focus,
-.btn-primary:active:focus {
-    color: var(--accent2);
-    background-color: var(--bg);
-    border-color: var(--primary-accent);
-    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.35);
-}
-
- /* .btn-secondary {
-    outline: 2px solid var(--accent2);
-} */
 
 /**/
 
