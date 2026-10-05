@@ -16,14 +16,9 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var group in Model.Groups)
-        {
-            <tr>
-                <td>@group.Name</td>
-                <td>@group.CourseSession?.Name</td>
-                <td>@group.Members.Count</td>
-                <td>@group.MaxSize</td>
-            </tr>
-        }
+       @foreach (var group in Model.Groups)
+{
+    <partial name="_GroupTable" model="group" />
+}
     </tbody>
 </table>
