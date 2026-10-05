@@ -5,4 +5,9 @@
     <td>@Model.CourseSession?.Name</td>
     <td>@Model.Members.Count</td>
     <td>@Model.MaxSize</td>
+    <td>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Details</a>
+        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Update</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+    </td>
 </tr>
