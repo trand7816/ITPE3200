@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewData["Title"] = "Create Group";
+    ViewData["Title"] = "Create Group (for students)";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -10,12 +10,11 @@
 <form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Name"></label><span class="text-danger">*</span>
+        <label asp-for="Name">Group Name</label>
         <input asp-for="Name" class="form-control"> 
-        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="MaxSize"></label><span class="text-danger">*</span>
+        <label asp-for="MaxSize">Group Size</label><span class="text-danger">*</span>
         <input asp-for="MaxSize" class="form-control" type="number"> 
         <span asp-validation-for="MaxSize" class="text-danger"></span>
     </div>
@@ -23,6 +22,7 @@
     <div class="form-group">
         <label asp-for="CourseSessionId">Course Session</label><span class="text-danger">*</span>
 
+        <!--Flytt denne til 'Course Sessions' senere, sånn at dette blir læreren sin del -->
         <select asp-for="CourseSessionId" 
                 asp-items="@(new SelectList(Model.CourseSessions, "Id", "Name"))" class="form-control">
                 <option value="">Choose Course Session</option>

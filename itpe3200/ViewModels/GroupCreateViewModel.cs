@@ -5,8 +5,11 @@ namespace itpe3200.ViewModels;
 
 public class GroupCreateViewModel
 {
+    [RegularExpression(@"[0-9a-zA-ZæøåÆØÅ. \-]{0,20}]", ErrorMessage ="The group name must be numbers or letters between 0 ad 20 characters.")]
+    [Display(Name = "Group Name")]
     public string Name { get; set; } = string.Empty;
-    [Range(0, int.MaxValue, ErrorMessage = "Group size requires a valid number")]
+    [Range(1, int.MaxValue, ErrorMessage = "Group requires at least 1 member")]
+    [Display(Name = "Group Size")]
     public int MaxSize { get; set; }
     [Required(ErrorMessage = "Course session is required")]
     public int? CourseSessionId { get; set; }
