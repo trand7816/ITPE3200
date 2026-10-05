@@ -76,8 +76,8 @@ public class GroupController : Controller
 
                     _logger.LogInformation("[GroupController] Group {GroupName} created", group.Name);
 
-                    //forblir i create group-siden etter gruppen har blitt laget
-                    return RedirectToAction("Create");
+                    // User gets sent to Table-view as confirmation
+                    return RedirectToAction("Table");
                 }
                 catch (Exception e)
                 {
@@ -180,7 +180,7 @@ public class GroupController : Controller
                     _appDbContext.SaveChanges();
                     _logger.LogInformation("[GroupController] Student {StudentName} joined session {SessionId:0000}", student.Name, courseSession.Id);
 
-                    return RedirectToAction("Create");
+                    return RedirectToAction("Table");
                 }
                 catch (Exception e)
                 {
