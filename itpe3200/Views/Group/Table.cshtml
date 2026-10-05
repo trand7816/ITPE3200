@@ -1,0 +1,29 @@
+@model itpe3200.ViewModels.GroupsViewModel
+
+@{
+    ViewData["Title"] = "Groups";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Group name</th>
+            <th>Course session</th>
+            <th>Members</th>
+            <th>Maximum size</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in Model.Groups)
+        {
+            <tr>
+                <td>@group.Name</td>
+                <td>@group.CourseSession?.Name</td>
+                <td>@group.Members.Count</td>
+                <td>@group.MaxSize</td>
+            </tr>
+        }
+    </tbody>
+</table>
