@@ -185,6 +185,24 @@ public class GroupController : Controller
         return View(model);
     }
 
+    // GET: Group/Details/5 – shows details for one group
+[HttpGet]
+public async Task<IActionResult> Details(int id)
+{
+    var group = await _repo.GetGroupById(id);
+
+    if (group is null)
+    {
+        _logger.LogWarning(
+            "[GroupController] Group not found for GroupId {GroupId:0000}",
+            id);
+
+        return NotFound();
+    }
+
+    return View(group);
+}
+
     // GET: Group/Grid – shows a grid of all groups
     [HttpGet]
 public async Task<IActionResult> Grid()
