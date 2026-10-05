@@ -3,6 +3,7 @@ using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -101,6 +102,51 @@ public class GroupController : Controller
             });
         }
 
+        return View(model);
+    }
+
+    [HttpGet]
+    public async Task <IActionResult> Update(int id)
+    {
+        var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == id);
+
+        if(group == null)
+        {
+            return NotFound();
+        }
+        return View(group);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(Group model)
+    {
+        if (ModelState.IsValid)
+        {
+            var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == model.Id);
+
+            if(group == null)
+            {
+                return NotFound();
+            }
+
+            group.Name = model.Name;
+            group.MaxSize = model.MaxSize;
+
+            try
+            {
+                await _appDbContext.SaveChangesAsync();
+                
+                _logger.LogInformation("[GroupController] Group {GroupId:0000} updated", group.Id);
+
+                return RedirectToAction("Table");
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("[GroupController] Group update failed for group {@group}, error message: {e}", group, e.Message);
+
+                ModelState.AddModelError("", "Could not update group. Please try again");
+            }
+        }
         return View(model);
     }
 

@@ -1,0 +1,25 @@
+@model itpe3200.Models.Group
+
+@{ViewData["Title"] = "Update Group";}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Update" method="post">
+    <input type="hidden" asp-for="Id">
+
+    <div class="form-group">
+        <label asp-for="Name">Change Group Name</label><span class="text-danger">*</span>
+        <input asp-for="Name" class="form-control">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="MaxSize">Change Group Size</label><span class="text-danger">*</span>
+        <input asp-for="MaxSize" class="form-control" type="number">
+        <span asp-validation-for="MaxSize" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Table" class="btn btn-secondary">Cancel</a>
+</form>
+
