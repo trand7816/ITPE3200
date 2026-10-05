@@ -49,6 +49,10 @@ body {
     --input-fields: #75798C;
 }
 
+/*NAVBAR*/
+.dark-navbar {
+  background-color: var(--card-bg);
+}
 /*GLOBAL THEME*/
 body {
     background: var(--bg);
@@ -65,7 +69,6 @@ p, .p {
 
 .card{
     padding: 20px;
-    padding-bottom: 70px;
     margin: 10px;
     background-color: var(--card-bg);
     border-radius: 15px;
@@ -77,6 +80,7 @@ p, .p {
 .table td {
     background-color: var(--card-bg);
     color: var(--body-text);
+    padding: 15px;
 }
 
 .btn {
@@ -168,7 +172,12 @@ p, .p {
 .item-content {
     text-align: left;
     padding: 2rem;
-    margin-left: 5rem;
+}
+
+@media (min-width: 768px) { /*TODO: Adjust so controls don't overlap!*/
+    .item-content {
+        margin-left: 5rem;
+    }
 }
 
 .item-content h2 {
