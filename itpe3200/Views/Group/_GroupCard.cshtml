@@ -1,0 +1,15 @@
+@model itpe3200.Models.Group
+
+<div class="card h-100">
+    <div class="card-body">
+        <h2 class="h5 card-title">@Model.Name</h2>
+
+        <p class="card-text">
+            Course session: @Model.CourseSession?.Name
+        </p>
+
+        <p class="card-text">
+            Members: @Model.Members.Count / @Model.MaxSize
+        </p>
+    </div>
+</div>

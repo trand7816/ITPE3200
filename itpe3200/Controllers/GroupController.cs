@@ -38,8 +38,8 @@ public class GroupController : Controller
             });
 
         }
-    //sender objektet til Create.cshtml slik at groupsessions kan vises i en dropdown-meny
-    return View(model);
+        //sender objektet til Create.cshtml slik at groupsessions kan vises i en dropdown-meny
+        return View(model);
     }
 
     [HttpPost]
@@ -50,7 +50,7 @@ public class GroupController : Controller
         {
             //Validering basert på om course session ID finnes i databasen
             var courseSession = _appDbContext.CourseSessions.Find(model.CourseSessionId);
-            if(courseSession == null)
+            if (courseSession == null)
             {
                 ModelState.AddModelError("CourseSessionId", "Invalid course session ID");
             }
@@ -83,7 +83,7 @@ public class GroupController : Controller
                 catch (Exception e)
                 {
                     _logger.LogError("[GroupController] Group creation failed for group {@group}, error message: {e}", group, e.Message);
-                    ModelState.AddModelError("", "Could not save the group. Please try again.");                
+                    ModelState.AddModelError("", "Could not save the group. Please try again.");
                 }
 
             }
@@ -91,7 +91,7 @@ public class GroupController : Controller
         _logger.LogWarning("[GroupController] Group creation failed {@model}", model);
 
         //Henter course session-data til dropdown-menyen på nytt hvis forrige innsending feilet
-        foreach(var courseSession in _appDbContext.CourseSessions)
+        foreach (var courseSession in _appDbContext.CourseSessions)
         {
             model.CourseSessions.Add(new CourseSessionViewModel
             {
@@ -100,7 +100,7 @@ public class GroupController : Controller
 
             });
         }
-        
+
         return View(model);
     }
 
@@ -117,7 +117,7 @@ public class GroupController : Controller
         {
             //Sjekker om input-koden er lik JoinCode i databasen, returnerer null dersom den ikke finnes i db
             var courseSession = _appDbContext.CourseSessions.FirstOrDefault(c => c.JoinCode == model.JoinCode);
-            if(courseSession == null)
+            if (courseSession == null)
             {
                 ModelState.AddModelError("JoinCode", "Invalid join code");
             }
@@ -173,5 +173,45 @@ public class GroupController : Controller
         _logger.LogInformation("[GroupController] Group {GroupId:0000} deleted", id);
         return RedirectToAction("Table");
     }
+
+    // GET: Group/Table – shows a table of all groups
+    [HttpGet]
+    public async Task<IActionResult> Table()
+    {
+        var groups = await _repo.GetAllGroups();
+
+        if (groups is null)
+        {
+            _logger.LogError("[GroupController] Could not load groups for table");
+            return Problem("Could not load groups.");
+        }
+
+        var model = new GroupsViewModel
+        {
+            Groups = groups
+        };
+
+        return View(model);
+    }
+
+    // GET: Group/Grid – shows a grid of all groups
+    [HttpGet]
+public async Task<IActionResult> Grid()
+{
+    var groups = await _repo.GetAllGroups();
+
+    if (groups is null)
+    {
+        _logger.LogError("[GroupController] Could not load groups for grid");
+        return Problem("Could not load groups.");
+    }
+
+    var model = new GroupsViewModel
+    {
+        Groups = groups
+    };
+
+    return View(model);
+}
 }
 
