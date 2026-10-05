@@ -2,11 +2,11 @@
 
 ## Group members
 
-mijit7782
-kabak8529
-joskr6803
-mango7778
-trand7816
+- Miriam Wang (mijit7782)
+- Johannes Jonssønn Skramstad (joskr6803)
+- Kaya Rabino Baksaas (kabak8529)
+- Truls Andreassen (trand7816)
+- Martin Ngo (mango7778)
 
 ## Requirements
 
@@ -33,11 +33,16 @@ dotnet run
 
 ## Features
 
-- Create course sessions with a name, maximum group count, and a random-assignment setting.
-- View course sessions and their join codes.
+- Create course sessions with a name, maximum group count and a random-assignment setting. A unique 6-character join code is generated automatically.
+- View all course sessions and their join codes.
 - Join a course session as a student using its join code.
-- Create groups for a course session, with a group name and maximum size.
-- View groups as a table or card grid, including session, member count, and capacity.
+- Full CRUD for groups:
+  - **Create** a group for a course session with a name and maximum size
+  - **Read** groups as a table or card grid, and open a details page with the member list
+  - **Update** a group's name and maximum size
+  - **Delete** a group after a confirmation page (members are kept, but left without a group)
+- Server-side input validation on all forms, with error messages shown next to each field.
+- Error handling and logging: all database operations are wrapped in try/catch and logged with ILogger/Serilog to the console and to `Logs/`. Unexpected errors show a friendly error page.
 
 ## Sources
 
