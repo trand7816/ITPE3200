@@ -43,7 +43,7 @@ public class GroupController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(GroupCreateViewModel model)
+    public async Task<IActionResult> Create(GroupCreateViewModel model)
     {
         //Validerer at input fra skjemaet samsvarer med viewmodellen
         if (ModelState.IsValid)
@@ -66,7 +66,15 @@ public class GroupController : Controller
                 try
                 {
                     _appDbContext.Groups.Add(group);
-                    _appDbContext.SaveChanges();
+                    await _appDbContext.SaveChangesAsync();
+
+                    //Hvis elev oppretter gruppe uten navn registreres gruppen som gruppe + id i databasen
+                    if (string.IsNullOrWhiteSpace(group.Name))
+                    {
+                        group.Name = $"Group {group.Id}";
+                        await _appDbContext.SaveChangesAsync();
+                    }
+
                     _logger.LogInformation("[GroupController] Group {GroupName} created", group.Name);
 
                     //forblir i create group-siden etter gruppen har blitt laget
@@ -77,6 +85,7 @@ public class GroupController : Controller
                     _logger.LogError("[GroupController] Group creation failed for group {@group}, error message: {e}", group, e.Message);
                     ModelState.AddModelError("", "Could not save the group. Please try again.");                
                 }
+
             }
         }
         _logger.LogWarning("[GroupController] Group creation failed {@model}", model);
