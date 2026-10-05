@@ -9,7 +9,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+   box-shadow: 0 0 0 0.25rem rgba(145, 132, 217, 0.35);
 }
 
 html {
@@ -20,6 +20,168 @@ html {
 body {
   margin-bottom: 60px;
 }
+/*COLOR PALLETTE*/
+
+/*Light Theme*/
+:root {
+    --bg: #ffffff;
+    --heading: #222222;
+    --card-bg: #f5f5f5;
+}
+
+/*Dark Theme - Default for now*/
+[data-theme="dark"] {
+    --bg: #161826;
+    --card-bg: #232532;
+
+    /*Text*/
+    --heading: #ffffff; /*For H1*/
+    --subheading: #E9E9ED; 
+    --body-text: #B2B6CA;
+    --labels: #CFD3E5; /*Additional text*/
+ 
+
+    /*Accents*/
+     --primary-accent: #9184D9; /*Button outlines, active dot*/
+     --accent2: #E7E5FE; /*Button text, active tab*/
+     --accent3: #B5ABFC; /*Links, notes*/
+     --accent4: #D2CEFD; /*Highlight card border*/
+
+    /*Placeholders & Inputs*/
+    --dividers: #3F424D;
+    --card-borders: #595D6C;
+    --input-fields: #75798C;
+}
+
+/*GLOBAL THEME*/
+body {
+    background: var(--bg);
+    color: var(--heading);
+} 
+
+button{
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 7px;
+    background-color: transparent;
+    color: var(--accent2);
+}
+
+button :hover{
+    color: var(--accent2);
+    background-color: #7f72c7;
+    border-color: #7f72c7;
+}
+
+p, .p {
+    color: var(--body-text);
+}
+
+.subheading {
+        color: var(--subheading); /*Change to apply to all h2,h3 etc.?*/
+    }
+
+.label {
+    background-color: var(--dividers);
+    color: var(--labels);
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 7px;
+}
+
+.form-control,
+.form-select {
+    background-color: var(--card-bg);
+    color: var(--body-text);
+    border-color: var(--input-fields);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--card-bg);
+    color: var(--heading);
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.25);
+}
+
+/*HOMEPAGE STYLING*/
+.greeting-text{
+    padding: 15px;
+}
+
+.greeting-text a {
+    margin-left: 15px;
+}
+
+/*For Hero section only*/
+.carousel-indicators {
+    position: static;
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: var(--primary-accent);
+}
+
+.carousel-inner {
+    margin-top: 30px;
+}
+.carousel-item {
+  background-color: var(--card-bg);
+}
+
+.item-content {
+    text-align: left;
+    padding: 2rem;
+    margin-left: 5rem;
+}
+
+.item-content h2 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.item-content p {
+    margin-bottom: 1rem;
+}
+
+.btn {
+    margin-top: 7px;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 7px;
+    background-color: transparent;
+    color: var(--accent2);
+  
+}
+.btn-primary {
+    color: var(--accent2);
+    background-color: var(--bg);
+    border-color: var(--primary-accent);
+}
+
+.btn-primary:hover {
+    color: var(--accent3);
+    background-color: #10121D;
+    border-color: var(--primary-accent);
+}
+
+.btn-primary:focus,
+.btn-primary:active:focus {
+    color: var(--accent2);
+    background-color: var(--bg);
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.35);
+}
+
+ /* .btn-secondary {
+    outline: 2px solid var(--accent2);
+} */
+
+/**/
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);

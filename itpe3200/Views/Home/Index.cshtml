@@ -3,63 +3,6 @@
 }
 <style>
 /*Move to site.css*/
-:root {
-    --main-bg-color: #ffffff;
-    --heading: #222222;
-    --main-card-bg: #f5f5f5;
-}
-
-[data-theme="dark"] {
-    --main-bg-color: #161826;
-    --main-card-bg: #232532;
-
-    /*Text*/
-    --heading: #ffffff;
-    --subheading: #E9E9ED;
-    --subheading-muted: #B2B6CA;
-
-    /*Accents*/
-     --accent-main: #9184D9; /*Button outlines, active dot*/
-     --accent2: #E7E5FE; /*Button text, active tab*/
-     --accent3: #B5ABFC; /*Links, notes*/
-     --accent4: #D2CEFD; /*Highlight card border*/
-
-    /*Placeholders & Inputs*/
-    --dividers: #3F424D;
-    --card-borders: #595D6C;
-    --
-
-}
-.carousel-item {
-    background-color: var(--main-card-bg);
-
-}
-body {
-    background: var(--main-bg-color);
-    color: var(--heading);
-} 
- .item-content {
-        text-align: left;
-        padding: 2rem;
-    }
-
-    .item-content h2 {
-        margin-bottom: 1rem;
-    }
-
-    .item-content p {
-        margin-bottom: 1.5rem;
-    }
-
-    .subtext{
-        color: var(--subheading);
-    }
-
-    button{
-    
-        border-radius: 15px;
-        outline: #9184D9;
-    }
 
 </style>
   
@@ -67,55 +10,57 @@ body {
     <section class="greeeting"> <!--TODO: Make into partial view-->
         <div class="greeting-text"> 
               <h1> Good Morning! </h1> <!--TODO: Make dynamic (based on user + time) -->
-              <span id="date">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
-              <span id="update"> 3 courses • 1 live session </span>
-              <button class="start-session">Start Session</button>
-              <button class="add-course">Add course</button>
+              <span id="date" class="p">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
+              <span id="update" class="p"> 3 courses • 1 live session </span> <!-- Will have live updates-->  
+              <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Start Session</a>
+              <a asp-controller="Group" asp-action="Create" class="btn btn-primary">Add Group</a>
         </div>
     </section> 
 
     <!--TODO: Make into partial view-->
     <section id="suggestionsCarousel" class="carousel slide" data-bs-ride="carousel">  <!--Using bootstrap structure-->
 
-        <!-- Carousel buttons-->
+
+        <div class="carousel-inner">
+            <!--Suggestion 1--> 
+            <div class="carousel-item active" >
+                <div class="item-content">
+                    <span class="label"> TIP </span>
+                    <h2 class="subheading">Show the QR code on full screen</h2>
+                    <p>Short description</p>
+                    <!-- <img src="" alt=""> -->
+                    <button class="btn">Try It</button>
+                </div>
+            </div>
+            <!--Suggestion 2--> 
+            <div class="carousel-item" >
+                <div class="item-content">
+                    <span class="label"> TIP </span>
+                    <h2 class="subheading">Randomize groups</h2>
+                    <p>Short description</p>
+                    <!-- <img src="" alt=""> -->
+                    <button class="btn">Try It</button>
+                </div>
+            </div>
+         <!--Suggestion 3--> 
+            <div class="carousel-item" >
+                <div class="item-content">
+                    <span class="label"> TIP </span>
+                    <h2 class="subheading">Let students pick their own groups</h2>
+                    <p>Short description</p>
+                    <!-- <img src="" alt=""> -->
+                    <button class="btn">Try It</button>
+                </div>
+            </div>
+        </div>
+
+         <!-- Carousel buttons-->
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Tip 1"></button>
             <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="1" aria-label="Tip 2"></button>
             <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="2" aria-label="Tip 3"></button>
         </div>
 
-        <div class="carousel-inner">
-            <!--Suggestion 1--> 
-            <div class="carousel-item active" >
-                <div class="item-content">
-                    <span> TIP </span>
-                    <h2 class="subtext">Show the QR code on full screen</h2>
-                    <p>Short description</p>
-                    <!-- <img src="" alt=""> -->
-                    <button>Try It</button>
-                </div>
-            </div>
-            <!--Suggestion 2--> 
-            <div class="carousel-item" >
-                <div class="item-content">
-                    <span class="tip"> TIP </span>
-                    <h2 class="subtext">Randomize groups</h2>
-                    <p>Short description</p>
-                    <!-- <img src="" alt=""> -->
-                    <button>Try It</button>
-                </div>
-            </div>
-         <!--Suggestion 3--> 
-            <div class="carousel-item" >
-                <div class="item-content">
-                    <span> TIP </span>
-                    <h2 class="subtext">Let students pick their own groups</h2>
-                    <p>Short description</p>
-                    <!-- <img src="" alt=""> -->
-                    <button>Try It</button>
-                </div>
-            </div>
-        </div>
     <!--Left and Right Controls -->
         <button class="carousel-control-prev" type="button" data-bs-target="#suggestionsCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
