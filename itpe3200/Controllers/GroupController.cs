@@ -164,7 +164,7 @@ public class GroupController : Controller
         _logger.LogInformation("[GroupController] Group {GroupId:0000} deleted", id);
         return RedirectToAction("Table");
     }
-    
+
     // GET: Group/Table – shows a table of all groups
     [HttpGet]
     public async Task<IActionResult> Table()
@@ -184,5 +184,25 @@ public class GroupController : Controller
 
         return View(model);
     }
+
+    // GET: Group/Grid – shows a grid of all groups
+    [HttpGet]
+public async Task<IActionResult> Grid()
+{
+    var groups = await _repo.GetAllGroups();
+
+    if (groups is null)
+    {
+        _logger.LogError("[GroupController] Could not load groups for grid");
+        return Problem("Could not load groups.");
+    }
+
+    var model = new GroupsViewModel
+    {
+        Groups = groups
+    };
+
+    return View(model);
+}
 }
 
