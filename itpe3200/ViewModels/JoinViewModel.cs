@@ -4,7 +4,7 @@ namespace itpe3200.ViewModels;
 
 public class JoinViewModel
 {
-    [RegularExpression(@"[a-zA-ZæøåÆØÅ. \-]", ErrorMessage ="The name must be letters")]
+    [RegularExpression(@"[a-zA-ZæøåÆØÅ. \-]{2,50}", ErrorMessage = "The name must be letters between 2 and 50 characters")]
     [Required(ErrorMessage = "Student name is required")]
     public string Name {get; set; } = string.Empty;
 
