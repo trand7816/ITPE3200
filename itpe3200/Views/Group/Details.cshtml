@@ -1,0 +1,44 @@
+
+@model itpe3200.Models.Group
+
+@{
+    ViewData["Title"] = "Group details";
+}
+
+@* Display the page heading. *@
+<h1>@ViewData["Title"]</h1>
+
+@* Display group information as a definition list. *@
+<dl class="row">
+    <dt class="col-sm-3">Group name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Course session</dt>
+    @* ?. prevents an error if the group has no related course session. *@
+    <dd class="col-sm-9">@Model.CourseSession?.Name</dd>
+
+    <dt class="col-sm-3">Members</dt>
+    @* Show the current number of members compared with the maximum size. *@
+    <dd class="col-sm-9">@Model.Members.Count / @Model.MaxSize</dd>
+</dl>
+
+<h2>Students</h2>
+
+@* Show a message when the group has no students. *@
+@if (!Model.Members.Any())
+{
+    <p>No students have joined this group yet.</p>
+}
+else
+{
+    <ul>
+        @* Create one list item for each student in the group. *@
+        @foreach (var member in Model.Members)
+        {
+            <li>@member.Name</li>
+        }
+    </ul>
+}
+
+@* Return to the group table. *@
+<a asp-action="Table" class="btn btn-secondary">Back to groups</a>

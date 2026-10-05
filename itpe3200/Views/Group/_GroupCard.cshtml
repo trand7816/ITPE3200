@@ -11,5 +11,11 @@
         <p class="card-text">
             Members: @Model.Members.Count / @Model.MaxSize
         </p>
+
+        <a asp-action="Details"
+          asp-route-id="@Model.Id"
+          class="btn btn-primary">
+           Details
+        </a>
     </div>
 </div>

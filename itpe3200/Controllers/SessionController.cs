@@ -8,10 +8,12 @@ namespace itpe3200.Controllers;
 public class SessionController : Controller
 {
     private readonly ICourseRepository _repo;
+    private readonly ILogger<SessionController> _logger;
 
-    public SessionController(ICourseRepository repo)
+    public SessionController(ICourseRepository repo, ILogger<SessionController> logger)
     {
         _repo = repo;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -20,6 +22,7 @@ public class SessionController : Controller
         var sessions = await _repo.GetAllSessions();
         if (sessions is null)
         {
+            _logger.LogError("[SessionController] Course sessions could not be loaded");
             return Problem("Unable to load course sessions.");
         }
 
@@ -37,6 +40,7 @@ public class SessionController : Controller
     {
         if (string.IsNullOrWhiteSpace(joinCode))
         {
+            _logger.LogWarning("[SessionController] Join attempted without a join code");
             ModelState.AddModelError(nameof(joinCode), "Join code is required.");
             return View();
         }
@@ -44,6 +48,7 @@ public class SessionController : Controller
         var session = await _repo.GetSessionByJoinCode(joinCode.Trim().ToUpperInvariant());
         if (session is null)
         {
+            _logger.LogWarning("[SessionController] No session found for JoinCode {JoinCode}", joinCode);
             ModelState.AddModelError(nameof(joinCode), "No course session was found for that join code.");
             return View();
         }
@@ -56,6 +61,7 @@ public class SessionController : Controller
     {
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("[SessionController] Session creation failed validation {@model}", model);
             return View(model);
         }
 
@@ -70,9 +76,11 @@ public class SessionController : Controller
 
         if (!await _repo.CreateSession(session))
         {
+            _logger.LogError("[SessionController] Session creation failed for session {@session}", session);
             return Problem("Unable to create the course session.");
         }
 
+        _logger.LogInformation("[SessionController] Session {SessionName} created with JoinCode {JoinCode}", session.Name, session.JoinCode);
         return RedirectToAction(nameof(Index));
     }
 
@@ -82,6 +90,7 @@ public class SessionController : Controller
         return View(new SessionCreateViewModel());
     }
 
+    // Generates a random 6-character join code that is not already in use
     private async Task<string> CreateUniqueJoinCode()
     {
         const string characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
