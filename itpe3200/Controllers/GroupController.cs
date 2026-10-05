@@ -1,9 +1,7 @@
 using itpe3200.DAL;
 using itpe3200.Models;
 using itpe3200.ViewModels;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -15,7 +13,7 @@ public class GroupController : Controller
     private readonly ICourseRepository _repo;
     private readonly ILogger<GroupController> _logger;
 
-    //gir tilgang til database
+    //gir tilgang til database, repository og logging
     public GroupController(AppDbContext appDbContext, ICourseRepository repo, ILogger<GroupController> logger)
     {
         _appDbContext = appDbContext;
@@ -24,7 +22,7 @@ public class GroupController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
 
         var model = new GroupCreateViewModel();
@@ -105,18 +103,21 @@ public class GroupController : Controller
         return View(model);
     }
 
+    // GET: Group/Update/5 – shows the form filled in with the group's current values
     [HttpGet]
-    public async Task <IActionResult> Update(int id)
+    public async Task<IActionResult> Update(int id)
     {
         var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == id);
 
-        if(group == null)
+        if (group == null)
         {
-            return NotFound();
+            _logger.LogError("[GroupController] Group not found when updating GroupId {GroupId:0000}", id);
+            return NotFound("Group not found");
         }
         return View(group);
     }
 
+    // POST: Group/Update/5 – validates and saves the changes
     [HttpPost]
     public async Task<IActionResult> Update(Group model)
     {
@@ -124,9 +125,10 @@ public class GroupController : Controller
         {
             var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == model.Id);
 
-            if(group == null)
+            if (group == null)
             {
-                return NotFound();
+                _logger.LogError("[GroupController] Group not found when updating GroupId {GroupId:0000}", model.Id);
+                return NotFound("Group not found");
             }
 
             group.Name = model.Name;
@@ -135,18 +137,16 @@ public class GroupController : Controller
             try
             {
                 await _appDbContext.SaveChangesAsync();
-                
                 _logger.LogInformation("[GroupController] Group {GroupId:0000} updated", group.Id);
-
                 return RedirectToAction("Table");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError("[GroupController] Group update failed for group {@group}, error message: {e}", group, e.Message);
-
                 ModelState.AddModelError("", "Could not update group. Please try again");
             }
         }
+        _logger.LogWarning("[GroupController] Group update failed {@model}", model);
         return View(model);
     }
 
@@ -241,41 +241,37 @@ public class GroupController : Controller
     }
 
     // GET: Group/Details/5 – shows details for one group
-[HttpGet]
-public async Task<IActionResult> Details(int id)
-{
-    var group = await _repo.GetGroupById(id);
-
-    if (group is null)
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
     {
-        _logger.LogWarning(
-            "[GroupController] Group not found for GroupId {GroupId:0000}",
-            id);
+        var group = await _repo.GetGroupById(id);
 
-        return NotFound();
+        if (group is null)
+        {
+            _logger.LogError("[GroupController] Group not found for GroupId {GroupId:0000}", id);
+            return NotFound("Group not found");
+        }
+
+        return View(group);
     }
-
-    return View(group);
-}
 
     // GET: Group/Grid – shows a grid of all groups
     [HttpGet]
-public async Task<IActionResult> Grid()
-{
-    var groups = await _repo.GetAllGroups();
-
-    if (groups is null)
+    public async Task<IActionResult> Grid()
     {
-        _logger.LogError("[GroupController] Could not load groups for grid");
-        return Problem("Could not load groups.");
+        var groups = await _repo.GetAllGroups();
+
+        if (groups is null)
+        {
+            _logger.LogError("[GroupController] Could not load groups for grid");
+            return Problem("Could not load groups.");
+        }
+
+        var model = new GroupsViewModel
+        {
+            Groups = groups
+        };
+
+        return View(model);
     }
-
-    var model = new GroupsViewModel
-    {
-        Groups = groups
-    };
-
-    return View(model);
 }
-}
-
