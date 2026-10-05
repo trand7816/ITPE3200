@@ -1,5 +1,7 @@
 using itpe3200.DAL;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,19 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+// Log to console and to a new file per run in Logs/ (same setup as the course demo)
+builder.Services.AddSerilog((services, loggerConfiguration) =>
+{
+    loggerConfiguration
+        .MinimumLevel.Information()
+        .WriteTo.Console()
+        .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log")
+        // Hide noisy SQL logs from Entity Framework
+        .Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
+                                 e.Level == LogEventLevel.Information &&
+                                 e.MessageTemplate.Text.Contains("Executed DbCommand"));
+});
 
 var app = builder.Build();
 
