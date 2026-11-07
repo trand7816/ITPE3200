@@ -33,9 +33,10 @@ else
 {
     <ul>
         @* Create one list item for each student in the group. *@
+        @* Each member is a GroupMember row, so the name comes from member.Student. *@
         @foreach (var member in Model.Members)
         {
-            <li>@member.Name</li>
+            <li>@member.Student?.Name</li>
         }
     </ul>
 }

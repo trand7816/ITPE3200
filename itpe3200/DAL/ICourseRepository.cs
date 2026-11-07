@@ -21,7 +21,7 @@ public interface ICourseRepository
 
     // ---------------- Students ----------------
     Task<Student?> GetStudentById(int id);
-    Task<IEnumerable<Student>?> GetUnassignedStudents(int sessionId);
     Task<bool> AddStudent(Student student);
-    Task<bool> AssignStudentToGroup(int studentId, int? groupId);
+    // student a member of the group. adds a GroupMember row
+    Task<bool> AssignStudentToGroup(int studentId, int groupId);
 }

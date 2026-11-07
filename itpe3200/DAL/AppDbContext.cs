@@ -14,4 +14,6 @@ public class AppDbContext : IdentityDbContext
     public DbSet<CourseSession> CourseSessions { get; set; }
     public DbSet<Group> Groups { get; set; }
     public DbSet<Student> Students { get; set; }
+    // Join table that links students and groups many to many
+    public DbSet<GroupMember> GroupMembers { get; set; }
 }

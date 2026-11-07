@@ -102,8 +102,8 @@ public class CourseRepository : ICourseRepository
                 return false;
             }
 
-            // Groups and students belong to a session (required foreign key),
-            // so EF Core deletes them together with the session (cascade delete).
+            // Groups belong to a session (required foreign key), so EF Core deletes
+            // them and their members, together with the session (cascade delete).
             _db.CourseSessions.Remove(session);
             await _db.SaveChangesAsync();
             return true;        
@@ -136,6 +136,8 @@ public class CourseRepository : ICourseRepository
         }
     }
 
+    // Used by Group/Details and Group/Delete.
+    // ThenInclude loads the student for each member so the view can show the names
     public async Task<Group?> GetGroupById(int id)
     {
         try
@@ -143,6 +145,7 @@ public class CourseRepository : ICourseRepository
             return await _db.Groups
                 .Include(g => g.CourseSession)
                 .Include(g => g.Members)
+                    .ThenInclude(m => m.Student)
                 .FirstOrDefaultAsync(g => g.Id == id);
         }
         catch (Exception e)
@@ -186,13 +189,10 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            // Load the members too. Student.GroupId is an optional foreign key,
-            // and EF Core only sets it to null for students it has loaded.
-            // Without Include, SQLite rejects the delete with a foreign key error
-            // whenever the group still has members.
-            var group = await _db.Groups
-                .Include(g => g.Members)
-                .FirstOrDefaultAsync(g => g.Id == id);
+            // GroupMember.GroupId is required so EF Core deletes the groups
+            // members together with the group (cascade delete).
+            // The students themselves are not deleted.
+            var group = await _db.Groups.FindAsync(id);
 
             if (group == null)
             {
@@ -226,21 +226,6 @@ public class CourseRepository : ICourseRepository
         }
     }
 
-    public async Task<IEnumerable<Student>?> GetUnassignedStudents(int sessionId)
-    {
-        try
-        {
-            return await _db.Students
-                .Where(s => s.CourseSessionId == sessionId && s.GroupId == null)
-                .ToListAsync();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("[CourseRepository] GetUnassignedStudents failed for SessionId {SessionId:0000}, error message: {e}", sessionId, e.Message);
-            return null;
-        }
-    }
-
     public async Task<bool> AddStudent(Student student)
     {
         try
@@ -256,24 +241,22 @@ public class CourseRepository : ICourseRepository
         }
     }
 
-    public async Task<bool> AssignStudentToGroup(int studentId, int? groupId)
+    // Adds a row in the join table so the student becomes a member of the group
+    public async Task<bool> AssignStudentToGroup(int studentId, int groupId)
     {
         try
         {
-            var student = await _db.Students.FindAsync(studentId);
-            if (student == null)
+            _db.GroupMembers.Add(new GroupMember
             {
-                _logger.LogError("[CourseRepository] Student not found for StudentId {StudentId:0000}", studentId);
-                return false;
-            }
-
-            student.GroupId = groupId;
+                StudentId = studentId,
+                GroupId = groupId
+            });
             await _db.SaveChangesAsync();
             return true;
         }
         catch (Exception e)
         {
-            _logger.LogError("[CourseRepository] Assigning StudentId {StudentId:0000} to GroupId {GroupId} failed, error message: {e}", studentId, groupId, e.Message);
+            _logger.LogError("[CourseRepository] Adding StudentId {StudentId:0000} to GroupId {GroupId:0000} failed, error message: {e}", studentId, groupId, e.Message);
             return false;
         }
     }

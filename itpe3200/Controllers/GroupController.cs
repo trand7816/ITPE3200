@@ -60,7 +60,8 @@ public class GroupController : Controller
                 {
                     Name = model.Name,
                     MaxSize = model.MaxSize,
-                    CourseSessionId = model.CourseSessionId
+                    // Use the session we found above so the id is never null
+                    CourseSessionId = courseSession.Id
                 };
                 try
                 {
@@ -169,10 +170,10 @@ public class GroupController : Controller
             }
             else
             {
+                //  the student is created without a group.The student is linked to a group later with AssignStudentToGroup.
                 var student = new Student
                 {
-                    Name = model.Name,
-                    CourseSessionId = courseSession.Id
+                    Name = model.Name
                 };
                 try
                 {
