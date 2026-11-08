@@ -20,8 +20,15 @@ public interface ICourseRepository
     Task<bool> DeleteGroup(int id);
 
     // ---------------- Students ----------------
+    Task<IEnumerable<Student>?> GetAllStudents();
     Task<Student?> GetStudentById(int id);
     Task<bool> AddStudent(Student student);
+    Task<bool> UpdateStudent(Student student);
+    Task<bool> DeleteStudent(int id);
+
+    // ---------------- Group members ----------------
     // student a member of the group. adds a GroupMember row
     Task<bool> AssignStudentToGroup(int studentId, int groupId);
+    Task<bool> RemoveStudentFromGroup(int studentId, int groupId);
+    Task<bool?> IsStudentInSession(int studentId, int sessionId);
 }

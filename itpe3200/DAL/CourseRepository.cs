@@ -213,11 +213,34 @@ public class CourseRepository : ICourseRepository
 
     // ---------------- Students ----------------
 
+    // Includes the groups so a list of students can show which groups each student is in
+    public async Task<IEnumerable<Student>?> GetAllStudents()
+    {
+        try
+        {
+            return await _db.Students
+                .Include(s => s.Groups)
+                    .ThenInclude(m => m.Group)
+                .ToListAsync();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] Students ToListAsync() failed in GetAllStudents(), error message: {e}", e.Message);
+            return null;
+        }
+    }
+
+    // Includes the groups and their sessions so a details page can show
+
     public async Task<Student?> GetStudentById(int id)
     {
         try
         {
-            return await _db.Students.FindAsync(id);
+            return await _db.Students
+                .Include(s => s.Groups)
+                    .ThenInclude(m => m.Group)
+                        .ThenInclude(g => g!.CourseSession)
+                .FirstOrDefaultAsync(s => s.Id == id);
         }
         catch (Exception e)
         {
@@ -241,6 +264,47 @@ public class CourseRepository : ICourseRepository
         }
     }
 
+    public async Task<bool> UpdateStudent(Student student)
+    {
+        try
+        {
+            _db.Students.Update(student);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] Student update failed for StudentId {StudentId:0000}, error message: {e}", student.Id, e.Message);
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteStudent(int id)
+    {
+        try
+        {
+            var student = await _db.Students.FindAsync(id);
+            if (student == null)
+            {
+                _logger.LogError("[CourseRepository] Student not found for StudentId {StudentId:0000}", id);
+                return false;
+            }
+
+            // GroupMember.StudentId is required, so EF Core deletes the students
+ 
+            _db.Students.Remove(student);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] Student deletion failed for StudentId {StudentId:0000}, error message: {e}", id, e.Message);
+            return false;
+        }
+    }
+
+    // ---------------- Group members ----------------
+
     // Adds a row in the join table so the student becomes a member of the group
     public async Task<bool> AssignStudentToGroup(int studentId, int groupId)
     {
@@ -258,6 +322,47 @@ public class CourseRepository : ICourseRepository
         {
             _logger.LogError("[CourseRepository] Adding StudentId {StudentId:0000} to GroupId {GroupId:0000} failed, error message: {e}", studentId, groupId, e.Message);
             return false;
+        }
+    }
+
+    // Removes the row in the join table. The student and the group are not deleted.
+    public async Task<bool> RemoveStudentFromGroup(int studentId, int groupId)
+    {
+        try
+        {
+            var member = await _db.GroupMembers
+                .FirstOrDefaultAsync(m => m.StudentId == studentId && m.GroupId == groupId);
+            if (member == null)
+            {
+                _logger.LogError("[CourseRepository] StudentId {StudentId:0000} is not a member of GroupId {GroupId:0000}", studentId, groupId);
+                return false;
+            }
+
+            _db.GroupMembers.Remove(member);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] Removing StudentId {StudentId:0000} from GroupId {GroupId:0000} failed, error message: {e}", studentId, groupId, e.Message);
+            return false;
+        }
+    }
+
+    // Checks if the student already is in a group in this session. Used for the rule "only one group per session".
+    // Returns null if the database query fails
+
+    public async Task<bool?> IsStudentInSession(int studentId, int sessionId)
+    {
+        try
+        {
+            return await _db.GroupMembers
+                .AnyAsync(m => m.StudentId == studentId && m.Group!.CourseSessionId == sessionId);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] IsStudentInSession failed for StudentId {StudentId:0000} and SessionId {SessionId:0000}, error message: {e}", studentId, sessionId, e.Message);
+            return null;
         }
     }
 }
