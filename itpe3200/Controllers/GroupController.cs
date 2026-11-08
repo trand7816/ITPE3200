@@ -2,41 +2,33 @@ using itpe3200.DAL;
 using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace itpe3200.Controllers;
 
 public class GroupController : Controller
 {
-    private readonly AppDbContext _appDbContext;
     private readonly ICourseRepository _repo;
     private readonly ILogger<GroupController> _logger;
 
-    //gir tilgang til database, repository og logging
-    public GroupController(AppDbContext appDbContext, ICourseRepository repo, ILogger<GroupController> logger)
+    //gir tilgang til repository og logging. All databasetilgang går gjennom repositoryet
+    public GroupController(ICourseRepository repo, ILogger<GroupController> logger)
     {
-        _appDbContext = appDbContext;
         _repo = repo;
         _logger = logger;
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-
         var model = new GroupCreateViewModel();
 
         //henter kursøktene fra databasen og legger det til i listen 'CourseSessions' i viewmodellen 'GroupCreateViewModel'.
-        foreach (var courseSession in _appDbContext.CourseSessions)
+        if (!await LoadCourseSessions(model))
         {
-            model.CourseSessions.Add(new CourseSessionViewModel
-            {
-                Id = courseSession.Id,
-                Name = courseSession.Name
-            });
-
+            return Problem("Could not load course sessions.");
         }
+
         //sender objektet til Create.cshtml slik at groupsessions kan vises i en dropdown-meny
         return View(model);
     }
@@ -48,7 +40,7 @@ public class GroupController : Controller
         if (ModelState.IsValid)
         {
             //Validering basert på om course session ID finnes i databasen
-            var courseSession = _appDbContext.CourseSessions.Find(model.CourseSessionId);
+            var courseSession = await _repo.GetSessionById(model.CourseSessionId ?? 0);
             if (courseSession == null)
             {
                 ModelState.AddModelError("CourseSessionId", "Invalid course session ID");
@@ -63,52 +55,67 @@ public class GroupController : Controller
                     // Use the session we found above so the id is never null
                     CourseSessionId = courseSession.Id
                 };
-                try
+
+                bool ok = await _repo.CreateGroup(group);
+
+                //Hvis elev oppretter gruppe uten navn registreres gruppen som gruppe + id i databasen
+                if (ok && string.IsNullOrWhiteSpace(group.Name))
                 {
-                    _appDbContext.Groups.Add(group);
-                    await _appDbContext.SaveChangesAsync();
+                    group.Name = $"Group {group.Id}";
+                    ok = await _repo.UpdateGroup(group);
+                }
 
-                    //Hvis elev oppretter gruppe uten navn registreres gruppen som gruppe + id i databasen
-                    if (string.IsNullOrWhiteSpace(group.Name))
-                    {
-                        group.Name = $"Group {group.Id}";
-                        await _appDbContext.SaveChangesAsync();
-                    }
-
+                if (ok)
+                {
                     _logger.LogInformation("[GroupController] Group {GroupName} created", group.Name);
 
                     // User gets sent to Table-view as confirmation
                     return RedirectToAction("Table");
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError("[GroupController] Group creation failed for group {@group}, error message: {e}", group, e.Message);
-                    ModelState.AddModelError("", "Could not save the group. Please try again.");
-                }
 
+                // The repository has already logged the database error
+                ModelState.AddModelError("", "Could not save the group. Please try again.");
             }
         }
         _logger.LogWarning("[GroupController] Group creation failed {@model}", model);
 
         //Henter course session-data til dropdown-menyen på nytt hvis forrige innsending feilet
-        foreach (var courseSession in _appDbContext.CourseSessions)
+        if (!await LoadCourseSessions(model))
+        {
+            return Problem("Could not load course sessions.");
+        }
+
+        return View(model);
+    }
+
+    // Fills the dropdown list in the Create form with all course sessions
+
+    private async Task<bool> LoadCourseSessions(GroupCreateViewModel model)
+    {
+        var sessions = await _repo.GetAllSessions();
+        if (sessions is null)
+        {
+            _logger.LogError("[GroupController] Could not load course sessions for the Create form");
+            return false;
+        }
+
+        model.CourseSessions.Clear();
+        foreach (var courseSession in sessions)
         {
             model.CourseSessions.Add(new CourseSessionViewModel
             {
                 Id = courseSession.Id,
                 Name = courseSession.Name
-
             });
         }
-
-        return View(model);
+        return true;
     }
 
     // GET: Group/Update/5 – shows the form filled in with the group's current values
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == id);
+        var group = await _repo.GetGroupById(id);
 
         if (group == null)
         {
@@ -124,7 +131,9 @@ public class GroupController : Controller
     {
         if (ModelState.IsValid)
         {
-            var group = await _appDbContext.Groups.FirstOrDefaultAsync(g => g.Id == model.Id);
+            // Load the saved group first, so fields that are not in the form
+
+            var group = await _repo.GetGroupById(model.Id);
 
             if (group == null)
             {
@@ -135,17 +144,14 @@ public class GroupController : Controller
             group.Name = model.Name;
             group.MaxSize = model.MaxSize;
 
-            try
+            if (await _repo.UpdateGroup(group))
             {
-                await _appDbContext.SaveChangesAsync();
                 _logger.LogInformation("[GroupController] Group {GroupId:0000} updated", group.Id);
                 return RedirectToAction("Table");
             }
-            catch (Exception e)
-            {
-                _logger.LogError("[GroupController] Group update failed for group {@group}, error message: {e}", group, e.Message);
-                ModelState.AddModelError("", "Could not update group. Please try again");
-            }
+
+            // The repository has already logged the database error
+            ModelState.AddModelError("", "Could not update group. Please try again");
         }
         _logger.LogWarning("[GroupController] Group update failed {@model}", model);
         return View(model);
@@ -158,12 +164,12 @@ public class GroupController : Controller
     }
 
     [HttpPost]
-    public IActionResult Join(JoinViewModel model)
+    public async Task<IActionResult> Join(JoinViewModel model)
     {
         if (ModelState.IsValid)
         {
             //Sjekker om input-koden er lik JoinCode i databasen, returnerer null dersom den ikke finnes i db
-            var courseSession = _appDbContext.CourseSessions.FirstOrDefault(c => c.JoinCode == model.JoinCode);
+            var courseSession = await _repo.GetSessionByJoinCode(model.JoinCode);
             if (courseSession == null)
             {
                 ModelState.AddModelError("JoinCode", "Invalid join code");
@@ -175,19 +181,15 @@ public class GroupController : Controller
                 {
                     Name = model.Name
                 };
-                try
+                if (await _repo.AddStudent(student))
                 {
-                    _appDbContext.Students.Add(student);
-                    _appDbContext.SaveChanges();
                     _logger.LogInformation("[GroupController] Student {StudentName} joined session {SessionId:0000}", student.Name, courseSession.Id);
 
                     return RedirectToAction("Table");
                 }
-                catch (Exception e)
-                {
-                    _logger.LogError("[GroupController] Student join failed for student {@student}, error message: {e}", student, e.Message);
-                    ModelState.AddModelError("", "Could not join the session. Please try again.");
-                }
+
+                // The repository has already logged the database error
+                ModelState.AddModelError("", "Could not join the session. Please try again.");
             }
         }
         _logger.LogWarning("[GroupController] Join failed for JoinCode {JoinCode}", model.JoinCode);
