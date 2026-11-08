@@ -8,7 +8,7 @@ public class AppDbContext : IdentityDbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-        Database.EnsureCreated();
+        // Database.EnsureCreated();  // we use EF Core migrations now (dotnet ef database update)
     }
 
     public DbSet<CourseSession> CourseSessions { get; set; }
