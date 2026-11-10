@@ -2,7 +2,7 @@ using itpe3200.DAL;
 using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace itpe3200.Controllers;
 
@@ -19,6 +19,7 @@ public class GroupController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Create()
     {
         var model = new GroupCreateViewModel();
@@ -34,6 +35,7 @@ public class GroupController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(GroupCreateViewModel model)
     {
         //Validerer at input fra skjemaet samsvarer med viewmodellen
@@ -113,6 +115,7 @@ public class GroupController : Controller
 
     // GET: Group/Update/5 – shows the form filled in with the group's current values
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         var group = await _repo.GetGroupById(id);
@@ -127,6 +130,7 @@ public class GroupController : Controller
 
     // POST: Group/Update/5 – validates and saves the changes
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Update(Group model)
     {
         if (ModelState.IsValid)
@@ -198,6 +202,7 @@ public class GroupController : Controller
 
     // GET: Group/Delete/5 – shows a confirmation page before deleting
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var group = await _repo.GetGroupById(id);
@@ -211,6 +216,7 @@ public class GroupController : Controller
 
     // POST: Group/DeleteConfirmed/5 – performs the delete
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         bool ok = await _repo.DeleteGroup(id);

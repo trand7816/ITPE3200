@@ -2,6 +2,7 @@ using itpe3200.DAL;
 using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace itpe3200.Controllers;
 
@@ -57,6 +58,7 @@ public class SessionController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(SessionCreateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -85,6 +87,7 @@ public class SessionController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult Create()
     {
         return View(new SessionCreateViewModel());
@@ -136,6 +139,7 @@ public class SessionController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
     var session = await _repo.GetSessionById(id);
@@ -161,6 +165,7 @@ public class SessionController : Controller
    }
 
    [HttpPost]
+   [Authorize]
    public async Task<IActionResult> Update(SessionUpdateViewModel model)
    {
     if (!ModelState.IsValid)
@@ -205,6 +210,7 @@ public class SessionController : Controller
    }
 
    [HttpGet]
+   [Authorize]
    public async Task<IActionResult> Delete(int id)
    {
     var session = await _repo.GetSessionById(id);
@@ -229,6 +235,7 @@ public class SessionController : Controller
    }
 
    [HttpPost]
+   [Authorize]
    public async Task<IActionResult> DeleteConfirmed(int id)
    {
     var deleted = await _repo.DeleteSession(id);

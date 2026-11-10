@@ -1,4 +1,5 @@
 using itpe3200.DAL;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -11,6 +12,21 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+// Identity gives us user accounts, password hashing and login cookies.
+// The Identity tables are already part of the InitialCreate migration.
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false; // no email confirmation, so testing is easy
+}).AddEntityFrameworkStores<AppDbContext>();
+
+// Send users to our own Account pages instead of the built-in Identity pages
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/Login";
+});
 
 // Log to console and to a new file per run in Logs/ (same setup as the course demo)
 builder.Services.AddSerilog((services, loggerConfiguration) =>
@@ -41,6 +57,8 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// UseAuthentication (who are you?) must come before UseAuthorization (are you allowed?)
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
