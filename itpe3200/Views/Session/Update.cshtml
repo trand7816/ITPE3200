@@ -1,0 +1,39 @@
+@model itpe3200.ViewModels.SessionUpdateViewModel
+
+@{
+    ViewData["Title"] = "Update session";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Update" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaxGroups" class="form-label">Maximum groups</label>
+        <input asp-for="MaxGroups" class="form-control" type="number" min="0" />
+        <span asp-validation-for="MaxGroups" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="RandomAssignment" class="form-check-input" />
+        <label asp-for="RandomAssignment" class="form-check-label">
+            Randomly assign students to groups
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save changes</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

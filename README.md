@@ -1,4 +1,6 @@
-# Group Management Platform (ITPE3200 – Mandatory Assignment, Task 3)
+# Group Management Platform (ITPE3200 – Exam Project, Task 3)
+
+This is Subapp 1 (ASP.NET Core MVC) of the exam group project. 
 
 ## Group members
 
@@ -10,8 +12,9 @@
 
 ## Requirements
 
-- .NET 10 SDK
+- .NET 10 SDK (tested with 10.0.203)
 - Node.js: not used. This is a pure ASP.NET Core MVC app with no npm dependencies. Bootstrap and jQuery are included as static files in `wwwroot/lib`.
+- Database: SQLite (`groups.db`), created with EF Core migrations.
   
 ## How to run
 
@@ -20,16 +23,44 @@ From the repository root, run:
 ```bash
 cd itpe3200
 dotnet restore
+dotnet tool restore
+dotnet ef database update
+dotnet run
+```
+
+### Start over with a fresh database
+
+If the database is from an older version of the app (or you just want the test data back),
+delete `groups.db` and create it again:
+
+```bash
+dotnet ef database update
 dotnet run
 ```
 
 ## Test data
 
-| Type | Value |
+Course sessions:
+
+| Session | Join code |
 |---|---|
-| Course session | ITPE3200 (join code `ABC123`) |
-| Group | Gruppe1 (max size 4) |
-| Student | Elev1 (member of Gruppe1) |
+| ITPE3200 | `ABC123` |
+| DATA1700 | `XYZ789` |
+| DAPE1400 | `DEF456` |
+
+Groups and members:
+
+| Group | Session | Max size | Members |
+|---|---|---|---|
+| Gruppe1 | ITPE3200 | 4 | Elev1, Ola Nordmann |
+| Gruppe2 | ITPE3200 | 3 | Kari Nordmann, Per Hansen, Anne Larsen (full) |
+| Gruppe3 | ITPE3200 | 5 | Jonas Berg |
+| Gruppe4 | DATA1700 | 4 | Elev1, Kari Nordmann, Sofie Dahl |
+| Gruppe5 | DATA1700 | 4 | Ola Nordmann, Emil Strand |
+| Gruppe6 | DAPE1400 | 5 | Per Hansen, Ingrid Lie |
+
+- Elev1, Ola, Kari and Per are in groups in two different sessions (many-to-many).
+- Lukas Moen is not in any group.
 
 ## Features
 
@@ -40,7 +71,9 @@ dotnet run
   - **Create** a group for a course session with a name and maximum size
   - **Read** groups as a table or card grid, and open a details page with the member list
   - **Update** a group's name and maximum size
-  - **Delete** a group after a confirmation page (members are kept, but left without a group)
+  - **Delete** a group after a confirmation page (the members are removed from the group, but the students are not deleted)
+- Many-to-many relationship between students and groups through the `GroupMember` join table. A student can be in groups in several sessions.
+- All database access goes through the repository (`DAL/CourseRepository.cs`) and is asynchronous.
 - Server-side input validation on all forms, with error messages shown next to each field.
 - Error handling and logging: all database operations are wrapped in try/catch and logged with ILogger/Serilog to the console and to `Logs/`. Unexpected errors show a friendly error page.
 
