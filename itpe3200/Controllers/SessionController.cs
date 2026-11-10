@@ -107,4 +107,31 @@ public class SessionController : Controller
             }
         }
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var session = await _repo.GetSessionById(id);
+
+        if (session is null)
+        {
+            _logger.LogWarning(
+                "[SessionController] Session not found for SessionId {SessionId}",
+                id);
+
+            return NotFound("Course session not found.");
+        }
+
+        var model = new SessionDetailsViewModel
+        {
+            Id = session.Id,
+            Name = session.Name,
+            JoinCode = session.JoinCode,
+            MaxGroups = session.MaxGroups,
+            RandomAssignment = session.RandomAssignment,
+            CreatedAt = session.CreatedAt
+        };
+
+        return View(model);
+    }
 }

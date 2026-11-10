@@ -1,0 +1,26 @@
+@model itpe3200.ViewModels.SessionDetailsViewModel
+
+@{
+    ViewData["Title"] = "Session details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Join code</dt>
+    <dd class="col-sm-9">@Model.JoinCode</dd>
+
+    <dt class="col-sm-3">Maximum groups</dt>
+    <dd class="col-sm-9">@Model.MaxGroups</dd>
+
+    <dt class="col-sm-3">Random assignment</dt>
+    <dd class="col-sm-9">@(Model.RandomAssignment ? "Yes" : "No")</dd>
+
+    <dt class="col-sm-3">Created</dt>
+    <dd class="col-sm-9">@Model.CreatedAt.ToLocalTime().ToString("g")</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Back to sessions</a>
