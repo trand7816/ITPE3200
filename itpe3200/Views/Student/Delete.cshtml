@@ -1,0 +1,32 @@
+@model itpe3200.ViewModels.StudentDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete student";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this student?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+</dl>
+
+@if (Model.GroupCount > 0)
+{
+    <div class="alert alert-danger">
+        This student is a member of @Model.GroupCount
+        @(Model.GroupCount == 1 ? "group" : "groups").
+        The memberships will be removed, but the groups themselves will not be deleted.
+    </div>
+}
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
