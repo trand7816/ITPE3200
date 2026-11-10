@@ -1,3 +1,4 @@
+namespace itpe3200.ViewModels;
 public class SessionDeleteViewModel
 {
     public int Id { get; set; }
