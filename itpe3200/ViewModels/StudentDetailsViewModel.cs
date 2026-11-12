@@ -16,4 +16,5 @@ public class StudentGroupViewModel
     public int Id { get; set; }
     public string Name { get; set; } = "";
     public string SessionName { get; set; } = "";
+    public DateTime JoinedAt { get; set; }
 }

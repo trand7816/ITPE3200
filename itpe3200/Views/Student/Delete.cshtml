@@ -17,6 +17,12 @@
 
 @if (Model.Groups.Any())
 {
+    <div class="alert alert-danger">
+        This student is a member of @Model.Groups.Count
+        @(Model.Groups.Count == 1 ? "group" : "groups").
+        The memberships will be removed, but the groups themselves will not be deleted.
+    </div>
+
     <h2 class="h5">Current groups</h2>
 
     <ul>
@@ -25,10 +31,6 @@
             <li>@group.Name (@group.SessionName)</li>
         }
     </ul>
-
-    <p class="text-warning">
-        The student will be removed from these groups.
-    </p>
 }
 else
 {
@@ -38,11 +40,6 @@ else
 <form asp-action="DeleteConfirmed" method="post">
     <input type="hidden" asp-for="Id" />
 
-    <button type="submit" class="btn btn-danger">
-        Delete
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancel
-    </a>
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
