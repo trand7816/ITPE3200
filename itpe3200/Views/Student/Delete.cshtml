@@ -1,0 +1,48 @@
+@model itpe3200.ViewModels.StudentDeleteViewModel
+
+@{
+    ViewData["Title"] = "Delete student";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete this student?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+</dl>
+
+@if (Model.Groups.Any())
+{
+    <h2 class="h5">Current groups</h2>
+
+    <ul>
+        @foreach (var group in Model.Groups)
+        {
+            <li>@group.Name (@group.SessionName)</li>
+        }
+    </ul>
+
+    <p class="text-warning">
+        The student will be removed from these groups.
+    </p>
+}
+else
+{
+    <p>This student is not currently a member of any group.</p>
+}
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Delete
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancel
+    </a>
+</form>

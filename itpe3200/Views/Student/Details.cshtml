@@ -1,0 +1,51 @@
+@model itpe3200.ViewModels.StudentDetailsViewModel
+
+@{
+    ViewData["Title"] = "Student details";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Name</dt>
+    <dd class="col-sm-9">@Model.Name</dd>
+
+    <dt class="col-sm-3">Groups</dt>
+    <dd class="col-sm-9">@Model.Groups.Count</dd>
+</dl>
+
+<h2>Groups</h2>
+
+@if (!Model.Groups.Any())
+{
+    <p>This student is not currently a member of any group.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Group</th>
+                <th>Course session</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.Groups)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Group"
+                           asp-action="Details"
+                           asp-route-id="@group.Id">
+                            @group.Name
+                        </a>
+                    </td>
+                    <td>@group.SessionName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to students</a>
+<a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>

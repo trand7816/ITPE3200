@@ -1,0 +1,56 @@
+@model IEnumerable<itpe3200.Models.Student>
+
+@{
+    ViewData["Title"] = "Students";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No students have been registered yet.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Groups</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Name</td>
+                    <td>@student.Groups.Count</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@student.Id"
+                           class="btn btn-sm btn-outline-primary">
+                            Details
+                        </a>
+
+                        <a asp-action="Update"
+                           asp-route-id="@student.Id"
+                           class="btn btn-sm btn-outline-secondary">
+                            Update
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@student.Id"
+                           class="btn btn-sm btn-outline-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
