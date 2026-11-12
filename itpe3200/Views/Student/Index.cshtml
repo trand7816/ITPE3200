@@ -1,0 +1,41 @@
+@model IEnumerable<itpe3200.ViewModels.StudentListItemViewModel>
+
+@{
+    ViewData["Title"] = "Students";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>@ViewData["Title"]</h1>
+    <a asp-action="Create" class="btn btn-primary">Add student</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No students have been registered yet.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Groups</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Name</td>
+                    <td>@student.GroupCount</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-sm btn-outline-primary">Details</a>
+                        <a asp-action="Update" asp-route-id="@student.Id" class="btn btn-sm btn-outline-secondary">Update</a>
+                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
