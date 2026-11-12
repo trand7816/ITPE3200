@@ -55,12 +55,16 @@ public class StudentController : Controller
         {
             Id = student.Id,
             Name = student.Name,
-            Groups = student.Groups.Select(m => new StudentGroupViewModel
-            {
-                GroupName = m.Group?.Name ?? "Unknown group",
-                SessionName = m.Group?.CourseSession?.Name ?? "Unknown session",
-                JoinedAt = m.JoinedAt
-            }).ToList()
+            Groups = student.Groups
+                .Where(member => member.Group is not null)
+                .Select(member => new StudentGroupViewModel
+                {
+                    Id = member.Group!.Id,
+                    Name = member.Group.Name ?? "",
+                    SessionName = member.Group.CourseSession?.Name ?? "",
+                    JoinedAt = member.JoinedAt
+                })
+                .ToList()
         };
 
         return View(model);
@@ -168,7 +172,16 @@ public class StudentController : Controller
         {
             Id = student.Id,
             Name = student.Name,
-            GroupCount = student.Groups.Count
+            Groups = student.Groups
+                .Where(member => member.Group is not null)
+                .Select(member => new StudentGroupViewModel
+                {
+                    Id = member.Group!.Id,
+                    Name = member.Group.Name ?? "",
+                    SessionName = member.Group.CourseSession?.Name ?? "",
+                    JoinedAt = member.JoinedAt
+                })
+                .ToList()
         };
 
         return View(model);

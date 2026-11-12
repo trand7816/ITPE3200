@@ -18,7 +18,7 @@
 
 @if (!Model.Groups.Any())
 {
-    <p>This student is not a member of any group yet.</p>
+    <p>This student is not currently a member of any group.</p>
 }
 else
 {
@@ -34,7 +34,11 @@ else
             @foreach (var group in Model.Groups)
             {
                 <tr>
-                    <td>@group.GroupName</td>
+                    <td>
+                        <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
+                            @group.Name
+                        </a>
+                    </td>
                     <td>@group.SessionName</td>
                     <td>@group.JoinedAt.ToLocalTime().ToString("g")</td>
                 </tr>

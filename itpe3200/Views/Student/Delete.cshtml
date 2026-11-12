@@ -15,13 +15,26 @@
     <dd class="col-sm-9">@Model.Name</dd>
 </dl>
 
-@if (Model.GroupCount > 0)
+@if (Model.Groups.Any())
 {
     <div class="alert alert-danger">
-        This student is a member of @Model.GroupCount
-        @(Model.GroupCount == 1 ? "group" : "groups").
+        This student is a member of @Model.Groups.Count
+        @(Model.Groups.Count == 1 ? "group" : "groups").
         The memberships will be removed, but the groups themselves will not be deleted.
     </div>
+
+    <h2 class="h5">Current groups</h2>
+
+    <ul>
+        @foreach (var group in Model.Groups)
+        {
+            <li>@group.Name (@group.SessionName)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>This student is not currently a member of any group.</p>
 }
 
 <form asp-action="DeleteConfirmed" method="post">

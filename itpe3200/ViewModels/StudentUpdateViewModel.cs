@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace itpe3200.ViewModels;
 
+// Carries the validated student data submitted when a student's name is updated.
 public class StudentUpdateViewModel
 {
     public int Id { get; set; }

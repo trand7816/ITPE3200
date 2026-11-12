@@ -1,18 +1,20 @@
 namespace itpe3200.ViewModels;
 
+// Contains the student information and group memberships shown on the details page.
 public class StudentDetailsViewModel
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
 
-    // The groups this student is a member of, through the GroupMember join table
-    public List<StudentGroupViewModel> Groups { get; set; } = new();
+    public IReadOnlyList<StudentGroupViewModel> Groups { get; set; }
+        = Array.Empty<StudentGroupViewModel>();
 }
 
-// One group membership shown on the details page
+// Represents a group membership together with the course session it belongs to.
 public class StudentGroupViewModel
 {
-    public string GroupName { get; set; } = "";
+    public int Id { get; set; }
+    public string Name { get; set; } = "";
     public string SessionName { get; set; } = "";
     public DateTime JoinedAt { get; set; }
 }
