@@ -247,24 +247,58 @@ public class GroupController : Controller
     }
 
     // GET: Group/Table – shows a table of all groups
-    [HttpGet]
-    public async Task<IActionResult> Table()
+[HttpGet]
+public async Task<IActionResult> Table(string? search, int? sessionId)
+{
+    var groups = await _repo.GetAllGroups();
+
+    if (groups is null)
     {
-        var groups = await _repo.GetAllGroups();
-
-        if (groups is null)
-        {
-            _logger.LogError("[GroupController] Could not load groups for table");
-            return Problem("Could not load groups.");
-        }
-
-        var model = new GroupsViewModel
-        {
-            Groups = groups
-        };
-
-        return View(model);
+        _logger.LogError("[GroupController] Could not load groups for table");
+        return Problem("Could not load groups.");
     }
+
+    var sessions = await _repo.GetAllSessions();
+
+    if (sessions is null)
+    {
+        _logger.LogError("[GroupController] Could not load course sessions for group filters");
+        return Problem("Could not load course sessions.");
+    }
+
+    var filteredGroups = groups.AsEnumerable();
+
+    if (!string.IsNullOrWhiteSpace(search))
+    {
+        var searchText = search.Trim();
+
+        filteredGroups = filteredGroups.Where(group =>
+            (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
+    }
+
+    if (sessionId.HasValue)
+    {
+        filteredGroups = filteredGroups
+            .Where(group => group.CourseSessionId == sessionId.Value);
+    }
+
+    var model = new GroupsViewModel
+    {
+        Groups = filteredGroups.ToList(),
+        Search = search?.Trim() ?? "",
+        SessionId = sessionId,
+        CourseSessions = sessions
+            .Select(session => new CourseSessionViewModel
+            {
+                Id = session.Id,
+                Name = session.Name
+            })
+            .ToList()
+    };
+
+    return View(model);
+}
 
     // GET: Group/Details/5 – shows details for one group
     [HttpGet]

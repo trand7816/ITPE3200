@@ -39,6 +39,8 @@ public class CourseRepository : ICourseRepository
         {
             return await _db.CourseSessions
                 .Include(s => s.Groups)
+                    .ThenInclude(g => g.Members)
+                        .ThenInclude(m => m.Student)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
         catch (Exception e)
@@ -106,7 +108,7 @@ public class CourseRepository : ICourseRepository
             // them and their members, together with the session (cascade delete).
             _db.CourseSessions.Remove(session);
             await _db.SaveChangesAsync();
-            return true;        
+            return true;
         }
         catch (Exception e)
         {
@@ -128,7 +130,7 @@ public class CourseRepository : ICourseRepository
                 .Include(g => g.Members)
                 .ToListAsync();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             _logger.LogError("[CourseRepository] Groups ToListAsync() failed in GetAllGroups(), error message: {e}", e.Message);
             return null;
@@ -291,7 +293,7 @@ public class CourseRepository : ICourseRepository
             }
 
             // GroupMember.StudentId is required, so EF Core deletes the students
- 
+
             _db.Students.Remove(student);
             await _db.SaveChangesAsync();
             return true;
