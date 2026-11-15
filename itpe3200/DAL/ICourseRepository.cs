@@ -1,4 +1,5 @@
 using itpe3200.Models;
+using itpe3200.Services;
 
 namespace itpe3200.DAL;
 
@@ -28,7 +29,7 @@ public interface ICourseRepository
 
     // ---------------- Group members ----------------
     // student a member of the group. adds a GroupMember row
-    Task<bool> AssignStudentToGroup(int studentId, int groupId);
+    Task<GroupJoinResult> AssignStudentToGroup(int studentId, int groupId);
     Task<bool> RemoveStudentFromGroup(int studentId, int groupId);
     Task<bool?> IsStudentInSession(int studentId, int sessionId);
 }
