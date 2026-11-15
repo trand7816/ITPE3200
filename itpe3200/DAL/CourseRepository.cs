@@ -41,7 +41,9 @@ public class CourseRepository : ICourseRepository
         {
             return await _db.CourseSessions
                 .Include(s => s.Groups)
+                .ThenInclude(g => g.Members)
                 .FirstOrDefaultAsync(s => s.Id == id);
+                
         }
         catch (Exception e)
         {
@@ -361,6 +363,7 @@ public class CourseRepository : ICourseRepository
             return GroupJoinResult.DatabaseError;
         }
     }
+    
 
     // Removes the row in the join table. The student and the group are not deleted.
     public async Task<bool> RemoveStudentFromGroup(int studentId, int groupId)

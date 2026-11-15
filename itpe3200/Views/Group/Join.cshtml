@@ -7,18 +7,51 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="Join" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <label asp-for="Name">Student Name</label><span class="text-danger">*</span>
-        <input asp-for="Name" class="form-control"> 
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="JoinCode">Join Code</label><span class="text-danger">*</span>
-        <input asp-for="JoinCode" class="form-control"> 
-        <span asp-validation-for="JoinCode" class="text-danger"></span>
-    </div>
+@if (Model?.Groups != null)
+{
+    <h2>Choose a group in @Model.CourseSessionName</h2>
 
-    <button type="submit" class="btn btn-primary">Join</button>
-</form>
+    @foreach (var group in Model.Groups)
+    {
+        <div class="mb-3">
+            <strong>@group.Name</strong>
+            <span>(@group.Members.Count / @group.MaxSize members)</span>
+
+            @if (group.Members.Count >= group.MaxSize)
+            {
+                <span class="text-danger">Full</span>
+            }
+            else
+            {
+                <form asp-action="JoinGroup" method="post">
+                    <input type="hidden" name="groupId" value="@group.Id" />
+                    <input type="hidden" name="Name" value="@Model.Name" />
+                    <input type="hidden" name="JoinCode" value="@Model.JoinCode">
+                    <button type="submit" class="btn btn-primary">Join Group</button>
+                </form>
+            }
+        </div>
+    }
+}
+else
+{
+    <form asp-action="Join" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name">Student Name</label><span class="text-danger">*</span>
+            <input asp-for="Name" class="form-control"> 
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="JoinCode">Join Code</label><span class="text-danger">*</span>
+            <input asp-for="JoinCode" class="form-control"> 
+            <span asp-validation-for="JoinCode" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Join</button>
+    </form>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -3,9 +3,11 @@ using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using itpe3200.Services;
 
 namespace itpe3200.Controllers;
 
+//[Authorize]
 public class GroupController : Controller
 {
     private readonly ICourseRepository _repo;
@@ -179,12 +181,14 @@ public class GroupController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult Join()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Join(JoinViewModel model)
     {
         if (ModelState.IsValid)
@@ -197,25 +201,49 @@ public class GroupController : Controller
             }
             else
             {
-                //  the student is created without a group.The student is linked to a group later with AssignStudentToGroup.
-                var student = new Student
+                var session = await _repo.GetSessionById(courseSession.Id);
+                if(session == null)
                 {
-                    Name = model.Name
-                };
-                if (await _repo.AddStudent(student))
-                {
-                    _logger.LogInformation("[GroupController] Student {StudentName} joined session {SessionId:0000}", student.Name, courseSession.Id);
-
-                    return RedirectToAction("Table");
+                    return NotFound();
                 }
-
-                // The repository has already logged the database error
-                ModelState.AddModelError("", "Could not join the session. Please try again.");
-            }
+                model.CourseSessionId = session.Id;
+                model.CourseSessionName = session.Name;
+                model.Groups = session.Groups.ToList();
+                
+                return View(model);
+            } 
         }
         _logger.LogWarning("[GroupController] Join failed for JoinCode {JoinCode}", model.JoinCode);
         return View(model);
     }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> JoinGroup(int groupId, JoinViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest("Invalid student information");
+        }
+        
+        var session = await _repo.GetSessionByJoinCode(model.JoinCode);
+        var group = await _repo.GetGroupById(groupId);
+
+        if(session == null || group == null || group.CourseSessionId != session.Id)
+        {
+            return BadRequest("Invalid group or join code");
+        }
+
+        // TODO: Find the existing Student using the logged-in Identity user.
+        // Then call _repo.AssignStudentToGroup(student.Id, groupId).
+        ModelState.AddModelError("", "Group joining is temporarily unavailable until student login is connected.");
+        model.CourseSessionId = session.Id;
+        model.CourseSessionName = session.Name;
+        model.Groups = (await _repo.GetSessionById(session.Id))?.Groups.ToList();
+
+        return View("Join", model);
+    }
+
 
     // GET: Group/Delete/5 – shows a confirmation page before deleting
     [HttpGet]
