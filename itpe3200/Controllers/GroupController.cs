@@ -248,23 +248,31 @@ public class GroupController : Controller
 
     // GET: Group/Table – shows a table of all groups
     [HttpGet]
-    public async Task<IActionResult> Table()
+   public async Task<IActionResult> Table(string? search, int? sessionId)
+{
+    var groups = await _repo.GetAllGroups();
+
+    if (groups is null)
     {
-        var groups = await _repo.GetAllGroups();
-
-        if (groups is null)
-        {
-            _logger.LogError("[GroupController] Could not load groups for table");
-            return Problem("Could not load groups.");
-        }
-
-        var model = new GroupsViewModel
-        {
-            Groups = groups
-        };
-
-        return View(model);
+        _logger.LogError("[GroupController] Could not load groups for table");
+        return Problem("Could not load groups.");
     }
+
+    var sessions = await _repo.GetAllSessions();
+
+    if (sessions is null)
+    {
+        _logger.LogError("[GroupController] Could not load course sessions for group filters");
+        return Problem("Could not load course sessions.");
+    }
+
+    var model = new GroupsViewModel
+    {
+        Groups = groups
+    };
+
+    return View(model);
+}
 
     // GET: Group/Details/5 – shows details for one group
     [HttpGet]
