@@ -1,4 +1,5 @@
 using itpe3200.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace itpe3200.DAL;
 
@@ -8,6 +9,9 @@ public static class DbInit
     {
         using var scope = app.ApplicationServices.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        //creates database and applies migrations
+        db.Database.Migrate();
 
         // only add test data when the database is empty
         if (!db.CourseSessions.Any())

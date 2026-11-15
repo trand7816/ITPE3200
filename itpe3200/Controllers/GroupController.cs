@@ -132,13 +132,13 @@ public class GroupController : Controller
             Name = group.Name,
             MaxSize = group.MaxSize
         };
-        return View(group);
+        return View(model);
     }
 
     // POST: Group/Update/5 – validates and saves the changes
     [HttpPost]
     [Authorize]
-    public async Task<IActionResult> Update(Group model)
+    public async Task<IActionResult> Update(GroupUpdateViewModel model)
     {
         if (ModelState.IsValid)
         {
@@ -156,7 +156,7 @@ public class GroupController : Controller
 
             if(model.MaxSize < memberCount)
             {
-                ModelState.AddModelError(nameof(model.MaxSize), $"Group already has {memberCount} members" 
+                ModelState.AddModelError(nameof(model.MaxSize), $"Group already has {memberCount} members. " 
                 + $"Maximum size cannot be less than {memberCount}");
                 
                 return View(model);
