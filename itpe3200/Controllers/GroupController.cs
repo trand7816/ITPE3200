@@ -125,6 +125,13 @@ public class GroupController : Controller
             _logger.LogError("[GroupController] Group not found when updating GroupId {GroupId:0000}", id);
             return NotFound("Group not found");
         }
+        
+        var model = new GroupUpdateViewModel
+        {
+            Id = group.Id,
+            Name = group.Name,
+            MaxSize = group.MaxSize
+        };
         return View(group);
     }
 
@@ -143,6 +150,16 @@ public class GroupController : Controller
             {
                 _logger.LogError("[GroupController] Group not found when updating GroupId {GroupId:0000}", model.Id);
                 return NotFound("Group not found");
+            }
+
+            int memberCount = group.Members.Count;
+
+            if(model.MaxSize < memberCount)
+            {
+                ModelState.AddModelError(nameof(model.MaxSize), $"Group already has {memberCount} members" 
+                + $"Maximum size cannot be less than {memberCount}");
+                
+                return View(model);
             }
 
             group.Name = model.Name;
