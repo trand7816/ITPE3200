@@ -132,7 +132,21 @@ public class SessionController : Controller
             JoinCode = session.JoinCode,
             MaxGroups = session.MaxGroups,
             RandomAssignment = session.RandomAssignment,
-            CreatedAt = session.CreatedAt
+            CreatedAt = session.CreatedAt,
+
+            Groups = session.Groups
+                .Select(group => new SessionGroupViewModel
+                {
+                    Id = group.Id,
+                    Name = group.Name ?? "",
+                    MemberCount = group.Members.Count,
+                    MaxSize = group.MaxSize,
+                    Members = group.Members
+                        .Where(member => member.Student is not null)
+                        .Select(member => member.Student!.Name)
+                        .ToList()
+                })
+                .ToList()
         };
 
         return View(model);
