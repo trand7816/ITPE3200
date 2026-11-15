@@ -247,8 +247,8 @@ public class GroupController : Controller
     }
 
     // GET: Group/Table – shows a table of all groups
-    [HttpGet]
-   public async Task<IActionResult> Table(string? search, int? sessionId)
+[HttpGet]
+public async Task<IActionResult> Table(string? search, int? sessionId)
 {
     var groups = await _repo.GetAllGroups();
 
@@ -266,9 +266,35 @@ public class GroupController : Controller
         return Problem("Could not load course sessions.");
     }
 
+    var filteredGroups = groups.AsEnumerable();
+
+    if (!string.IsNullOrWhiteSpace(search))
+    {
+        var searchText = search.Trim();
+
+        filteredGroups = filteredGroups.Where(group =>
+            (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
+            || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
+    }
+
+    if (sessionId.HasValue)
+    {
+        filteredGroups = filteredGroups
+            .Where(group => group.CourseSessionId == sessionId.Value);
+    }
+
     var model = new GroupsViewModel
     {
-        Groups = groups
+        Groups = filteredGroups.ToList(),
+        Search = search?.Trim() ?? "",
+        SessionId = sessionId,
+        CourseSessions = sessions
+            .Select(session => new CourseSessionViewModel
+            {
+                Id = session.Id,
+                Name = session.Name
+            })
+            .ToList()
     };
 
     return View(model);

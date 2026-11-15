@@ -5,7 +5,7 @@ public class GroupsViewModel
 {
     public IEnumerable<Group> Groups { get; set; } = Enumerable.Empty<Group>();
 
-    public string Search { get; set; } = "";
+    public string? Search { get; set; } 
 
     public int? SessionId { get; set; }
 
