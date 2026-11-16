@@ -1,0 +1,37 @@
+@model itpe3200.Models.CourseSession
+
+<!--Partial view for one session card, based on _ItemCard from Demo-ShopMVC-4-DynamicViews.-->
+<article class="session-card h-100 position-relative">
+    <div class="d-flex justify-content-between align-items-center">
+         <h3 class="h5 mb-0">@Model.Name</h3>
+        <!--A button for a fullscreen modal for the join codes. Added @Model.Id so each card gets its own modal-->
+         <button type="button" class="btn btn-sm session-fullscreen-btn" data-bs-toggle="modal" data-bs-target="#codeModal-@Model.Id"
+            aria-label="Show join code in full screen">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
+                    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
+                </svg>
+        </button> 
+    </div>
+    <p class="session-code mt-3">@Model.JoinCode</p>
+    <a asp-controller="Session" asp-action="Details" asp-route-id="@Model.Id" class="stretched-link session-link"></a>
+    <!--Stretched link makes entire card clickable-->
+     <p>Max groups: @Model.MaxGroups</p>
+    <p>Created: @Model.CreatedAt</p>
+</article>
+
+<!-- Modal -->
+<div class="modal fade" id="codeModal-@Model.Id" tabindex="-1" aria-labelledby="codeModalLabel-@Model.Id" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content code-modal">
+      <div class="modal-header border-0">
+        <h2 class="modal-title fs-5" id="codeModalLabel-@Model.Id">@Model.Name</h2>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
+        <p class="fs-3">Join at the front page with this code:</p>
+        <p class="code-modal-code">@Model.JoinCode</p>
+      </div>
+    </div>
+  </div>
+</div> 
