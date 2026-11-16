@@ -1,0 +1,17 @@
+@model itpe3200.ViewModels.JoinViewModel
+
+<form asp-controller="Group" asp-action="Join" method="post">
+     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="mb-3">
+        <label asp-for="JoinCode" class="visually-hidden"></label><span class="text-danger"></span>
+        <input asp-for="JoinCode" class="form-control form-control-lg join-code-input" maxlength="6" autocomplete="off"> 
+        <span asp-validation-for="JoinCode" class="text-danger"></span>
+    </div>
+     <div class="form-floating mb-3">
+        <input asp-for="Name" class="form-control" placeholder="Name"> 
+        <label asp-for="Name"></label><span class="text-danger"></span>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary w-100 py-3 fs-5">Join Session</button>
+    <p class="text-center mt-3 mb-0"> Join code not working? Ask you teacher or refresh the page </p>
+</form>
