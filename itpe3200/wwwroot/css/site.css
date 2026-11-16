@@ -17,16 +17,59 @@ body {
   margin-bottom: 60px;
 }
 /*COLOR PALLETTE*/
-
-/*Light Theme*/
 :root {
-    --bg: #ffffff;
-    --heading: #222222;
-    --card-bg: #f5f5f5;
+/* Light theme */
+    --bg: #F7F6FB;
+    --card-bg: #FFFFFF;
+
+    /* Text */
+    --heading: #1C1840;
+    --subheading: #2C2A3A;
+    --body-text: #4A4760;
+    --labels: #6B6880;
+
+    /* Accents */
+    --primary-accent: #534AB7;
+    --accent2: #3C3489;
+    --accent3: #534AB7;
+    --accent4: #AFA9EC;
+    --accent-ink: #FFFFFF; 
+    --accent-deep: #EEEDFE; 
+
+    /* Placeholders & inputs */
+    --dividers: #E4E1F2;
+    --card-borders: #D6D2EA;
+    --input-fields: #8A879E;
+    --focus-outline: rgba(207, 201, 243, 0.2); 
 }
 
+/*Dark Theme - Previous colors
+
+   [data-theme="dark"] {
+    --bg: #161826;
+    --card-bg: #232532;
+
+    Text:
+    --heading: #ffffff;
+    --subheading: #E9E9ED; 
+    --body-text: #B2B6CA;
+    --labels: #CFD3E5;
+ 
+    Accents:
+     --primary-accent: #9184D9;
+     --accent2: #E7E5FE;
+     --accent3: #B5ABFC;
+     --accent4: #D2CEFD; 
+
+    Placeholders & Inputs
+    --dividers: #3F424D;
+    --card-borders: #595D6C;
+    --input-fields: #75798C;  
+} */
+
 /*Dark Theme - Default for now*/
-[data-theme="dark"] {
+
+ [data-theme="dark"] {
     --bg: #161826;
     --card-bg: #232532;
 
@@ -38,15 +81,18 @@ body {
  
 
     /*Accents*/
-     --primary-accent: #9184D9; /*Button outlines, active dot*/
+     --primary-accent: #CFC9F3; /*Button outlines, active dot*/
      --accent2: #E7E5FE; /*Button text, active tab*/
-     --accent3: #B5ABFC; /*Links, notes*/
-     --accent4: #D2CEFD; /*Highlight card border*/
+     --accent3: #CFC9F3; /*Links, notes*/
+     --accent4: #CFC9F3; /*Highlight card border*/
+     --accent-ink: #1C1840; 
+     --accent-deep: #2D2752; 
 
     /*Placeholders & Inputs*/
     --dividers: #3F424D;
     --card-borders: #595D6C;
-    --input-fields: #75798C;
+    --input-fields: #75798C;  
+    --focus-outline: rgba(207, 201, 243, 0.35);
 }
 
 /*NAVBAR*/
@@ -85,45 +131,53 @@ p, .p {
 
 .btn {
     margin-top: 7px;
-    padding: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 2px 10px;
     border-radius: 7px;
     background-color: transparent;
     color: var(--accent2);
 }
-
 .btn-primary {
-    color: var(--accent2);
-    background-color: var(--bg);
+    color: var(--accent-ink);
+    background-color: var(--primary-accent);
     border-color: var(--primary-accent);
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-   box-shadow: 0 0 0 0.25rem rgba(145, 132, 217, 0.35);
 }
 
 .btn-primary:hover {
-    color: var(--accent3);
-    background-color: #10121D;
-    border-color: var(--primary-accent);
+    color: var(--accent-ink);
+    background-color: var(--accent2);
+    border-color: var(--accent2);
 }
 
+.btn-primary:active,
 .btn-primary:focus,
 .btn-primary:active:focus {
-    color: var(--accent2);
-    background-color: var(--bg);
+    color: var(--accent-ink);
+    background-color: var(--primary-accent);
     border-color: var(--primary-accent);
-    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.35);
 }
 
-.label {
-    background-color: var(--dividers);
-    color: var(--labels);
-    padding: 3px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 7px;
+.btn-outline-primary {
+    color: var(--primary-accent);
+    border-color: var(--primary-accent);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.btn-outline-primary:active:focus {
+    color: var(--accent-ink);
+    background-color: var(--primary-accent);
+    border-color: var(--primary-accent);
+}
+
+.btn:focus-visible,
+.btn-link.nav-link:focus-visible {
+   box-shadow: 0 0 0 0.25rem var(--focus-outline);
+}
+
+/*TODO. ADD color for special buttons*/
+.btn-danger {
+    background-color: var(--bs-danger);
+    color: #fff;
 }
 
 .form-control,
@@ -138,55 +192,100 @@ p, .p {
     background-color: var(--card-bg);
     color: var(--heading);
     border-color: var(--primary-accent);
-    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.25);
+    box-shadow: 0 0 0 0.1rem var(--focus-outline)
 }
+
+.form-check-input:focus {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.1rem var(--focus-outline);
+}
+
+/* Small pill for the counts in the greeting */
+.stat-pill {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+}
+
+.label {
+    background-color: var(--dividers);
+    color: var(--labels);
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 7px;
+}
+
 
 /*HOMEPAGE STYLING*/
 .greeting-text{
-    padding: 15px;
+    text-align: left;
+    padding: 2rem;
 }
-
-.greeting-text a {
-    margin-left: 15px;
+@media (min-width: 768px) {
+    .greeting-text {
+        padding: 2rem 4rem;
+    }
 }
 
 /*CAROUSEL SECTION*/
 .carousel-indicators {
-    position: static;
-    margin-top: 1rem;
-    margin-bottom: 0;
+    margin-bottom: 1rem;
 }
 
 .carousel-indicators [data-bs-target] {
-    background-color: var(--primary-accent);
+    background-color: var(--accent-ink);
+    opacity: 0.4;
 }
 
+.carousel-indicators .active {
+    opacity: 1;
+}
+
+[data-theme="dark"] .carousel-control-prev-icon,
+[data-theme="dark"] .carousel-control-next-icon {
+    filter: invert(1);
+}
 .carousel-inner {
-    margin-top: 30px;
     border-radius: 15px;
 }
 .carousel-item {
-  background-color: var(--card-bg);
+  background-color: var(--primary-accent);
 }
 
 .item-content {
     text-align: left;
     padding: 2rem;
+    margin-left: 2rem;
 }
 
-@media (min-width: 768px) { /*TODO: Adjust so controls don't overlap!*/
+@media (min-width: 768px) {
     .item-content {
-        margin-left: 5rem;
+        padding: 2rem 4rem;
     }
 }
 
 .item-content h2 {
     margin-bottom: 1rem;
     margin-top: 1rem;
+    color: var(--accent-ink);
 }
 
 .item-content p {
     margin-bottom: 1rem;
+    color: var(--accent-ink);
+}
+
+.item-content .label {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+}
+
+.item-content .btn {
+    background-color: var(--accent-ink);
+    color: var(--primary-accent);
+    border-color: var(--accent-ink);
 }
 
 /**/
@@ -218,4 +317,76 @@ p, .p {
 
 .card a:not(.btn) {
     color: var(--accent3);
+}
+
+@media (min-width: 768px) {
+    .session-overview {
+        padding: 2rem 4rem;
+    }
+}
+
+/*Card for sessions in teacher view*/
+.session-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-borders);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+/*Code displayed on in teacher view*/
+.session-code{
+    font-family: monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
+    margin-bottom: 1rem;
+}
+
+.form-control::placeholder {
+    color: var(--input-fields);
+}
+/*Join code input field styled with a line under each character. Technique based on Ana Tudor, 
+"Input field with underline under each character", https://codepen.io/thebabydino/pen/mRrPwB (accessed 14 Nov 2026).*/
+ .join-code-input{
+    font-family: monospace;
+    font-size: 2rem;
+    letter-spacing: 1ch;                       
+    width: 100%;                              
+    padding: 0.75rem 0 0.75rem calc(50% - 5.5ch);   
+    background: repeating-linear-gradient( 90deg, var(--labels) 0 1ch, transparent 1ch 2ch);
+    background-size: 12ch 2px;
+    background-origin: content-box;           
+    background-position: left bottom;
+    background-repeat: no-repeat;
+}
+/*Fullscreen join code modal*/
+.code-modal {
+    background: var(--bg);
+    color: var(--heading);
+}
+
+.code-modal-code {
+    font-family: monospace;
+    font-size: 50px;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
+}
+
+/*Originally made session link not look like a link*/
+/* .session-link {
+    color: inherit;
+    text-decoration: none;
+} */
+
+.session-card {
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.session-card:hover, .session-card:focus-within {
+    transform: translateY(-3px);
+    border-color: var(--primary-accent);
+}
+/*Keeps fullscreen button clickable on top of card*/
+.session-fullscreen-btn {
+    position: relative;
+    z-index: 2;
 }
