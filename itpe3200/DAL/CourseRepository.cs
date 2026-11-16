@@ -253,6 +253,12 @@ public class CourseRepository : ICourseRepository
         }
     }
 
+    //Finds the student linked to an Identity user
+    public async Task <Student?> GetStudentByIdentityUserId(string identityUserId)
+    {
+        return await _db.Students.FirstOrDefaultAsync(s => s.IdentityUserId == identityUserId);
+    }
+
     public async Task<bool> AddStudent(Student student)
     {
         try
