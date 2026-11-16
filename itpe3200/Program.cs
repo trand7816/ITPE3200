@@ -1,3 +1,4 @@
+using itpe3200;
 using itpe3200.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,9 @@ builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false; // no email confirmation, so testing is easy
-}).AddEntityFrameworkStores<AppDbContext>();
+})
+.AddRoles<IdentityRole>() 
+.AddEntityFrameworkStores<AppDbContext>();
 
 // Send users to our own Account pages instead of the built-in Identity pages
 builder.Services.ConfigureApplicationCookie(options =>
@@ -43,8 +46,12 @@ builder.Services.AddSerilog((services, loggerConfiguration) =>
 
 var app = builder.Build();
 
+
 // Create the database and add test data (session, group, student)
-DbInit.Seed(app);   
+DbInit.Seed(app); 
+
+//Creates Identity roles (Teacher, Student) and gives the teacher account a Teacher role
+await IdentitySeed.SeedAsync(app);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -19,10 +19,10 @@ public interface ICourseRepository
     Task<bool> CreateGroup(Group group);
     Task<bool> UpdateGroup(Group group);
     Task<bool> DeleteGroup(int id);
-
     // ---------------- Students ----------------
     Task<IEnumerable<Student>?> GetAllStudents();
     Task<Student?> GetStudentById(int id);
+    Task<Student?> GetStudentByIdentityUserId(string identityUserId);
     Task<bool> AddStudent(Student student);
     Task<bool> UpdateStudent(Student student);
     Task<bool> DeleteStudent(int id);
