@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/itpe3200/bin/Debug/net10.0/Itpe3200.dll",
+            "program": "${workspaceFolder}/bin/Debug/net10.0/itpe3200.dll",
             "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,

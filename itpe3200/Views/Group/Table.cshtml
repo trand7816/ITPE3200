@@ -12,6 +12,37 @@
     </div>
 </div>
 
+<form asp-action="Table" method="get" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <label asp-for="Search" class="form-label">Search</label>
+        <input asp-for="Search"
+               class="form-control"
+               placeholder="Group or course session name" />
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="SessionId" class="form-label">Course session</label>
+        <select asp-for="SessionId" class="form-select">
+            <option value="">All course sessions</option>
+
+            @foreach (var session in Model.CourseSessions)
+            {
+                <option value="@session.Id">@session.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-md-3 d-flex align-items-end gap-2">
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+        <a asp-action="Table" class="btn btn-outline-secondary">
+            Clear
+        </a>
+    </div>
+</form>
+
 @if (!Model.Groups.Any())
 {
     <div class="alert alert-info">No groups have been created yet.</div>

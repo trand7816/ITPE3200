@@ -1,6 +1,8 @@
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using itpe3200.DAL;
+using itpe3200.Models;
 
 namespace itpe3200.Controllers;
 
@@ -11,15 +13,18 @@ public class AccountController : Controller
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly ILogger<AccountController> _logger;
+    private readonly AppDbContext _db;
 
     public AccountController(
         UserManager<IdentityUser> userManager,
         SignInManager<IdentityUser> signInManager,
-        ILogger<AccountController> logger)
+        ILogger<AccountController> logger,
+        AppDbContext db)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
+        _db = db;
     }
 
     // GET: /Account/Register
@@ -35,9 +40,30 @@ public class AccountController : Controller
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            //If account creation succeeds, the user is automatically assigned a Student role
+            //(Does not apply to excisting accounts)
             if (result.Succeeded)
             {
+                var roleResult = await _userManager.AddToRoleAsync(user, "Student");
+                if (!roleResult.Succeeded)
+                {
+                    foreach (var error in roleResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(model);
+                }
                 _logger.LogInformation("[AccountController] New user registered: {Email}", model.Email);
+
+                //Registers the users identityID in db after creation
+                var student = new Student
+                {
+                    Name = model.Email,
+                    IdentityUserId = user.Id
+                };
+                
+                _db.Students.Add(student);
+                await _db.SaveChangesAsync();
 
                 // Log the new user in straight away
                 await _signInManager.SignInAsync(user, isPersistent: false);

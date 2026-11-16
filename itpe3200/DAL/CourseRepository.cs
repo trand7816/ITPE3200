@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using itpe3200.Models;
+using itpe3200.Services;
+using System.Data;
 
 namespace itpe3200.DAL;
 
@@ -39,7 +41,10 @@ public class CourseRepository : ICourseRepository
         {
             return await _db.CourseSessions
                 .Include(s => s.Groups)
+                    .ThenInclude(g => g.Members)
+                        .ThenInclude(m => m.Student)
                 .FirstOrDefaultAsync(s => s.Id == id);
+                
         }
         catch (Exception e)
         {
@@ -106,7 +111,7 @@ public class CourseRepository : ICourseRepository
             // them and their members, together with the session (cascade delete).
             _db.CourseSessions.Remove(session);
             await _db.SaveChangesAsync();
-            return true;        
+            return true;
         }
         catch (Exception e)
         {
@@ -128,7 +133,7 @@ public class CourseRepository : ICourseRepository
                 .Include(g => g.Members)
                 .ToListAsync();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             _logger.LogError("[CourseRepository] Groups ToListAsync() failed in GetAllGroups(), error message: {e}", e.Message);
             return null;
@@ -249,6 +254,12 @@ public class CourseRepository : ICourseRepository
         }
     }
 
+    //Finds the student linked to an Identity user
+    public async Task <Student?> GetStudentByIdentityUserId(string identityUserId)
+    {
+        return await _db.Students.FirstOrDefaultAsync(s => s.IdentityUserId == identityUserId);
+    }
+
     public async Task<bool> AddStudent(Student student)
     {
         try
@@ -291,7 +302,7 @@ public class CourseRepository : ICourseRepository
             }
 
             // GroupMember.StudentId is required, so EF Core deletes the students
- 
+
             _db.Students.Remove(student);
             await _db.SaveChangesAsync();
             return true;
@@ -306,24 +317,60 @@ public class CourseRepository : ICourseRepository
     // ---------------- Group members ----------------
 
     // Adds a row in the join table so the student becomes a member of the group
-    public async Task<bool> AssignStudentToGroup(int studentId, int groupId)
+    public async Task<GroupJoinResult> AssignStudentToGroup(int studentId, int groupId)
     {
         try
         {
+            //starts a transaction with the strongest isolation level to avoid multiple people making changes to the database at the same time (prevents concurrency anomalies)
+            await using var transaction = await _db.Database.BeginTransactionAsync(IsolationLevel.Serializable);
+            
+            //Checks invalid states when attempting to assign a student to group
+            //Uses Services/GroupJoinResult to give specific return values in each if statement
+            bool studentExists = await _db.Students.AnyAsync(s => s.Id == studentId);
+            if (!studentExists)
+            {
+                return GroupJoinResult.StudentNotFound;
+            }
+
+            var group = await _db.Groups.FirstOrDefaultAsync(g => g.Id == groupId);
+            if(group == null)
+            {
+                return GroupJoinResult.GroupNotFound;
+            }
+
+            bool alreadyInSession = await _db.GroupMembers.AnyAsync(m => m.StudentId == studentId && m.Group!.CourseSessionId == group.CourseSessionId);
+            if (alreadyInSession)
+            {
+                return GroupJoinResult.AlreadyInSession;
+            }
+
+            int memberCount = await _db.GroupMembers.CountAsync(m => m.GroupId == groupId);
+            if(memberCount >= group.MaxSize)
+            {
+                return GroupJoinResult.GroupFull;
+            }
+
+            //If all if statements are passed, the student gets assigned to the specified group
             _db.GroupMembers.Add(new GroupMember
             {
                 StudentId = studentId,
                 GroupId = groupId
             });
             await _db.SaveChangesAsync();
-            return true;
+            //Completes transaction
+            await transaction.CommitAsync();
+
+            _logger.LogInformation("Student {StudentId} joined Group {GroupId}", studentId, groupId);
+
+            return GroupJoinResult.Success;
         }
         catch (Exception e)
         {
             _logger.LogError("[CourseRepository] Adding StudentId {StudentId:0000} to GroupId {GroupId:0000} failed, error message: {e}", studentId, groupId, e.Message);
-            return false;
+            return GroupJoinResult.DatabaseError;
         }
     }
+    
 
     // Removes the row in the join table. The student and the group are not deleted.
     public async Task<bool> RemoveStudentFromGroup(int studentId, int groupId)
