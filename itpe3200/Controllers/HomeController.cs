@@ -22,15 +22,19 @@ public class HomeController : Controller
     // Also ensures that index /homepage will not return to login page throughout session. 
     public IActionResult Index()
     {
-        if (User.Identity?.IsAuthenticated == true)
+        if (User.IsInRole("Teacher"))
         { 
             return RedirectToAction(nameof(Teacher));
+        }
+        if (User.IsInRole("Student"))
+        {
+            return RedirectToAction("Join", "Group");  
         }
         return View();
     }
 
     // Teacher View: Only for logged-in users, not role-based
-    [Authorize]
+    [Authorize(Roles= "Teacher")]
     public async Task<IActionResult> Teacher()
     {
         var sessions = await _repo.GetAllSessions();
@@ -56,12 +60,6 @@ public class HomeController : Controller
         };
         
         return View(model);
-    }
-
-    // Student View: Available for everyone
-    public IActionResult Student()
-    {
-        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
