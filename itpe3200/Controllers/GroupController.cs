@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace itpe3200.Controllers;
 
-//Authorizes every method in GroupController
+// Each action has a role in addition to authorize on class level.
+// Teachers manage groups (create, edit, delete, overview),
+// students join groups, and both can see group details.
 [Authorize]
 public class GroupController : Controller
 {
@@ -29,6 +31,7 @@ public class GroupController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Create()
     {
         var model = new GroupCreateViewModel();
@@ -44,6 +47,7 @@ public class GroupController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Create(GroupCreateViewModel model)
     {
         //Validerer at input fra skjemaet samsvarer med viewmodellen
@@ -122,6 +126,7 @@ public class GroupController : Controller
 
     // GET: Group/Update/5 – shows the form filled in with the group's current values
     [HttpGet]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Update(int id)
     {
         var group = await _repo.GetGroupById(id);
@@ -131,7 +136,7 @@ public class GroupController : Controller
             _logger.LogError("[GroupController] Group not found when updating GroupId {GroupId:0000}", id);
             return NotFound("Group not found");
         }
-        
+
         var model = new GroupUpdateViewModel
         {
             Id = group.Id,
@@ -143,6 +148,7 @@ public class GroupController : Controller
 
     // POST: Group/Update/5 – validates and saves the changes
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Update(GroupUpdateViewModel model)
     {
         if (ModelState.IsValid)
@@ -159,11 +165,11 @@ public class GroupController : Controller
 
             int memberCount = group.Members.Count;
 
-            if(model.MaxSize < memberCount)
+            if (model.MaxSize < memberCount)
             {
-                ModelState.AddModelError(nameof(model.MaxSize), $"Group already has {memberCount} members. " 
+                ModelState.AddModelError(nameof(model.MaxSize), $"Group already has {memberCount} members. "
                 + $"Maximum size cannot be less than {memberCount}");
-                
+
                 return View(model);
             }
 
@@ -184,12 +190,14 @@ public class GroupController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Student")]
     public IActionResult Join()
     {
         return View();
     }
     //Method to join session
     [HttpPost]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> Join(JoinViewModel model)
     {
         if (ModelState.IsValid)
@@ -203,23 +211,23 @@ public class GroupController : Controller
             else
             {
                 var session = await _repo.GetSessionById(courseSession.Id);
-                if(session == null)
+                if (session == null)
                 {
                     return NotFound();
                 }
                 model.CourseSessionId = session.Id;
                 model.CourseSessionName = session.Name;
                 model.Groups = session.Groups.ToList();
-                
+
                 return View(model);
-            } 
+            }
         }
         _logger.LogWarning("[GroupController] Join failed for JoinCode {JoinCode}", model.JoinCode);
         return View(model);
     }
     //Method for students to join group 
     [HttpPost]
-    [Authorize(Roles ="Student")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> JoinGroup(int groupId, JoinViewModel model)
     {
         if (!ModelState.IsValid)
@@ -228,7 +236,7 @@ public class GroupController : Controller
 
             return View("Join", model);
         }
-        
+
         var session = await _repo.GetSessionByJoinCode(model.JoinCode);
         var group = await _repo.GetGroupById(groupId);
 
@@ -241,7 +249,7 @@ public class GroupController : Controller
             return View("Join", model);
         }
 
-        if(group == null || group.CourseSessionId != session.Id)
+        if (group == null || group.CourseSessionId != session.Id)
         {
             _logger.LogWarning("Invalid group {GroupId} for session {SessionId}", groupId, session.Id);
 
@@ -251,27 +259,27 @@ public class GroupController : Controller
 
         //Find the currently logged-in user
         var user = await _userManager.GetUserAsync(User);
-        if(user == null)
+        if (user == null)
         {
             return Unauthorized();
         }
         //Find the student that is connected to this user by id
         var student = await _repo.GetStudentByIdentityUserId(user.Id);
-        if(student == null)
+        if (student == null)
         {
             _logger.LogWarning("No student profile found for the logged-in user");
 
             ModelState.AddModelError("", "No student profile was found for your account.");
 
-            return View("Join", model);        
+            return View("Join", model);
         }
 
         //Try to assign student to the specified group
         var result = await _repo.AssignStudentToGroup(student.Id, group.Id);
-        if(result == GroupJoinResult.Success)
+        if (result == GroupJoinResult.Success)
         {
             _logger.LogInformation("Student {StudentId} joined group {GroupId}", student.Id, groupId);
-            return RedirectToAction("Details", new {id = groupId});
+            return RedirectToAction("Details", new { id = groupId });
         }
 
         //Different error messages if group-joining fails
@@ -282,7 +290,7 @@ public class GroupController : Controller
             GroupJoinResult.StudentNotFound => "Student not found.",
             GroupJoinResult.GroupNotFound => "Group not found.",
             _ => "Could not join the group."
-        }); 
+        });
 
         //Reload groups to be displayed again for the Join page
         model.CourseSessionId = session.Id;
@@ -297,34 +305,34 @@ public class GroupController : Controller
     public async Task<IActionResult> AssignStudent(int studentId, int groupId)
     {
         var result = await _repo.AssignStudentToGroup(studentId, groupId);
-        
-        if(result == GroupJoinResult.Success)
+
+        if (result == GroupJoinResult.Success)
         {
             _logger.LogInformation("Student {StudentId} assigned to group {GroupId}", studentId, groupId);
-            return RedirectToAction("Details", new {id = groupId});
+            return RedirectToAction("Details", new { id = groupId });
         }
 
         _logger.LogWarning("Could not assign student {StudentId} to group {GroupId}: {Result}", studentId, groupId, result);
 
         //Switch case for every case where result did not return Success
         ModelState.AddModelError("", result switch
-    {
-        GroupJoinResult.GroupFull => "The group is full.",
-        GroupJoinResult.AlreadyInSession =>"Student already belongs to a group in this session.",
-        GroupJoinResult.StudentNotFound => "Student not found.",
-        GroupJoinResult.GroupNotFound => "Group not found.",
-        _ => "Could not assign student."
-    });
+        {
+            GroupJoinResult.GroupFull => "The group is full.",
+            GroupJoinResult.AlreadyInSession => "Student already belongs to a group in this session.",
+            GroupJoinResult.StudentNotFound => "Student not found.",
+            GroupJoinResult.GroupNotFound => "Group not found.",
+            _ => "Could not assign student."
+        });
 
         var group = await _repo.GetGroupById(groupId);
-        if(group == null)
+        if (group == null)
         {
             return NotFound();
         }
 
         var students = await _repo.GetAllStudents();
         if (students == null)
-        return Problem("Could not load students.");
+            return Problem("Could not load students.");
 
         ViewBag.Students = students;
 
@@ -334,6 +342,7 @@ public class GroupController : Controller
 
     // GET: Group/Delete/5 – shows a confirmation page before deleting
     [HttpGet]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Delete(int id)
     {
         var group = await _repo.GetGroupById(id);
@@ -347,6 +356,7 @@ public class GroupController : Controller
 
     // POST: Group/DeleteConfirmed/5 – performs the delete
     [HttpPost]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         bool ok = await _repo.DeleteGroup(id);
@@ -360,61 +370,65 @@ public class GroupController : Controller
     }
 
     // GET: Group/Table – shows a table of all groups
-[HttpGet]
-public async Task<IActionResult> Table(string? search, int? sessionId)
-{
-    var groups = await _repo.GetAllGroups();
-
-    if (groups is null)
+    [HttpGet]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> Table(string? search, int? sessionId)
     {
-        _logger.LogError("[GroupController] Could not load groups for table");
-        return Problem("Could not load groups.");
+        var groups = await _repo.GetAllGroups();
+
+        if (groups is null)
+        {
+            _logger.LogError("[GroupController] Could not load groups for table");
+            return Problem("Could not load groups.");
+        }
+
+        var sessions = await _repo.GetAllSessions();
+
+        if (sessions is null)
+        {
+            _logger.LogError("[GroupController] Could not load course sessions for group filters");
+            return Problem("Could not load course sessions.");
+        }
+
+        var filteredGroups = groups.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchText = search.Trim();
+
+            filteredGroups = filteredGroups.Where(group =>
+                (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
+                || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        if (sessionId.HasValue)
+        {
+            filteredGroups = filteredGroups
+                .Where(group => group.CourseSessionId == sessionId.Value);
+        }
+
+        var model = new GroupsViewModel
+        {
+            Groups = filteredGroups.ToList(),
+            Search = search?.Trim() ?? "",
+            SessionId = sessionId,
+            CourseSessions = sessions
+                .Select(session => new CourseSessionViewModel
+                {
+                    Id = session.Id,
+                    Name = session.Name
+                })
+                .ToList()
+        };
+
+        return View(model);
     }
-
-    var sessions = await _repo.GetAllSessions();
-
-    if (sessions is null)
-    {
-        _logger.LogError("[GroupController] Could not load course sessions for group filters");
-        return Problem("Could not load course sessions.");
-    }
-
-    var filteredGroups = groups.AsEnumerable();
-
-    if (!string.IsNullOrWhiteSpace(search))
-    {
-        var searchText = search.Trim();
-
-        filteredGroups = filteredGroups.Where(group =>
-            (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
-            || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
-    }
-
-    if (sessionId.HasValue)
-    {
-        filteredGroups = filteredGroups
-            .Where(group => group.CourseSessionId == sessionId.Value);
-    }
-
-    var model = new GroupsViewModel
-    {
-        Groups = filteredGroups.ToList(),
-        Search = search?.Trim() ?? "",
-        SessionId = sessionId,
-        CourseSessions = sessions
-            .Select(session => new CourseSessionViewModel
-            {
-                Id = session.Id,
-                Name = session.Name
-            })
-            .ToList()
-    };
-
-    return View(model);
-}
 
     // GET: Group/Details/5 – shows details for one group
     [HttpGet]
+    // Adding both roles ensures that if a user slips through and does not get assigned a role, 
+    // they will still not be able to see details
+    [Authorize(Roles = "Teacher,Student")]
     public async Task<IActionResult> Details(int id)
     {
         var group = await _repo.GetGroupById(id);
@@ -424,19 +438,23 @@ public async Task<IActionResult> Table(string? search, int? sessionId)
             _logger.LogError("[GroupController] Group not found for GroupId {GroupId:0000}", id);
             return NotFound("Group not found");
         }
-
-        var students = await _repo.GetAllStudents();
-        if(students == null)
+        // Only teachers need the list of all students - for the "Assign student" form
+        if (User.IsInRole("Teacher"))
         {
-            return Problem("Could not load students");
+            var students = await _repo.GetAllStudents();
+            if (students == null)
+            {
+                return Problem("Could not load students");
+            }
+            ViewBag.Students = students;
         }
-        ViewBag.Students = students;
-
         return View(group);
     }
 
+
     // GET: Group/Grid – shows a grid of all groups
     [HttpGet]
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Grid()
     {
         var groups = await _repo.GetAllGroups();

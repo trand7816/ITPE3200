@@ -8,6 +8,7 @@ namespace itpe3200.Controllers;
 
 // CRUD for students. A student can be a member of several groups
 // (one per course session) through the GroupMember join table.
+[Authorize(Roles = "Teacher")]
 public class StudentController : Controller
 {
     private readonly ICourseRepository _repo;
@@ -72,7 +73,6 @@ public class StudentController : Controller
 
     // GET: Student/Create
     [HttpGet]
-    [Authorize]
     public IActionResult Create()
     {
         return View(new StudentCreateViewModel());
@@ -80,7 +80,6 @@ public class StudentController : Controller
 
     // POST: Student/Create
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create(StudentCreateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -105,7 +104,6 @@ public class StudentController : Controller
 
     // GET: Student/Update/5
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         var student = await _repo.GetStudentById(id);
@@ -126,7 +124,6 @@ public class StudentController : Controller
 
     // POST: Student/Update/5
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Update(StudentUpdateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -158,7 +155,6 @@ public class StudentController : Controller
 
     // GET: Student/Delete/5 – shows a confirmation page before deleting
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var student = await _repo.GetStudentById(id);
@@ -189,7 +185,6 @@ public class StudentController : Controller
 
     // POST: Student/DeleteConfirmed/5
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         if (!await _repo.DeleteStudent(id))
