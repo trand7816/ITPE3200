@@ -92,3 +92,6 @@ including "Demo: Input validation" (29 Sept 2026). The code follows the structur
 - Fullscreen join code view (`Views/Home/_SessionCard.cshtml`): based on the
   [fullscreen modal example](https://getbootstrap.com/docs/5.3/components/modal/#fullscreen-modal)
   in the Bootstrap 5.3 documentation (accessed 16 Nov 2026). Adapted with help from Claude (Anthropic).
+  - Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
+  [color mode toggler](https://getbootstrap.com/docs/5.3/customize/color-modes/) in the Bootstrap 5.3 docs
+  (CC BY 3.0, accessed 17 Nov 2026). Simplified to light/dark only, with light as default.
