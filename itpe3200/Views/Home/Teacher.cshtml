@@ -9,18 +9,22 @@
     <section class="row g-3">
     <header class="greeting col-lg-5">
         <div class="greeting-text"> 
-            <span id="date" class="p">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
-            <h1> @Model.Greeting, @Model.TeacherName!</h1> <!--Only uses first part of mail adress, change to use a username -->
-            <span id="update" class="p stat-pill"> @Model.SessionCount sessions • @Model.GroupCount groups </span>
+            <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
+            <h1 class="mb-3"> @Model.Greeting, @Model.TeacherName!</h1> <!--Only uses first part of mail adress, change to use a username -->
+           
+            <div id="update d-flex gap-2">
+                <span class="p stat-pill d-inline-block mb-4"> @Model.SessionCount sessions</span>
+                <span>•</span>
+                <span class="p stat-pill d-inline-block mb-4"> @Model.GroupCount groups</span>
+            </div>
              <div class="d-flex gap-2">
                 <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Create Session</a>
-                <a asp-controller="Group" asp-action="Create" class="btn btn-outline-primary">Add Group</a>
+                <a asp-controller="Group" asp-action="Create" class="btn btn-secondary">Add Group</a>
              </div>
         </div>
     </header>
 
-    <!--TODO: Make into partial view-->
-    <div class="col-lg-7">
+    <div class="col-lg-7 mt-5">
     <aside id="suggestionsCarousel" class="carousel slide" data-bs-ride="carousel">  <!--Using bootstrap structure-->
 
 
@@ -28,7 +32,7 @@
             <!--Suggestion 1--> 
             <div class="carousel-item active" >
                 <div class="item-content">
-                    <span class="label"> TIP </span>
+                    <span class="stat-pill"> TIP </span>
                     <h2 class="subheading">Share the join code on full screen</h2>
                     <p>Click the fullscreen icon on a session card to show the join code on the projector.</p>
                     <a href="#sessions" class="btn btn-secondary btn-sm">Go to your sessions</a>
@@ -38,17 +42,17 @@
             <!--Suggestion 2--> 
             <div class="carousel-item" >
                 <div class="item-content">
-                    <span class="label"> TIP </span>
+                    <span class="stat-pill"> TIP </span>
                     <h2 class="subheading">Get an overview of each session's groups</h2>
                     <p>See which students have joined and how full each group is.</p>
-                    <a asp-controller="Group" asp-action="Grid" class="btn btn-secondary">View Groups</a>
+                    <a asp-controller="Group" asp-action="Grid" class="btn btn-secondary btn-sm">View Groups</a>
                     <!-- <img src="" alt=""> -->
                 </div>
             </div>
          <!--Suggestion 3--> 
             <div class="carousel-item" >
                 <div class="item-content">
-                    <span class="label"> TIP </span>
+                    <span class="stat-pill"> TIP </span>
                     <h2 class="subheading">Randomize group formation</h2>
                     <p> Randomize groups to promote collaboration.</p>
                     <a asp-controller="Session" asp-action="Create" class="btn btn-secondary btn-sm">Try It</a>
@@ -77,8 +81,8 @@
     </div>    
     </section>
 
-<section class="session-overview mt-5" id="sessions">
-    <h2 class="mb-3"> Your Sessions</h2>
+<section class="session-overview mt-3" id="sessions">
+    <h2 class="mb-4"> Your Sessions</h2>
 @*Loops through sessions and creates on card per session*@
     @if (Model.Sessions.Any()) {
             <div class="row g-3">
@@ -92,8 +96,7 @@
         } else { @*Shown when there are no sessions yet*@
             <div class="session-card text-center">
                 <p class="mb-3">You have no sessions yet.</p>
-                <a asp-controlller="Session" asp-action="Create" class="btn btn-primary">Crete your first session</a>
-
+                <a asp-controlller="Session" asp-action="Create" class="btn btn-primary">Create your first session</a>
             </div>
         }
 </section>
