@@ -66,5 +66,12 @@ else
     </form>
 }
 
-@* Return to the group table. *@
-<a asp-action="Table" class="btn btn-secondary">Back to groups</a>
+@* Teachers: Return to the group table. *@
+@* Students: Return to join page. *@
+
+@if (User.IsInRole("Teacher")) {
+    <a asp-action="Index" class="btn btn-secondary">Back to groups</a>
+
+} else {
+    <a asp-action="Join" class="btn btn-secondary">Back to join session</a>
+}

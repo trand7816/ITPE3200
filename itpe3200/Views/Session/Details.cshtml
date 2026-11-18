@@ -58,9 +58,5 @@ else
         </div>
     }
 }
-if (User.IsInRole("Teacher")) {
-    <a asp-action="Index" class="btn btn-secondary">Back to sessions</a>
 
-} else {
-    <a asp-action="Join" class="btn btn-secondary">Back to join session</a>
-}
+<a asp-action="Index" class="btn btn-secondary">Back to sessions</a>
