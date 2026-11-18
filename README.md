@@ -83,3 +83,15 @@ The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026
 including "Demo: Input validation" (29 Sept 2026). The code follows the structure of the demos.
 
 
+- Join code input (`wwwroot/css/site.css`, `.join-code-input`): technique based on
+  Ana Tudor, [Input field with underline under each character](https://codepen.io/thebabydino/pen/mRrPwB)
+  (CodePen, MIT license, accessed 14 Nov 2026). 
+- Fullscreen icon on the session card (`Views/Home/_SessionCard.cshtml`):
+  [fullscreen](https://icons.getbootstrap.com/icons/fullscreen/) from Bootstrap Icons
+  (MIT license, accessed 16 Nov 2026).
+- Fullscreen join code view (`Views/Home/_SessionCard.cshtml`): based on the
+  [fullscreen modal example](https://getbootstrap.com/docs/5.3/components/modal/#fullscreen-modal)
+  in the Bootstrap 5.3 documentation (accessed 16 Nov 2026). Adapted with help from Claude (Anthropic).
+  - Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
+  [color mode toggler](https://getbootstrap.com/docs/5.3/customize/color-modes/) in the Bootstrap 5.3 docs
+  (CC BY 3.0, accessed 17 Nov 2026). Simplified to light/dark only, with light as default.

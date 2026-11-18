@@ -1,76 +1,174 @@
+/* ==================================
+        1. BASE
+=================================== */
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    color: var(--bs-heading-color);
 }
-/*COLOR PALLETTE*/
 
-/*Light Theme*/
+/* =========================================================================
+        2. THEME COLORS
+Light theme is the default (:root), the dark theme is turned on with 
+Bootstrap's data-bs-theme="dark" on <html> (see wwwroot/js/color-modes.js).
+Where Bootstrap uses a variable for something on our pages, we set it directly. 
+Our own variables are for everything else.
+=========================================================================== */
+
+/* Light Theme */
 :root {
-    --bg: #ffffff;
-    --heading: #222222;
-    --card-bg: #f5f5f5;
+    /* Backgrounds */
+    --bs-body-bg: #F7F6FB;
+    --card-bg: #FFFFFF;
+
+    /* Text */
+    --bs-heading-color: #1C1840;
+    --bs-emphasis-color: #1C1840;
+    --subheading: #2C2A3A;
+    --bs-body-color: #4A4760;
+    --bs-secondary-color: #6B6880;
+
+    /* Accents */
+    --primary-accent: #534AB7;
+    --accent-ink: #FFFFFF;          /* text on the accent color */
+    --accent-deep: #EEEDFE;         /* soft accent background */
+
+    /* Links */
+    --bs-link-color: #534AB7;
+    --bs-link-color-rgb: 83, 74, 183;
+    --bs-link-hover-color: #3C3489;
+    --bs-link-hover-color-rgb: 60, 52, 137;
+
+    /* Borders, inputs & focus */
+    --dividers: #E4E1F2;
+    --bs-border-color: #D6D2EA;
+    --input-fields: #8A879E;
+    --focus-ring: rgba(83, 74, 183, 0.35);
+
+    /* Buttons: our own variables, because Bootstrap's --bs-btn-* are set
+    separately on each button class and can't be changed here.
+    Section 4 passes these colors on to --bs-btn-* for each button type. */
+
+    /* Primary and secondary buttons */
+    --btn-primary-bg: var(--primary-accent);
+    --btn-primary-hover-bg: #2D2752;
+    --btn-primary-text: #FFFFFF;
+    --btn-primary-hover-text: #FFFFFF;
+    --btn-secondary-bg: #E8E6F2;
+    --btn-secondary-hover-bg: #CBC5EE;
+    --btn-secondary-text: #1C1840;
+
+    /* Danger button (delete) */
+    --btn-danger-color: #C4325A;
+    --btn-danger-hover-color: #9E2346;
+    --btn-danger-text: #FFFFFF;
+    --bs-danger-rgb: 196, 50, 90;
+
+    /* Warning alerts (e.g. alert boxes) */
+    --bs-warning-text-emphasis: #7A4E00;
+    --bs-warning-bg-subtle: #FFF4DC;
+    --bs-warning-border-subtle: #F0D49A;
+
+    /* Danger alerts (e.g. error boxes) */
+    --bs-danger-text-emphasis: #9E2346;
+    --bs-danger-bg-subtle: #FCE8EE;
+    --bs-danger-border-subtle: #F2B8C8;
 }
 
-/*Dark Theme - Default for now*/
-[data-theme="dark"] {
-    --bg: #161826;
+/* Dark Theme */
+[data-bs-theme="dark"] {
+    /* Backgrounds */
+    --bs-body-bg: #161826;
     --card-bg: #232532;
 
-    /*Text*/
-    --heading: #ffffff; /*For H1*/
-    --subheading: #E9E9ED; 
-    --body-text: #B2B6CA;
-    --labels: #CFD3E5; /*Additional text*/
- 
+    /* Text */
+    --bs-heading-color: #FFFFFF;
+    --bs-emphasis-color: #FFFFFF;
+    --subheading: #E9E9ED;
+    --bs-body-color: #B2B6CA;
+    --bs-secondary-color: #CFD3E5;
 
-    /*Accents*/
-     --primary-accent: #9184D9; /*Button outlines, active dot*/
-     --accent2: #E7E5FE; /*Button text, active tab*/
-     --accent3: #B5ABFC; /*Links, notes*/
-     --accent4: #D2CEFD; /*Highlight card border*/
+    /* Accents */
+    --primary-accent: #CFC9F3;
+    --accent-ink: #1C1840;
+    --accent-deep: #2D2752;
 
-    /*Placeholders & Inputs*/
+    /* Links */
+    --bs-link-color: #CFC9F3;
+    --bs-link-color-rgb: 207, 201, 243;
+    --bs-link-hover-color: #E7E5FE;
+    --bs-link-hover-color-rgb: 231, 229, 254;
+
+    /* Borders, inputs & focus */
     --dividers: #3F424D;
-    --card-borders: #595D6C;
+    --bs-border-color: #595D6C;
     --input-fields: #75798C;
+    --focus-ring: rgba(207, 201, 243, 0.35);
+
+    /* Buttons: primary and secondary */
+    --btn-primary-bg: var(--primary-accent);
+    --btn-primary-hover-bg: #E7E5FE;
+    --btn-primary-text: var(--accent-ink);
+    --btn-primary-hover-text: var(--accent-ink);
+    --btn-secondary-bg: #2E3040;
+    --btn-secondary-hover-bg: #3F3A6E;
+    --btn-secondary-text: #E9E9ED;
+
+    /* Danger button */
+    --btn-danger-color: #F08A9B;
+    --btn-danger-hover-color: #F7B0BC;
+    --btn-danger-text: #1C1840;
+    --bs-danger-rgb: 240, 138, 155;
+
+    /* Warning alerts */
+    --bs-warning-text-emphasis: #F2C46B;
+    --bs-warning-bg-subtle: var(--bs-body-bg);
+    --bs-warning-border-subtle: #6B5420;
+
+    /* Danger alerts */
+    --bs-danger-text-emphasis: #F08A9B;
+    --bs-danger-bg-subtle: var(--bs-body-bg);
+    --bs-danger-border-subtle: #6E2E40;
 }
 
-/*NAVBAR*/
-.dark-navbar {
-  background-color: var(--card-bg);
-}
-/*GLOBAL THEME*/
-body {
-    background: var(--bg);
-    color: var(--heading);
+/* ========================================================================
+    3. GENERAL STYLING
+===========================================================================  */
+.site-navbar {
+    background-color: var(--card-bg);
 }
 
-p, .p {
-    color: var(--body-text);
+/* Menu links and link-style buttons*/
+.nav-link:focus-visible {
+    box-shadow: 0 0 0 0.25rem var(--focus-ring);
+}
+
+p,
+.p {
+    color: var(--bs-body-color);
 }
 
 .subheading {
     color: var(--subheading);
 }
 
-.card{
+/* Cards (used on the group and session pages) */
+.card {
     padding: 20px;
     margin: 10px;
     background-color: var(--card-bg);
+    color: var(--bs-heading-color);
     border-radius: 15px;
     justify-content: center;
 }
@@ -79,143 +177,307 @@ p, .p {
 .table th,
 .table td {
     background-color: var(--card-bg);
-    color: var(--body-text);
+    color: var(--bs-body-color);
     padding: 15px;
-}
-
-.btn {
-    margin-top: 7px;
-    padding: 2px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 7px;
-    background-color: transparent;
-    color: var(--accent2);
-}
-
-.btn-primary {
-    color: var(--accent2);
-    background-color: var(--bg);
-    border-color: var(--primary-accent);
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-   box-shadow: 0 0 0 0.25rem rgba(145, 132, 217, 0.35);
-}
-
-.btn-primary:hover {
-    color: var(--accent3);
-    background-color: #10121D;
-    border-color: var(--primary-accent);
-}
-
-.btn-primary:focus,
-.btn-primary:active:focus {
-    color: var(--accent2);
-    background-color: var(--bg);
-    border-color: var(--primary-accent);
-    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.35);
-}
-
-.label {
-    background-color: var(--dividers);
-    color: var(--labels);
-    padding: 3px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 7px;
-}
-
-.form-control,
-.form-select {
-    background-color: var(--card-bg);
-    color: var(--body-text);
-    border-color: var(--input-fields);
-}
-
-.form-control:focus,
-.form-select:focus {
-    background-color: var(--card-bg);
-    color: var(--heading);
-    border-color: var(--primary-accent);
-    box-shadow: 0 0 0 0.2rem rgba(145, 132, 217, 0.25);
-}
-
-/*HOMEPAGE STYLING*/
-.greeting-text{
-    padding: 15px;
-}
-
-.greeting-text a {
-    margin-left: 15px;
-}
-
-/*CAROUSEL SECTION*/
-.carousel-indicators {
-    position: static;
-    margin-top: 1rem;
-    margin-bottom: 0;
-}
-
-.carousel-indicators [data-bs-target] {
-    background-color: var(--primary-accent);
-}
-
-.carousel-inner {
-    margin-top: 30px;
-    border-radius: 15px;
-}
-.carousel-item {
-  background-color: var(--card-bg);
-}
-
-.item-content {
-    text-align: left;
-    padding: 2rem;
-}
-
-@media (min-width: 768px) { /*TODO: Adjust so controls don't overlap!*/
-    .item-content {
-        margin-left: 5rem;
-    }
-}
-
-.item-content h2 {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-}
-
-.item-content p {
-    margin-bottom: 1rem;
-}
-
-/**/
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
-/*FOOTER AND MUTED TEXT*/
-/* Bootstrap's text-muted is dark grey with !important, which is unreadable on the dark background */
-.text-muted {
-    color: var(--labels) !important;
 }
 
 .footer {
     border-top-color: var(--dividers) !important;
 }
 
-/*CARDS*/
-/* Bootstrap gives .card dark text by default, so set light text for the dark theme */
-.card {
-    color: var(--heading);
+/*----- Alerts ----*/
+.alert-warning {
+    border-left: 4px solid var(--bs-warning-text-emphasis);
 }
 
-.card a:not(.btn) {
-    color: var(--accent3);
+.alert-danger {
+    border-left: 4px solid var(--bs-danger-text-emphasis);
 }
+
+/* =================================================================================
+    4. BUTTONS
+    Bootstrap's buttons read their colors from --bs-btn-* variables in every state
+    (normal, hover, active, focus), so we only set the variables.
+    The colors themselves are defined in the theme blocks at the top.
+ ==================================================================================== */
+
+/* All buttons: compact size, rounded corners and our focus ring */
+.btn {
+    margin-top: 7px;
+    padding: 2px 10px;
+    border-radius: 7px;
+    --bs-btn-focus-box-shadow: 0 0 0 0.25rem var(--focus-ring);
+}
+
+/* Small "press" effect while a button is clicked */
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Main action button: filled with the accent color */
+.btn-primary {
+    --bs-btn-color: var(--btn-primary-text);
+    --bs-btn-bg: var(--btn-primary-bg);
+    --bs-btn-border-color: var(--btn-primary-bg);
+    --bs-btn-hover-color: var(--btn-primary-hover-text);
+    --bs-btn-hover-bg: var(--btn-primary-hover-bg);
+    --bs-btn-hover-border-color: var(--btn-primary-hover-bg);
+    --bs-btn-active-color: var(--btn-primary-hover-text);
+    --bs-btn-active-bg: var(--btn-primary-hover-bg);
+    --bs-btn-active-border-color: var(--btn-primary-hover-bg);
+}
+
+/* Secondary action: accent-colored outline, fills with the accent color on hover */
+.btn-outline-primary {
+    --bs-btn-color: var(--btn-primary-bg);
+    --bs-btn-border-color: var(--btn-primary-bg);
+    --bs-btn-hover-color: var(--btn-primary-text);
+    --bs-btn-hover-bg: var(--btn-primary-bg);
+    --bs-btn-hover-border-color: var(--btn-primary-bg);
+    --bs-btn-active-color: var(--btn-primary-text);
+    --bs-btn-active-bg: var(--btn-primary-bg);
+    --bs-btn-active-border-color: var(--btn-primary-bg);
+}
+
+/* Neutral action: grey surface that gets a purple tint on hover */
+.btn-secondary {
+    --bs-btn-color: var(--btn-secondary-text);
+    --bs-btn-bg: var(--btn-secondary-bg);
+    --bs-btn-border-color: var(--btn-secondary-bg);
+    --bs-btn-hover-color: var(--btn-secondary-text);
+    --bs-btn-hover-bg: var(--btn-secondary-hover-bg);
+    --bs-btn-hover-border-color: var(--btn-secondary-hover-bg);
+    --bs-btn-active-color: var(--btn-secondary-text);
+    --bs-btn-active-bg: var(--btn-secondary-hover-bg);
+    --bs-btn-active-border-color: var(--btn-secondary-hover-bg);
+}
+
+/* Neutral action, outline: grey outline that fills with a soft purple on hover */
+.btn-outline-secondary {
+    --bs-btn-color: var(--btn-secondary-text);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--btn-secondary-text);
+    --bs-btn-hover-bg: var(--btn-secondary-hover-bg);
+    --bs-btn-hover-border-color: var(--btn-secondary-hover-bg);
+    --bs-btn-active-color: var(--btn-secondary-text);
+    --bs-btn-active-bg: var(--btn-secondary-hover-bg);
+    --bs-btn-active-border-color: var(--btn-secondary-hover-bg);
+}
+
+/* Dangerous action, filled: for the final "Delete" on the confirmation pages */
+.btn-danger {
+    --bs-btn-color: var(--btn-danger-text);
+    --bs-btn-bg: var(--btn-danger-color);
+    --bs-btn-border-color: var(--btn-danger-color);
+    --bs-btn-hover-color: var(--btn-danger-text);
+    --bs-btn-hover-bg: var(--btn-danger-hover-color);
+    --bs-btn-hover-border-color: var(--btn-danger-hover-color);
+    --bs-btn-active-color: var(--btn-danger-text);
+    --bs-btn-active-bg: var(--btn-danger-hover-color);
+    --bs-btn-active-border-color: var(--btn-danger-hover-color);
+}
+
+/* Dangerous action, outline: for "Delete" in tables and lists */
+.btn-outline-danger {
+    --bs-btn-color: var(--btn-danger-color);
+    --bs-btn-border-color: var(--btn-danger-color);
+    --bs-btn-hover-color: var(--btn-danger-text);
+    --bs-btn-hover-bg: var(--btn-danger-color);
+    --bs-btn-hover-border-color: var(--btn-danger-color);
+    --bs-btn-active-color: var(--btn-danger-text);
+    --bs-btn-active-bg: var(--btn-danger-color);
+    --bs-btn-active-border-color: var(--btn-danger-color);
+}
+
+/* =========================================================================
+    5. FORMS
+   ========================================================================= */
+
+.form-control,
+.form-select {
+    background-color: var(--card-bg);
+    color: var(--bs-body-color);
+    border-color: var(--input-fields);
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: var(--card-bg);
+    color: var(--bs-heading-color);
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.1rem var(--focus-ring);
+}
+
+.form-check-input:focus {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 0 0.1rem var(--focus-ring);
+}
+
+.form-control::placeholder {
+    color: var(--input-fields);
+}
+
+/* ========================================================================
+   6. CUSTOM COMPONENTS
+   ======================================================================== */
+
+/*---- Pills ----*/
+
+/* Small pill badge */
+.stat-pill {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+}
+
+/*---- Teacher Dashboard Greeting ----*/
+.greeting-text {
+    text-align: left;
+    padding: 2rem;
+}
+
+@media (min-width: 768px) {
+    .greeting-text {
+        padding: 2rem 4rem;
+    }
+}
+
+/* ----- Teacher dashboard: carousel ----- */
+
+.carousel-inner {
+    border-radius: 15px;
+}
+
+.carousel-item {
+    background-color: var(--primary-accent);
+}
+
+.carousel-indicators {
+    margin-bottom: 0.3rem;
+}
+
+.carousel-indicators [data-bs-target] {
+    background-color: var(--accent-ink);
+    opacity: 0.4;
+    height: 5px;
+    border-radius: 7px / 12px;
+}
+
+.carousel-indicators .active {
+    opacity: 1;
+}
+
+/* Bootstrap's arrows are white images: invert them for dark theme only */
+[data-bs-theme="dark"] .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel-control-next-icon {
+    filter: invert(1);
+}
+
+.item-content {
+    text-align: left;
+    padding: 2rem;
+    margin-left: 2rem;
+}
+
+@media (min-width: 768px) {
+    .item-content {
+        padding: 2rem 4rem;
+    }
+}
+
+.item-content h2 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    color: var(--accent-ink);
+}
+
+.item-content p {
+    margin-bottom: 1rem;
+    color: var(--accent-ink);
+}
+
+/* Button inside the carousel */
+.item-content .btn {
+    --bs-btn-color: var(--primary-accent);
+    --bs-btn-bg: var(--accent-ink);
+    --bs-btn-border-color: var(--accent-ink);
+    --bs-btn-hover-color: var(--primary-accent);
+    --bs-btn-hover-bg: var(--accent-deep);
+    --bs-btn-hover-border-color: var(--accent-deep);
+    --bs-btn-active-color: var(--primary-accent);
+    --bs-btn-active-bg: var(--accent-deep);
+    --bs-btn-active-border-color: var(--accent-deep);
+}
+
+/* ----- Teacher dashboard: session cards ----- */
+
+/*Padding around the session overview in the teacher view*/
+@media (min-width: 768px) {
+    .session-overview {
+        padding: 2rem 4rem;
+    }
+}
+
+/*Card for sessions in teacher view*/
+.session-card {
+    background: var(--card-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+/* Lifts the card on mouse hover, or when something inside it has keyboard focus. */
+.session-card:hover,
+.session-card:has(:focus-visible) {
+    transform: translateY(-3px);
+    border-color: var(--primary-accent);
+}
+
+/*Join code on the session card*/
+.session-code {
+    font-family: monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
+    margin-bottom: 1rem;
+}
+
+/*Keeps fullscreen button clickable on top of card's stretched link*/
+.session-fullscreen-btn {
+    position: relative;
+    z-index: 2;
+}
+
+/* ----- Fullscreen join code view (modal) ----- */
+
+.code-modal {
+    background: var(--bs-body-bg);
+    color: var(--bs-heading-color);
+}
+
+.code-modal-code {
+    font-family: monospace;
+    font-size: 50px;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
+}
+
+/* ----- Join form: join code input ----- */
+
+/*Join code input field styled with a line under each character. Technique based on Ana Tudor, 
+"Input field with underline under each character", https://codepen.io/thebabydino/pen/mRrPwB (accessed 14 Nov 2026).*/
+.join-code-input {
+    font-family: monospace;
+    font-size: 2rem;
+    letter-spacing: 1ch;
+    width: 100%;
+    padding: 0.75rem 0 0.75rem calc(50% - 5.5ch);
+    background: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch 2ch);
+    background-size: 12ch 2px;
+    background-origin: content-box;
+    background-position: left bottom;
+    background-repeat: no-repeat;
+}
+
