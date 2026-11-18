@@ -26,7 +26,9 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            return await _db.CourseSessions.ToListAsync();
+            return await _db.CourseSessions
+            .Include(s => s.Groups)
+            .ToListAsync();
         }
         catch (Exception e)
         {
