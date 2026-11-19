@@ -28,6 +28,29 @@ dotnet ef database update
 dotnet run
 ```
 
+## Logging in
+
+**Teacher (demo account)**
+- Email: `Teacher@123.com`
+- Password: `Teacher!23`
+
+The teacher account is created automatically on startup (see `DAL/IdentitySeed.cs`),
+using the credentials in `appsettings.Development.json`.
+
+**Students**
+Students create their own account through **Register**. All registered users get the Student role.
+
+### Why teachers are not registered
+In a real system, teacher accounts would need to be verified (e.g. through the institution's login),
+so teachers do not create their own accounts. For this project, one demo teacher is seeded instead.
+The demo password is stored in `appsettings.Development.json` for easy access during grading;
+a production system would store credentials as secrets.
+
+### Authorization
+Authentication follows the course demo *Demo-ShopSecurity*. We extended it with role-based
+authorization (Teacher/Student) using `[Authorize(Roles = "...")]`, following Microsoft Learn:
+"Role-based authorization in ASP.NET Core" (accessed 18 Nov 2026).
+
 ### Start over with a fresh database
 
 If the database is from an older version of the app (or you just want the test data back),
