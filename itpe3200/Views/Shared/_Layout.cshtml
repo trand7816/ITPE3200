@@ -29,20 +29,30 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Group" asp-action="Join">Join Session</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Group" asp-action="Table">Groups</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Session" asp-action="Index">Course
-                                Sessions</a>
+                        @* Client-side authorization by only showing the links each role has access to.
+                           The controllers check the roles - hiding links is not the only protection. *@
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Group" asp-action="Join">Join Session</a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("Teacher"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Group" asp-action="Table">Groups</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Index">Students</a>
-                            </li>
+                                <a class="nav-link" asp-area="" asp-controller="Session" asp-action="Index">Course
+                                    Sessions</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Index">Students</a>
+                                </li>
+                            }
                         </ul>
+
                         <div class="d-flex" role="group" aria-label="Color mode">
                             <button type="button" class="btn" data-bs-theme-value="light" aria-pressed="false"
                                     aria-label="Light mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
