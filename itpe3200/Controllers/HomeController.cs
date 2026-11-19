@@ -5,6 +5,7 @@ using itpe3200.Models;
 using Microsoft.AspNetCore.Authorization;
 using itpe3200.DAL;
 using itpe3200.ViewModels;
+using System.Security.Claims;
 namespace itpe3200.Controllers;
 
 public class HomeController : Controller
@@ -18,23 +19,23 @@ public class HomeController : Controller
         _logger = logger;
     }
 
-    // Welcome page with login. Logged-in teachers are sent straight to their view.
+    // Welcome page with login. Logged-in users are sent to their role’s homepage.
     // Also ensures that index /homepage will not return to login page throughout session. 
     public IActionResult Index()
     {
         if (User.IsInRole("Teacher"))
-        { 
+        {
             return RedirectToAction(nameof(Teacher));
         }
         if (User.IsInRole("Student"))
         {
-            return RedirectToAction("Join", "Group");  
+            return RedirectToAction(nameof(Student));
         }
         return View();
     }
 
-    // Teacher View: Only for logged-in users, not role-based
-    [Authorize(Roles= "Teacher")]
+    // Teacher homepage: only for users with teacher role
+    [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Teacher()
     {
         var sessions = await _repo.GetAllSessions();
@@ -58,7 +59,53 @@ public class HomeController : Controller
             StudentCount = students?.Count() ?? 0,
             Sessions = sessions ?? new List<CourseSession>()
         };
-        
+
+        return View(model);
+    }
+
+    //Student homepage: greeting, join form and the student's groups
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> Student()
+    {
+        var groups = new List<StudentGroupViewModel>();
+
+        //Fetch the logged-in user's id
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //Fetch the user profile connected to the login account as they are separate records
+        var profile = userId is null ? null : await _repo.GetStudentByIdentityUserId(userId);
+
+        if (profile is null)
+        {
+            _logger.LogWarning("[HomeController] No student profile found for the logged-in user");
+        }
+        else
+        {
+            //GetStudentbyId also loads the student's groups and course sessions 
+            var student = await _repo.GetStudentById(profile.Id);
+            if (student is not null)
+            {
+                groups = student.Groups
+                .Where(member => member.Group is not null)
+                .Select(member => new StudentGroupViewModel
+                {
+                    Id = member.Group!.Id,
+                    Name = member.Group.Name ?? "",
+                    SessionName = member.Group.CourseSession?.Name ?? "",
+                    JoinedAt = member.JoinedAt
+                })
+               .ToList();
+            }
+        }
+
+        string email = User.Identity?.Name ?? "";
+
+        var model = new StudentHomeViewModel
+        {
+            Greeting = GetGreeting(DateTime.Now.Hour),
+            StudentName = profile?.Name.Split(' ')[0] ?? "",
+            Groups = groups
+        };
+
         return View(model);
     }
 

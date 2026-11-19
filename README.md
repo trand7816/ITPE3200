@@ -102,8 +102,7 @@ Groups and members:
 
 ## Sources
 
-The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026, https://github.com/Baifan-Zhou/ITPE3200-26H), from the first MVC demos up to and
-including "Demo: Input validation" (29 Sept 2026). The code follows the structure of the demos.
+The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026, https://github.com/Baifan-Zhou/ITPE3200-26H), from the first MVC demos up to and including "Demo: Input validation" (29 Sept 2026). The code follows the structure of the demos.
 
 
 - Join code input (`wwwroot/css/site.css`, `.join-code-input`): technique based on

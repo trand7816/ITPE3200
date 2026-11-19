@@ -55,10 +55,10 @@ public class AccountController : Controller
                 }
                 _logger.LogInformation("[AccountController] New user registered: {Email}", model.Email);
 
-                //Registers the users identityID in db after creation
+                //Create the student profile, linked to the login account through IdentityUserId
                 var student = new Student
                 {
-                    Name = model.Email,
+                    Name = model.Name.Trim(),
                     IdentityUserId = user.Id
                 };
                 
