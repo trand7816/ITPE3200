@@ -279,7 +279,7 @@ public class GroupController : Controller
         if (result == GroupJoinResult.Success)
         {
             _logger.LogInformation("Student {StudentId} joined group {GroupId}", student.Id, groupId);
-            return RedirectToAction("Details", new { id = groupId });
+            return RedirectToAction(nameof(Joined), new { id = groupId });
         }
 
         //Different error messages if group-joining fails
@@ -298,6 +298,21 @@ public class GroupController : Controller
         model.Groups = (await _repo.GetSessionById(session.Id))?.Groups.ToList();
 
         return View("Join", model);
+    }
+
+    //GET: Group/Joined/5 - confirmation page after a student has joined a group (step 3. of join flow)
+    [HttpGet]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> Joined(int id)
+    {
+        var group = await _repo.GetGroupById(id);
+        if (group is null)
+        {
+            _logger.LogWarning("[GroupController] Group not found for GroupId {GroupId:0000} on the joined page", id);
+            return NotFound("Group not found");
+        }
+
+        return View(group);
     }
 
     [HttpPost]

@@ -238,7 +238,6 @@ public class CourseRepository : ICourseRepository
     }
 
     // Includes the groups and their sessions so a details page can show
-
     public async Task<Student?> GetStudentById(int id)
     {
         try
@@ -247,6 +246,10 @@ public class CourseRepository : ICourseRepository
                 .Include(s => s.Groups)
                     .ThenInclude(m => m.Group)
                         .ThenInclude(g => g!.CourseSession)
+                //Will also load the members of each group - for the homepage
+                .Include(s=> s.Groups)
+                    .ThenInclude(m=> m.Group)
+                        .ThenInclude(g => g!.Members)
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
         catch (Exception e)

@@ -7,97 +7,109 @@
   
 <main class="main">
     <section class="row g-3">
-    <header class="greeting col-lg-5">
-        <div class="greeting-text"> 
-            <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
-            <h1 class="mb-3"> @Model.Greeting, @Model.TeacherName!</h1> <!--Only uses first part of mail adress, change to use a username -->
+        <header class="greeting col-lg-5">
+            <div class="greeting-text">
+                <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM",
+                                        System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
+                    <h1 class="mb-3"> @Model.Greeting, @Model.TeacherName!</h1>
+                    <!--Only uses first part of mail adress, change to use a username -->
            
-            <div id="update d-flex gap-2">
-                <span class="p stat-pill d-inline-block mb-4"> @Model.SessionCount sessions</span>
-                <span>•</span>
-                <span class="p stat-pill d-inline-block mb-4"> @Model.GroupCount groups</span>
-            </div>
-             <div class="d-flex gap-2">
-                <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Create Session</a>
-                <a asp-controller="Group" asp-action="Create" class="btn btn-secondary">Add Group</a>
-             </div>
-        </div>
-    </header>
-
-    <div class="col-lg-7 mt-5">
-    <aside id="suggestionsCarousel" class="carousel slide" data-bs-ride="carousel">  <!--Using bootstrap structure-->
-
-
-        <div class="carousel-inner">
-            <!--Suggestion 1--> 
-            <div class="carousel-item active" >
-                <div class="item-content">
-                    <span class="stat-pill"> TIP </span>
-                    <h2 class="subheading">Share the join code on full screen</h2>
-                    <p>Click the fullscreen icon on a session card to show the join code on the projector.</p>
-                    <a href="#sessions" class="btn btn-secondary btn-sm">Go to your sessions</a>
-                    <!-- <img src="" alt=""> -->
-                </div>
-            </div>
-            <!--Suggestion 2--> 
-            <div class="carousel-item" >
-                <div class="item-content">
-                    <span class="stat-pill"> TIP </span>
-                    <h2 class="subheading">Get an overview of each session's groups</h2>
-                    <p>See which students have joined and how full each group is.</p>
-                    <a asp-controller="Group" asp-action="Grid" class="btn btn-secondary btn-sm">View Groups</a>
-                    <!-- <img src="" alt=""> -->
-                </div>
-            </div>
-         <!--Suggestion 3--> 
-            <div class="carousel-item" >
-                <div class="item-content">
-                    <span class="stat-pill"> TIP </span>
-                    <h2 class="subheading">Randomize group formation</h2>
-                    <p> Randomize groups to promote collaboration.</p>
-                    <a asp-controller="Session" asp-action="Create" class="btn btn-secondary btn-sm">Try It</a>
-                    <!-- <img src="" alt=""> -->
-                </div>
-            </div>
-              <!-- Carousel buttons-->
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Tip 1"></button>
-            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="1" aria-label="Tip 2"></button>
-            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="2" aria-label="Tip 3"></button>
-        </div>
-        </div>
-
-    <!--Left and Right Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#suggestionsCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#suggestionsCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    </aside>
-    </div>    
-    </section>
-
-<section class="session-overview mt-3" id="sessions">
-    <h2 class="mb-4"> Your Sessions</h2>
-@*Loops through sessions and creates on card per session*@
-    @if (Model.Sessions.Any()) {
-            <div class="row g-3">
-                @foreach (var session in Model.Sessions)
-                {
-                    <div class= "col-md-4">
-                        <partial name ="_SessionCard" model="session"/>
+                    <div id="update d-flex gap-2">
+                        <span class="p stat-pill d-inline-block mb-4"> @Model.SessionCount sessions</span>
+                        <span>•</span>
+                        <span class="p stat-pill d-inline-block mb-4"> @Model.GroupCount groups</span>
                     </div>
-                }
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Create Session</a>
+                        <a asp-controller="Group" asp-action="Create" class="btn btn-secondary">Add Group</a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="col-lg-7 mt-5">
+                <aside id="suggestionsCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <!--Using bootstrap structure-->
+
+
+                    <div class="carousel-inner">
+                        <!--Suggestion 1-->
+                        <div class="carousel-item active">
+                            <div class="item-content">
+                                <span class="stat-pill"> TIP </span>
+                                <h2 class="subheading">Share the join code on full screen</h2>
+                                <p>Click the fullscreen icon on a session card to show the join code on the projector.</p>
+                                <a href="#sessions" class="btn btn-secondary btn-sm">Go to your sessions</a>
+                                <!-- <img src="" alt=""> -->
+                            </div>
+                        </div>
+                        <!--Suggestion 2-->
+                        <div class="carousel-item">
+                            <div class="item-content">
+                                <span class="stat-pill"> TIP </span>
+                                <h2 class="subheading">Get an overview of each session's groups</h2>
+                                <p>See which students have joined and how full each group is.</p>
+                                <a asp-controller="Group" asp-action="Grid" class="btn btn-secondary btn-sm">View Groups</a>
+                                <!-- <img src="" alt=""> -->
+                            </div>
+                        </div>
+                        <!--Suggestion 3-->
+                        <div class="carousel-item">
+                            <div class="item-content">
+                                <span class="stat-pill"> TIP </span>
+                                <h2 class="subheading">Randomize group formation</h2>
+                                <p> Randomize groups to promote collaboration.</p>
+                                <a asp-controller="Session" asp-action="Create" class="btn btn-secondary btn-sm">Try It</a>
+                                <!-- <img src="" alt=""> -->
+                            </div>
+                        </div>
+                        <!-- Carousel buttons-->
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="0" class="active"
+                                    aria-current="true" aria-label="Tip 1"></button>
+                            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="1"
+                                    aria-label="Tip 2"></button>
+                            <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="2"
+                                    aria-label="Tip 3"></button>
+                        </div>
+                    </div>
+
+                    <!--Left and Right Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#suggestionsCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button" data-bs-target="#suggestionsCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </aside>
             </div>
-        } else { @*Shown when there are no sessions yet*@
-            <div class="session-card text-center">
-                <p class="mb-3">You have no sessions yet.</p>
-                <a asp-controlller="Session" asp-action="Create" class="btn btn-primary">Create your first session</a>
-            </div>
-        }
-</section>
-</main>
+        </section>
+
+        <section class="session-overview mt-3" id="sessions">
+            <h2 class="mb-4"> Your Sessions</h2>
+            @*Loops through sessions and creates on card per session*@
+            @if (Model.Sessions.Any())
+            {
+                <div class="row g-3">
+                    @foreach (var session in Model.Sessions)
+                    {
+                        <div class="col-md-4">
+                            <partial name="_SessionCard" model="session" />
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                @*Shown when there are no sessions yet*@
+                <div class="session-card text-center">
+                    <p class="mb-3">You have no sessions yet.</p>
+                    <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Create your first session</a>
+                </div>
+            }
+        </section>
+    </main>

@@ -1,4 +1,3 @@
-
 @model itpe3200.Models.Group
 
 @{
@@ -46,32 +45,35 @@ else
 {
     <h2>Assign student to group</h2>
     <form asp-action="AssignStudent" method="post">
-    <input type="hidden" name="groupId" value="@Model.Id">
+        <input type="hidden" name="groupId" value="@Model.Id">
 
-    <div class="form-group mb-3">
-        <label for="studentId">Select student</label>
+        <div class="form-group mb-3">
+            <label for="studentId">Select student</label>
 
-        <select name="studentId" id="studentId" class="form-control" required>
-            <option value="">-- Select student --</option>
+            <select name="studentId" id="studentId" class="form-select" required>
+                <option value="">-- Select student --</option>
 
-            @foreach (var student in ViewBag.Students)
-            {
-                <option value="@student.Id">@student.Name</option>
-            }
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">
-        Add Student
-    </button>
+                @foreach (var student in ViewBag.Students)
+                {
+                    <option value="@student.Id">@student.Name</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">
+            Add Student
+        </button>
     </form>
 }
 
 @* Teachers: Return to the group table. *@
-@* Students: Return to join page. *@
+@* Students: Return to homepage. *@
 
-@if (User.IsInRole("Teacher")) {
-    <a asp-action="Index" class="btn btn-secondary">Back to groups</a>
+@if (User.IsInRole("Teacher"))
+{
+    <a asp-action="Table" class="btn btn-secondary">Back to groups</a>
 
-} else {
-    <a asp-action="Join" class="btn btn-secondary">Back to join session</a>
+}
+else
+{
+    <a asp-controller="Home" asp-action="Student" class="btn btn-secondary">Home</a>
 }

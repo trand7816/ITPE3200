@@ -114,6 +114,7 @@ The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026
 - Fullscreen join code view (`Views/Home/_SessionCard.cshtml`): based on the
   [fullscreen modal example](https://getbootstrap.com/docs/5.3/components/modal/#fullscreen-modal)
   in the Bootstrap 5.3 documentation (accessed 16 Nov 2026). Adapted with help from Claude (Anthropic).
-  - Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
+- Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
   [color mode toggler](https://getbootstrap.com/docs/5.3/customize/color-modes/) in the Bootstrap 5.3 docs
   (CC BY 3.0, accessed 17 Nov 2026). Simplified to light/dark only, with light as default.
+- Progress bar in the join flow: Bootstrap 5.3 “Progress” component, https://getbootstrap.com/docs/5.3/components/progress/ (accessed 19 Nov 2026).

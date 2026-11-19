@@ -67,7 +67,7 @@ public class HomeController : Controller
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> Student()
     {
-        var groups = new List<StudentGroupViewModel>();
+        var groups = new List<GroupMember>();
 
         //Fetch the logged-in user's id
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -80,20 +80,13 @@ public class HomeController : Controller
         }
         else
         {
-            //GetStudentbyId also loads the student's groups and course sessions 
+            //Send membership directly to view
             var student = await _repo.GetStudentById(profile.Id);
             if (student is not null)
             {
-                groups = student.Groups
+              groups = student.Groups
                 .Where(member => member.Group is not null)
-                .Select(member => new StudentGroupViewModel
-                {
-                    Id = member.Group!.Id,
-                    Name = member.Group.Name ?? "",
-                    SessionName = member.Group.CourseSession?.Name ?? "",
-                    JoinedAt = member.JoinedAt
-                })
-               .ToList();
+                .ToList();
             }
         }
 

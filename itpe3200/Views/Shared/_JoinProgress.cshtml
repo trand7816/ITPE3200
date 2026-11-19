@@ -1,0 +1,23 @@
+@* Each partial only gets a number - according to the step it should show *@
+@model int 
+
+@* Progress bar for the studen's join flow: 1 = Enter group, 2 = Choose group, 3 = Done. *@
+
+@{
+    @* Divides progress bar into three equal parts *@
+    var percent = Model switch{ 1 => 33, 2 => 66, _ => 100 };
+}
+
+<div class="mt-3">
+    <div class="d-flex justify-content-between small mb-1">
+        @* Gives the class "join-step-active" to the currently active step *@
+        <span class="@(Model == 1 ? "join-step-active" : "")">1 · Enter code</span>
+        <span class="@(Model == 2 ? "join-step-active" : "")">2 · Choose group</span>
+        <span class="@(Model == 3 ? "join-step-active" : "")">3 · Done</span>
+    </div>
+    @* Bootstrap's progress bar *@
+    <div class="progress" role="progressbar" aria-label="Join progress>
+        aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress-bar" style="width: @percent%"></div>
+    </div>
+</div>
