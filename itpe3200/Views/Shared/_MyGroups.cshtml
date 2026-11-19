@@ -1,0 +1,30 @@
+@model List<itpe3200.Models.GroupMember>
+
+<section id="my-groups" class="session-overview mt-4">
+    <h2 class="h4 mb-3">Your groups</h2>
+
+    @if (!Model.Any())
+    {
+        <p>You haven't joined any groups yet. Use the join code from your teacher to get started.</p>
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var member in Model)
+            {
+                // "!" is safe: HomeController only sends memberships that have a group
+                var group = member.Group!;
+
+                <div class="col-md-4">
+                    <article class="session-card h-100 position-relative">      
+                        <h3 class="h5 mt-3 mb-1">
+                            <a asp-controller="Group" asp-action="Details" asp-route-id="@member.GroupId" class="stretched-link text-reset text-decoration-none">@group!.Name</a>
+                        </h3>
+                         <p class="session-code mt-3">@group.CourseSession?.Name</p>
+                         <span class="stat-pill">@group.Members.Count / @group.MaxSize members</span>
+                    </article>
+                </div>
+            }
+        </div>
+    }
+</section>

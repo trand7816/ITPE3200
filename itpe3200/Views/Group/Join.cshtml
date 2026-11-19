@@ -2,53 +2,56 @@
 
 
 @{
-    ViewData["Title"] = "Join Session (for students)";
+    ViewData["Title"] = "Join Session";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 @if (Model?.Groups != null)
 {
-    <h2>Choose a group in @Model.CourseSessionName</h2>
+    @* Step 2 of the join flow: choose a group in the session *@    
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <div class="card join-card p-4 m-0">
+                <h2 class="h4 text-center mb-3">Choose a group in @Model.CourseSessionName</h2>
+                @* Errors from JoinGroup, e.g. "The group is full" *@
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-    @foreach (var group in Model.Groups)
-    {
-        <div class="mb-3">
-            <strong>@group.Name</strong>
-            <span>(@group.Members.Count / @group.MaxSize members)</span>
+                @foreach (var group in Model.Groups)
+                {
+                    <div class="join-group-row d-flex justify-content-between align-items-center mb-2">
+                        <span><strong>@group.Name</strong> · @group.Members.Count / @group.MaxSize</span>
 
-            @if (group.Members.Count >= group.MaxSize)
-            {
-                <span class="text-danger">Full</span>
-            }
-            else
-            {
-                <form asp-action="JoinGroup" method="post">
-                    <input type="hidden" name="groupId" value="@group.Id" />
-                    <input type="hidden" name="Name" value="@Model.Name" />
-                    <input type="hidden" name="JoinCode" value="@Model.JoinCode">
-                    <button type="submit" class="btn btn-primary">Join Group</button>
-                </form>
-            }
+                        @if (group.Members.Count >= group.MaxSize)
+                        {
+                            <span class="text-danger">Full</span>
+                        }
+                        else
+                        {
+                            <form asp-action="JoinGroup" method="post" class="m-0">
+                                <input type="hidden" name="groupId" value="@group.Id" />
+                                <input type="hidden" name="JoinCode" value="@Model.JoinCode">
+                                <button type="submit" class="btn btn-primary btn-sm mt-0">Join Group</button>
+                            </form>
+                        }
+                    </div>
+                }
+            </div>
+            <partial name="_JoinProgress" model="2" />
         </div>
-    }
+    </div>
 }
 else
 {
-    <form asp-action="Join" method="post">
-        <div class="form-group">
-            <label asp-for="Name">Student Name</label><span class="text-danger">*</span>
-            <input asp-for="Name" class="form-control"> 
-            <span asp-validation-for="Name" class="text-danger"></span>
+    @* Step 1 of the join flow: enter the join code *@
+    <div class="row justify-content-center mt-4 m-0">
+        <div class="col-md-6">
+            <div class="card join-card p-4">
+                <h2 class="h4">Join a session</h2>
+                <p>Got a join code from your teacher?</p>
+                <partial name="_JoinForm" model="Model" />
+            </div>
+            <partial name="_JoinProgress" model="1" />
         </div>
-        <div class="form-group">
-            <label asp-for="JoinCode">Join Code</label><span class="text-danger">*</span>
-            <input asp-for="JoinCode" class="form-control"> 
-            <span asp-validation-for="JoinCode" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Join</button>
-    </form>
+    </div>
 }
 
 @section Scripts {

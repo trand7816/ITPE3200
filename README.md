@@ -28,6 +28,29 @@ dotnet ef database update
 dotnet run
 ```
 
+## Logging in
+
+**Teacher (demo account)**
+- Email: `Teacher@123.com`
+- Password: `Teacher!23`
+
+The teacher account is created automatically on startup (see `DAL/IdentitySeed.cs`),
+using the credentials in `appsettings.Development.json`.
+
+**Students**
+Students create their own account through **Register**. All registered users get the Student role.
+
+### Why teachers are not registered
+In a real system, teacher accounts would need to be verified (e.g. through the institution's login),
+so teachers do not create their own accounts. For this project, one demo teacher is seeded instead.
+The demo password is stored in `appsettings.Development.json` for easy access during grading;
+a production system would store credentials as secrets.
+
+### Authorization
+Authentication follows the course demo *Demo-ShopSecurity*. We extended it with role-based
+authorization (Teacher/Student) using `[Authorize(Roles = "...")]`, following Microsoft Learn:
+"Role-based authorization in ASP.NET Core" (accessed 18 Nov 2026).
+
 ### Start over with a fresh database
 
 If the database is from an older version of the app (or you just want the test data back),
@@ -79,8 +102,7 @@ Groups and members:
 
 ## Sources
 
-The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026, https://github.com/Baifan-Zhou/ITPE3200-26H), from the first MVC demos up to and
-including "Demo: Input validation" (29 Sept 2026). The code follows the structure of the demos.
+The project is based on Baifan Zhou's ITPE3200 MyShop course demos (Oslomet 2026, https://github.com/Baifan-Zhou/ITPE3200-26H), from the first MVC demos up to and including "Demo: Input validation" (29 Sept 2026). The code follows the structure of the demos.
 
 
 - Join code input (`wwwroot/css/site.css`, `.join-code-input`): technique based on
@@ -92,6 +114,7 @@ including "Demo: Input validation" (29 Sept 2026). The code follows the structur
 - Fullscreen join code view (`Views/Home/_SessionCard.cshtml`): based on the
   [fullscreen modal example](https://getbootstrap.com/docs/5.3/components/modal/#fullscreen-modal)
   in the Bootstrap 5.3 documentation (accessed 16 Nov 2026). Adapted with help from Claude (Anthropic).
-  - Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
+- Light/dark mode toggle (`wwwroot/js/color-modes.js`): adapted from the
   [color mode toggler](https://getbootstrap.com/docs/5.3/customize/color-modes/) in the Bootstrap 5.3 docs
   (CC BY 3.0, accessed 17 Nov 2026). Simplified to light/dark only, with light as default.
+- Progress bar in the join flow: Bootstrap 5.3 “Progress” component, https://getbootstrap.com/docs/5.3/components/progress/ (accessed 19 Nov 2026).

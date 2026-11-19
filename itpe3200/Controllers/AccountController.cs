@@ -55,10 +55,10 @@ public class AccountController : Controller
                 }
                 _logger.LogInformation("[AccountController] New user registered: {Email}", model.Email);
 
-                //Registers the users identityID in db after creation
+                //Create the student profile, linked to the login account through IdentityUserId
                 var student = new Student
                 {
-                    Name = model.Email,
+                    Name = model.Name.Trim(),
                     IdentityUserId = user.Id
                 };
                 
@@ -123,5 +123,12 @@ public class AccountController : Controller
         _logger.LogInformation("[AccountController] User {Email} logged out", User.Identity?.Name);
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    // GET: /Account/AccessDenied
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 }
