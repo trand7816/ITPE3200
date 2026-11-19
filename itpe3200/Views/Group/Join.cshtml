@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "Join Session (for students)";
+    ViewData["Title"] = "Join Session";
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -25,7 +25,6 @@
             {
                 <form asp-action="JoinGroup" method="post">
                     <input type="hidden" name="groupId" value="@group.Id" />
-                    <input type="hidden" name="Name" value="@Model.Name" />
                     <input type="hidden" name="JoinCode" value="@Model.JoinCode">
                     <button type="submit" class="btn btn-primary">Join Group</button>
                 </form>
@@ -35,20 +34,14 @@
 }
 else
 {
-    <form asp-action="Join" method="post">
-        <div class="form-group">
-            <label asp-for="Name">Student Name</label><span class="text-danger">*</span>
-            <input asp-for="Name" class="form-control"> 
-            <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-3 mb-3">
+                <p>Got a join code from your teacher?</p>
+                <partial name="_JoinForm" model="Model" />
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="JoinCode">Join Code</label><span class="text-danger">*</span>
-            <input asp-for="JoinCode" class="form-control"> 
-            <span asp-validation-for="JoinCode" class="text-danger"></span>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Join</button>
-    </form>
+    </div>
 }
 
 @section Scripts {
