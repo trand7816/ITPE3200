@@ -68,7 +68,6 @@ Our own variables are for everything else.
     --btn-secondary-bg: #E8E6F2;
     --btn-secondary-hover-bg: #CBC5EE;
     --btn-secondary-text: #1C1840;
-    --btn-accent-hover-bg: #CBC5EE;         /* buttons on the accent background (carousel, join card) */
 
     /* Danger button (delete) */
     --btn-danger-color: #C4325A;
@@ -124,8 +123,7 @@ Our own variables are for everything else.
     --btn-primary-hover-text: var(--accent-ink);
     --btn-secondary-bg: #2E3040;
     --btn-secondary-hover-bg: #3F3A6E;
-    --btn-secondary-text: #E9E9ED;
-    --btn-accent-hover-bg: #1C1840;             
+    --btn-secondary-text: #E9E9ED;        
 
     /* Danger button */
     --btn-danger-color: #F08A9B;
@@ -147,6 +145,13 @@ Our own variables are for everything else.
 /* ========================================================================
     3. GENERAL STYLING
 ===========================================================================  */
+
+/* Color mode button: only show the icon of the mode you switch to */
+[data-bs-theme="light"] .theme-icon-sun,
+[data-bs-theme="dark"]  .theme-icon-moon {
+    display: none;
+}
+
 .site-navbar {
     background-color: var(--card-bg);
 }
@@ -351,8 +356,14 @@ p,
     border-radius: 15px;
 }
 
+/* Carousel uses the same fixed lavender colors as .join-card, so both highlighted cards look alike in light and dark mode */
 .carousel-item {
-    background-color: var(--primary-accent);
+    background-color: #CFC9F3;
+}
+
+.item-content h2,
+.item-content p {
+    color: #1C1840;
 }
 
 .carousel-indicators {
@@ -360,8 +371,8 @@ p,
 }
 
 .carousel-indicators [data-bs-target] {
-    background-color: var(--accent-ink);
-    opacity: 0.4;
+    background-color: #534AB7;
+    opacity: 0.35;
     height: 5px;
     border-radius: 7px / 12px;
 }
@@ -370,9 +381,9 @@ p,
     opacity: 1;
 }
 
-/* Bootstrap's arrows are white images: invert them for dark theme only */
-[data-bs-theme="dark"] .carousel-control-prev-icon,
-[data-bs-theme="dark"] .carousel-control-next-icon {
+/* Bootstrap's arrow icons are white, so they are inverted to dark in both themes (the light lavender background needs dark arrows) */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
     filter: invert(1);
 }
 
@@ -388,30 +399,18 @@ p,
     }
 }
 
-.item-content h2 {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    color: var(--accent-ink);
-}
-
-.item-content p {
-    margin-bottom: 1rem;
-    color: var(--accent-ink);
-}
-
-/* Button inside the carousel */
+/* Button inside the carousel: fixed purple, so it stays visible on lavender in both themes */
 .item-content .btn {
-    --bs-btn-color: var(--primary-accent);
-    --bs-btn-bg: var(--accent-deep);
-    --bs-btn-border-color: var(--accent-deep);
-    --bs-btn-hover-color: var(--primary-accent);
-    --bs-btn-hover-bg: var(--btn-accent-hover-bg);
-    --bs-btn-hover-border-color: var(--btn-accent-hover-bg);
-    --bs-btn-active-color: var(--primary-accent);
-    --bs-btn-active-bg: var(--btn-accent-hover-bg);
-    --bs-btn-active-border-color: var(--btn-accent-hover-bg);
+    --bs-btn-color: #FFFFFF;
+    --bs-btn-bg: #534AB7;
+    --bs-btn-border-color: #534AB7;
+    --bs-btn-hover-color: #FFFFFF;
+    --bs-btn-hover-bg: #3C3489;
+    --bs-btn-hover-border-color: #3C3489;
+    --bs-btn-active-color: #FFFFFF;
+    --bs-btn-active-bg: #3C3489;
+    --bs-btn-active-border-color: #3C3489;
 }
-
 /* ---- Student homepage: join card ---- */
 
 .join-card {
