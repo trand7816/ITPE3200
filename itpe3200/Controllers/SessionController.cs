@@ -80,6 +80,9 @@ public class SessionController : Controller
             RandomAssignment = model.RandomAssignment
         };
 
+        //Create the empty groups with the session
+        session.AddEmptyGroups(model.MaxGroups, model.GroupSize);
+
         if (!await _repo.CreateSession(session))
         {
             _logger.LogError("[SessionController] Session creation failed for session {@session}", session);
