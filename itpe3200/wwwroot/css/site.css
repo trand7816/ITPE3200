@@ -176,8 +176,20 @@ p,
     color: var(--bs-body-color);
 }
 
+/* ---- Subheadings ---- */
+
+/* regular subheading in muted color */
 .subheading {
     color: var(--subheading);
+}
+
+/* Uppercase and with accent color */
+.eyebrow,
+.join-page .eyebrow {
+    color: var(--primary-accent);
+    font-size: small;
+    letter-spacing: 0.04rem;
+    text-transform: uppercase;
 }
 
 /* Cards (used on the group and session pages) */
@@ -469,10 +481,47 @@ p,
     background-color: var(--highlight-bg);
     color: var(--highlight-text);
 }
-/* Makes the card itself invisible while keeping the join card text and button styling*/
+
 .join-page .join-card {
-    background-color: transparent;
+    background-color: var(--highlight-row-bg);
     border: 0;
+    text-align: center;
+}
+
+.join-card .h4{
+    font-size: 3rem;
+}
+
+.join-page .join-card .join-group-row {
+    background-color: var(--highlight-bg);
+}
+.join-page .join-card .join-code-input {
+    background-color: var(--accent-deep);
+    margin-top: 1rem;
+}
+/* Removes box around join code input for the join page */
+/* .join-page .join-code-input {
+    --code-gap: 1.5ch;
+    border: 0;
+    font-size: 1.5rem;
+    padding-top: 1rem;
+    letter-spacing: var(--code-gap);
+    padding-left: calc(50% - (6 * (1ch + var(--code-gap)) - var(--code-gap)) / 2);
+    background-image: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch calc(1ch + var(--code-gap)));
+    background-size: calc(6 * (1ch + var(--code-gap))) 2px;
+}
+
+@media (min-width: 1200px) {
+    .join-page .join-code-input {
+        font-size: 3rem;
+        --code-gap: 1.5ch;
+    }
+} */
+
+/* Makes the underlines get accent color while typing */
+ .join-page .join-code-input:focus {
+    box-shadow: none;
+    --bs-secondary-color: var(--primary-accent);
 }
 
 /* ----- Teacher homepage: session cards ----- */
@@ -546,3 +595,21 @@ p,
     background-repeat: no-repeat;
 }
 
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-bottom: 0.75rem;
+    border-radius: 9px;
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+}
+
+.feature-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+    stroke-width: 0.4px;
+}
