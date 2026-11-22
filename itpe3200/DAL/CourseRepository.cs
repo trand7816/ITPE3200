@@ -375,6 +375,39 @@ public class CourseRepository : ICourseRepository
             return GroupJoinResult.DatabaseError;
         }
     }
+
+    //Random assignment: places the student in one of the least full groups, but still at random
+    //Join still happens through AssignStudentToGroup
+    public async Task<(GroupJoinResult Result, int? GroupId)> AssignStudentRandomly(int studentId, int sessionId)
+    {
+        try
+        {
+            //Groups in the session that still have room
+            var openGroups = await _db.Groups
+                .Where(g => g.CourseSessionId == sessionId)
+                .Select(g => new {g.Id, MemberCount = g.Members.Count, g.MaxSize})
+                .Where(g => g.MemberCount < g.MaxSize)
+                .ToListAsync();
+
+            if (openGroups.Count == 0)
+            {
+                return (GroupJoinResult.SessionFull, null);
+            }
+            
+            //Pick at random from the groups with the fewest members
+            int fewest = openGroups.Min(g => g.MemberCount);
+            var leastFull = openGroups.Where(g => g.MemberCount == fewest).ToList();
+            int groupId = leastFull[Random.Shared.Next(leastFull.Count)].Id;
+
+            var result = await AssignStudentToGroup(studentId, groupId);
+            return (result, result == GroupJoinResult.Success ? groupId : null );
+        }   
+        catch (Exception e)
+        {
+            _logger.LogError("[CourseRepository] Random assignment failed for studentId {StudentId:0000} in sessionId {SessionId:0000}, error message: {e}", studentId, sessionId, e.Message);
+            return (GroupJoinResult.DatabaseError, null);
+        }
+    }
     
 
     // Removes the row in the join table. The student and the group are not deleted.
@@ -403,7 +436,6 @@ public class CourseRepository : ICourseRepository
 
     // Checks if the student already is in a group in this session. Used for the rule "only one group per session".
     // Returns null if the database query fails
-
     public async Task<bool?> IsStudentInSession(int studentId, int sessionId)
     {
         try

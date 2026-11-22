@@ -195,6 +195,7 @@ public class GroupController : Controller
     {
         return View();
     }
+
     //Method to join session
     [HttpPost]
     [Authorize(Roles = "Student")]
@@ -215,6 +216,30 @@ public class GroupController : Controller
                 {
                     return NotFound();
                 }
+
+                //Random assignment: places a student in a group right away and skips student choosing a group
+                if (session.RandomAssignment)
+                {
+                    var student = await GetLoggedInStudent();
+                    if (student == null)
+                    {
+                        ModelState.AddModelError("JoinCode", "No student profile was found for your account.");
+                        return View(model);
+                    }
+
+                    var (result, groupId) = await _repo.AssignStudentRandomly(student.Id, session.Id);
+                    if (result == GroupJoinResult.Success && groupId.HasValue)
+                    {
+                        _logger.LogInformation("[GroupController] Student {studentId} randomly assigned to group {groupId}", student.Id, groupId);
+                        return RedirectToAction(nameof(Joined), new {id = groupId.Value });
+                    }
+                        _logger.LogWarning("[GroupController] Random assignment failed for student {StudentId}:{Result}", student.Id, result);
+                        ModelState.AddModelError("JoinCode", JoinErrorMessage(result));
+                        return View(model);
+
+                }
+
+
                 model.CourseSessionId = session.Id;
                 model.CourseSessionName = session.Name;
                 model.Groups = session.Groups.ToList();
@@ -257,20 +282,12 @@ public class GroupController : Controller
             return View("Join", model);
         }
 
-        //Find the currently logged-in user
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
+        //Find the student profile for the logged in user
+        var student = await GetLoggedInStudent();
+        if (student == null)  
         {
-            return Unauthorized();
-        }
-        //Find the student that is connected to this user by id
-        var student = await _repo.GetStudentByIdentityUserId(user.Id);
-        if (student == null)
-        {
-            _logger.LogWarning("No student profile found for the logged-in user");
-
+            _logger.LogWarning("[GroupController] No student profile found for the logged-in user");
             ModelState.AddModelError("", "No student profile was found for your account.");
-
             return View("Join", model);
         }
 
@@ -282,15 +299,7 @@ public class GroupController : Controller
             return RedirectToAction(nameof(Joined), new { id = groupId });
         }
 
-        //Different error messages if group-joining fails
-        ModelState.AddModelError("", result switch
-        {
-            GroupJoinResult.GroupFull => "The group is full.",
-            GroupJoinResult.AlreadyInSession => "You already belong to a group in this course session.",
-            GroupJoinResult.StudentNotFound => "Student not found.",
-            GroupJoinResult.GroupNotFound => "Group not found.",
-            _ => "Could not join the group."
-        });
+        ModelState.AddModelError("", JoinErrorMessage(result));
 
         //Reload groups to be displayed again for the Join page
         model.CourseSessionId = session.Id;
@@ -487,4 +496,27 @@ public class GroupController : Controller
 
         return View(model);
     }
+
+    //Finds student profile linked to user, or returns null if there is none.
+    //Used by both join actions (choose group, and random assignment).
+    private async Task<Student?> GetLoggedInStudent()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return null;
+        }
+        return await _repo.GetStudentByIdentityUserId(user.Id);
+    }
+
+    private static string JoinErrorMessage(GroupJoinResult result) => result switch
+    {
+        //Different error messages if a join attempt fails
+            GroupJoinResult.GroupFull => "The group is full.",
+            GroupJoinResult.SessionFull => "All groups in this session is full, ask your teacher for help.",
+            GroupJoinResult.AlreadyInSession => "You already belong to a group in this course session.",
+            GroupJoinResult.StudentNotFound => "Student not found.",
+            GroupJoinResult.GroupNotFound => "Group not found.",
+            _ => "Could not join the group."
+    };
 }
