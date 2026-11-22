@@ -4,7 +4,7 @@
     ViewData["Title"] = "Students";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
     <h1>@ViewData["Title"]</h1>
     <a asp-action="Create" class="btn btn-primary">Add student</a>
 </div>
@@ -15,27 +15,34 @@
 }
 else
 {
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Groups</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var student in Model)
-            {
+    @* table-responsive: table scrolls sideways instead of making page wider on small screens*@
+    <div class="table-responsive table-card">
+        <table class="table align-middle">
+            <thead>
                 <tr>
-                    <td>@student.Name</td>
-                    <td>@student.GroupCount</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-sm btn-outline-primary">Details</a>
-                        <a asp-action="Update" asp-route-id="@student.Id" class="btn btn-sm btn-outline-secondary">Update</a>
-                        <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                    </td>
+                    <th>Name</th>
+                    <th>Groups</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var student in Model)
+                {
+                    <tr>
+                        <td>@student.Name</td>
+                        <td><span class="stat-pill">@student.GroupCount</span></td>
+                        <td>
+                            <div class="d-flex flex-column flex-sm-row align-items-start gap-1">
+                            <a asp-action="Details" asp-route-id="@student.Id"
+                               class="btn btn-sm btn-outline-primary">Details</a>
+                            <a asp-action="Update" asp-route-id="@student.Id"
+                               class="btn btn-sm btn-outline-secondary">Update</a>
+                            <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
