@@ -1,13 +1,25 @@
 @model itpe3200.Models.Group
 
+@* One row in the groups table (Group/Table.cshtml). The d-none/d-*-table-cell classes
+   on the cells must match the headers in that view so the information stays in the correct columns on smaller screens *@
 <tr>
-    <td>@Model.Name</td>
-    <td>@Model.CourseSession?.Name</td>
-    <td>@Model.Members.Count</td>
-    <td>@Model.MaxSize</td>
     <td>
-        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Details</a>
-        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Update</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+        @* Below sm (576px) the course session column is hidden and shown under group name instead to reduce scrolling *@
+        @Model.Name
+        <div class="small text-muted d-sm-none">@Model.CourseSession?.Name</div>
+    </td>
+    <td class="d-none d-sm-table-cell">@Model.CourseSession?.Name</td>
+    <td>
+        @* Below lg (992px) max size is shown under group count as "x / y" to reduce scrolling *@
+        @Model.Members.Count<span class="d-lg-none"> / @Model.MaxSize</span>
+    </td>
+    <td class="d-none d-lg-table-cell">@Model.MaxSize</td>
+    <td>
+        @* Keeps buttons stacked below sm (576px) with either all or none wrapping *@
+        <div class="d-flex flex-column flex-sm-row align-items-start gap-1">
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Details</a>
+            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Update</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+        </div>
     </td>
 </tr>

@@ -12,26 +12,23 @@
                 <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM",
                                         System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
                     <h1 class="mb-3"> @Model.Greeting, @Model.TeacherName!</h1>
-                    <!--Only uses first part of mail adress, change to use a username -->
-           
                     <div id="update d-flex gap-2">
                         <span class="p stat-pill d-inline-block mb-4"> @Model.SessionCount sessions</span>
                         <span class="p stat-pill d-inline-block mb-4"> @Model.GroupCount groups</span>
                     </div>
                     <div class="d-flex gap-2">
-                        <a asp-controller="Session" asp-action="Create" class="btn btn-primary">Create Session</a>
-                        <a asp-controller="Group" asp-action="Create" class="btn btn-secondary">Add Group</a>
+                        <a asp-controller="Session" asp-action="Create" class="btn btn-primary p-2">Create Session</a>
+                        <a asp-controller="Group" asp-action="Create" class="btn btn-secondary p-2">Add Group</a>
                     </div>
                 </div>
             </header>
 
             <div class="col-lg-7 mt-5">
                 <aside id="suggestionsCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <!--Using bootstrap structure-->
-
-
+                    
+                    @* Using bootstrap structure *@
                     <div class="carousel-inner">
-                        <!--Suggestion 1-->
+                        @* Suggestion 1 *@
                         <div class="carousel-item active">
                             <div class="item-content">
                                 <span class="stat-pill"> TIP </span>
@@ -41,7 +38,7 @@
                                 <!-- <img src="" alt=""> -->
                             </div>
                         </div>
-                        <!--Suggestion 2-->
+                        @* Suggestion 2 *@
                         <div class="carousel-item">
                             <div class="item-content">
                                 <span class="stat-pill"> TIP </span>
@@ -51,7 +48,7 @@
                                 <!-- <img src="" alt=""> -->
                             </div>
                         </div>
-                        <!--Suggestion 3-->
+                        @* Suggestion 3 *@
                         <div class="carousel-item">
                             <div class="item-content">
                                 <span class="stat-pill"> TIP </span>
@@ -61,7 +58,7 @@
                                 <!-- <img src="" alt=""> -->
                             </div>
                         </div>
-                        <!-- Carousel buttons-->
+                        @* Carousel indicators *@
                         <div class="carousel-indicators">
                             <button type="button" data-bs-target="#suggestionsCarousel" data-bs-slide-to="0" class="active"
                                     aria-current="true" aria-label="Tip 1"></button>
@@ -72,7 +69,7 @@
                         </div>
                     </div>
 
-                    <!--Left and Right Controls -->
+                    @* Left and right controls *@
                     <button class="carousel-control-prev" type="button" data-bs-target="#suggestionsCarousel"
                             data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -96,7 +93,7 @@
                 <div class="row g-3">
                     @foreach (var session in Model.Sessions)
                     {
-                        <div class="col-md-4">
+                        <div class="col-sm-6 col-lg-4">
                             <partial name="_SessionCard" model="session" />
                         </div>
                     }

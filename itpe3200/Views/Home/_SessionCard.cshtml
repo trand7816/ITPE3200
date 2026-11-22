@@ -1,11 +1,12 @@
 @model itpe3200.Models.CourseSession
 
-<!-- Partial view for one session card, based on _ItemCard from Demo-ShopMVC-4-DynamicViews. -->
+@* Partial view for one session card, based on _ItemCard from Demo-ShopMVC-4-DynamicViews. *@
 <article class="session-card h-100 position-relative">
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-start gap-2">
          <h3 class="h5 mb-0">@Model.Name</h3>
-        <!-- A button for a fullscreen modal for the join codes. -->
-         <button type="button" class="btn btn-sm session-fullscreen-btn" data-bs-toggle="modal" data-bs-target="#codeModal-@Model.Id"
+
+         @* A button for a fullscreen modal for the join codes. *@
+         <button type="button" class="btn btn-sm session-fullscreen-btn flex-shrink-0" data-bs-toggle="modal" data-bs-target="#codeModal-@Model.Id"
             aria-label="Show join code in full screen">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen" viewBox="0 0 16 16">
                     <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
@@ -13,9 +14,10 @@
         </button> 
     </div>
     <p class="session-code mt-3">@Model.JoinCode</p>
-     <!-- Stretched link makes entire card clickable -->
+
+    @* Stretched link makes entire card clickable *@
     <a asp-controller="Session" asp-action="Details" asp-route-id="@Model.Id" class="stretched-link session-link"></a>
-     <!-- Number of groups + max if the session has one -->
+    @* Number of groups + max if the session has one *@
     @if (Model.MaxGroups > 0)
     {
         <span class="stat-pill">@Model.Groups.Count / @Model.MaxGroups groups</span>
@@ -25,7 +27,7 @@
     }
 </article>
 
-<!-- Modal -->
+@* Fullscreen modal *@
 <div class="modal fade" id="codeModal-@Model.Id" tabindex="-1" aria-labelledby="codeModalLabel-@Model.Id" aria-hidden="true">
   <div class="modal-dialog modal-fullscreen">
     <div class="modal-content code-modal">
