@@ -392,11 +392,20 @@ public class GroupController : Controller
 
         var students = await _repo.GetAllStudents();
         if (students == null)
-            return Problem("Could not load students.");
+        {
+            return Problem("Could not load students");
+        }
+
+        var viewModel = new GroupDetailsViewModel { Group = group, Students = students };
+        return View("Details", viewModel);
+
+     /*   var students = await _repo.GetAllStudents();
+        if (students == null)
+            return Problem("Could not load students."); 
 
         ViewBag.Students = students;
 
-        return View("Details", group);
+        return View("Details", group); */
     }
 
 
@@ -499,17 +508,34 @@ public class GroupController : Controller
             return NotFound("Group not found");
         }
         // Only teachers need the list of all students - for the "Assign student" form
-        if (User.IsInRole("Teacher"))
-        {
-            var students = await _repo.GetAllStudents();
+      /*  if (User.IsInRole("Teacher"))
+        { */
+            var viewModel = new GroupDetailsViewModel {Group = group};
+
+            if (User.IsInRole("Teacher"))
+            {
+                var students = await _repo.GetAllStudents();
+                if (students == null)
+                {
+                    return Problem("Could not load students");
+                }
+
+                viewModel.Students = students;
+            }
+
+            return View(viewModel);
+         
+         
+          /*  var students = await _repo.GetAllStudents();
             if (students == null)
             {
                 return Problem("Could not load students");
             }
             ViewBag.Students = students;
         }
-        return View(group);
+        return View(group); */
     }
+    
 
 
     // GET: Group/Grid – shows a grid of all groups
