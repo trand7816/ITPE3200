@@ -324,6 +324,42 @@ public class GroupController : Controller
         return View(group);
     }
 
+    //GET: Group/Leave/5 - asks the student to confirm before leaving the group
+    [HttpGet]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> Leave(int id)
+    {
+        var group = await _repo.GetGroupById(id);
+        if (group is null)
+        {
+            _logger.LogWarning("[GroupController] Group not found for GroupId {GroupId:0000} on the leave page", id);
+            return NotFound("Group not found");
+        }
+        return View(group);
+    }
+
+    //POST: Group/Leave - a student leaves a group they are a member of
+    [HttpPost]
+    [Authorize(Roles = "Student")]
+    public async Task<IActionResult> LeaveConfirmed(int groupId)
+    {
+        var student = await GetLoggedInStudent();
+        if (student is null)
+        {
+            _logger.LogWarning("[GroupController] No student profile found when leaving group {GroupId:0000}", groupId);
+            return Unauthorized();
+        }
+
+        //Returns false if student is not a member of the group
+        if (!await _repo.RemoveStudentFromGroup(student.Id, groupId))
+        {
+            _logger.LogWarning("[GroupController] Student {StudentId} could not leave group {GroupId:0000}", student.Id, groupId);
+            return BadRequest("Could not leave the group");
+        }
+            _logger.LogInformation("[GroupController] Student {StudentId} left group {GroupId:0000}", student.Id, groupId);
+            return RedirectToAction("Student", "Home", null, "my-groups");
+    }
+
     [HttpPost]
     [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> AssignStudent(int studentId, int groupId)
