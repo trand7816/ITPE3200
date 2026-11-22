@@ -231,11 +231,11 @@ public class GroupController : Controller
                     if (result == GroupJoinResult.Success && groupId.HasValue)
                     {
                         _logger.LogInformation("[GroupController] Student {studentId} randomly assigned to group {groupId}", student.Id, groupId);
-                        return RedirectToAction(nameof(Joined), new {id = groupId.Value });
+                        return RedirectToAction(nameof(Joined), new { id = groupId.Value });
                     }
-                        _logger.LogWarning("[GroupController] Random assignment failed for student {StudentId}:{Result}", student.Id, result);
-                        ModelState.AddModelError("JoinCode", JoinErrorMessage(result));
-                        return View(model);
+                    _logger.LogWarning("[GroupController] Random assignment failed for student {StudentId}:{Result}", student.Id, result);
+                    ModelState.AddModelError("JoinCode", JoinErrorMessage(result));
+                    return View(model);
 
                 }
 
@@ -284,7 +284,7 @@ public class GroupController : Controller
 
         //Find the student profile for the logged in user
         var student = await GetLoggedInStudent();
-        if (student == null)  
+        if (student == null)
         {
             _logger.LogWarning("[GroupController] No student profile found for the logged-in user");
             ModelState.AddModelError("", "No student profile was found for your account.");
@@ -356,8 +356,8 @@ public class GroupController : Controller
             _logger.LogWarning("[GroupController] Student {StudentId} could not leave group {GroupId:0000}", student.Id, groupId);
             return BadRequest("Could not leave the group");
         }
-            _logger.LogInformation("[GroupController] Student {StudentId} left group {GroupId:0000}", student.Id, groupId);
-            return RedirectToAction("Student", "Home", null, "my-groups");
+        _logger.LogInformation("[GroupController] Student {StudentId} left group {GroupId:0000}", student.Id, groupId);
+        return RedirectToAction("Student", "Home", null, "my-groups");
     }
 
     [HttpPost]
@@ -398,14 +398,6 @@ public class GroupController : Controller
 
         var viewModel = new GroupDetailsViewModel { Group = group, Students = students };
         return View("Details", viewModel);
-
-     /*   var students = await _repo.GetAllStudents();
-        if (students == null)
-            return Problem("Could not load students."); 
-
-        ViewBag.Students = students;
-
-        return View("Details", group); */
     }
 
 
@@ -507,35 +499,23 @@ public class GroupController : Controller
             _logger.LogError("[GroupController] Group not found for GroupId {GroupId:0000}", id);
             return NotFound("Group not found");
         }
+        var viewModel = new GroupDetailsViewModel { Group = group };
+
         // Only teachers need the list of all students - for the "Assign student" form
-      /*  if (User.IsInRole("Teacher"))
-        { */
-            var viewModel = new GroupDetailsViewModel {Group = group};
-
-            if (User.IsInRole("Teacher"))
-            {
-                var students = await _repo.GetAllStudents();
-                if (students == null)
-                {
-                    return Problem("Could not load students");
-                }
-
-                viewModel.Students = students;
-            }
-
-            return View(viewModel);
-         
-         
-          /*  var students = await _repo.GetAllStudents();
+        if (User.IsInRole("Teacher"))
+        {
+            var students = await _repo.GetAllStudents();
             if (students == null)
             {
                 return Problem("Could not load students");
             }
-            ViewBag.Students = students;
+
+            viewModel.Students = students;
         }
-        return View(group); */
+
+        return View(viewModel);
     }
-    
+
 
 
     // GET: Group/Grid – shows a grid of all groups
@@ -571,14 +551,14 @@ public class GroupController : Controller
         return await _repo.GetStudentByIdentityUserId(user.Id);
     }
 
+    //Different error messages if a join attempt fails
     private static string JoinErrorMessage(GroupJoinResult result) => result switch
     {
-        //Different error messages if a join attempt fails
-            GroupJoinResult.GroupFull => "The group is full.",
-            GroupJoinResult.SessionFull => "All groups in this session is full, ask your teacher for help.",
-            GroupJoinResult.AlreadyInSession => "You already belong to a group in this course session.",
-            GroupJoinResult.StudentNotFound => "Student not found.",
-            GroupJoinResult.GroupNotFound => "Group not found.",
-            _ => "Could not join the group."
+        GroupJoinResult.GroupFull => "The group is full.",
+        GroupJoinResult.SessionFull => "All groups in this session is full, ask your teacher for help.",
+        GroupJoinResult.AlreadyInSession => "You already belong to a group in this course session.",
+        GroupJoinResult.StudentNotFound => "Student not found.",
+        GroupJoinResult.GroupNotFound => "Group not found.",
+        _ => "Could not join the group."
     };
 }
