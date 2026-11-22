@@ -1,24 +1,21 @@
 ﻿@{
     ViewData["Title"] = "Welcome";
 }
-
-<h1> Welcome! </h1>
-<p> Create course sessions and organize students into groups!</p>
-
-<div class="row">
-    <div class="col-md-6">
-        <div class="card p-3 mb-3">
-            <h2 class="h4">Student</h2>
-            <p>Got a join code from your teacher?</p>
-            <partial name="_JoinForm" model="new itpe3200.ViewModels.JoinViewModel()"/>
+@* Welcome page for logged out users: a short intro and one login form for everyone.
+   Logged in users are sent to their own homepage (see HomeController.Index) *@
+<section class="row g-3">
+    <header class="col-lg-5">
+        <div class="greeting-text">
+            <h1 class="mb-3">Welcome!</h1>
+            <p>Create course sessions and organize students into groups.</p>
+            <p class="mb-0">Students join a session with a code from their teacher.</p>
         </div>
-    </div>
-
-    <div class="col-md-6">
-        <div class="card p-3 mb-3">
-            <h2 class="h4">Teacher</h2>
-            <p> Manage course sessions and student groups </p>
+    </header>
+    <div class="col-lg-7 mt-lg-5">
+        <div class="card p-4">
+            <h2 class="h4">Log in</h2>
             <partial name="_LoginForm" model="new itpe3200.ViewModels.LoginViewModel()" />
         </div>
     </div>
-</div>
+</section>
+

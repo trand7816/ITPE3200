@@ -3,20 +3,24 @@ using itpe3200.Models;
 using itpe3200.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 
 namespace itpe3200.Controllers;
 
 // CRUD for students. A student can be a member of several groups
 // (one per course session) through the GroupMember join table.
+[Authorize(Roles = "Teacher")]
 public class StudentController : Controller
 {
     private readonly ICourseRepository _repo;
     private readonly ILogger<StudentController> _logger;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public StudentController(ICourseRepository repo, ILogger<StudentController> logger)
+    public StudentController(ICourseRepository repo, ILogger<StudentController> logger, UserManager<IdentityUser> userManager)
     {
         _repo = repo;
         _logger = logger;
+        _userManager = userManager;
     }
 
     // GET: Student – lists all students
@@ -72,7 +76,6 @@ public class StudentController : Controller
 
     // GET: Student/Create
     [HttpGet]
-    [Authorize]
     public IActionResult Create()
     {
         return View(new StudentCreateViewModel());
@@ -80,7 +83,6 @@ public class StudentController : Controller
 
     // POST: Student/Create
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create(StudentCreateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -105,7 +107,6 @@ public class StudentController : Controller
 
     // GET: Student/Update/5
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         var student = await _repo.GetStudentById(id);
@@ -126,7 +127,6 @@ public class StudentController : Controller
 
     // POST: Student/Update/5
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Update(StudentUpdateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -158,7 +158,6 @@ public class StudentController : Controller
 
     // GET: Student/Delete/5 – shows a confirmation page before deleting
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var student = await _repo.GetStudentById(id);
@@ -187,15 +186,37 @@ public class StudentController : Controller
         return View(model);
     }
 
-    // POST: Student/DeleteConfirmed/5
+    // POST: Student/DeleteConfirmed/5 - deletes the student profile as well as the login account
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
+        // Get the student first, so we know which login account belongs to it
+        var student = await _repo.GetStudentById(id);
+        if (student is null)
+        {
+            _logger.LogWarning("[StudentController] Student not found when deleting StudentId {StudentId}", id);
+            return NotFound("Student not found.");
+        }
+
         if (!await _repo.DeleteStudent(id))
         {
             _logger.LogError("[StudentController] Student deletion failed for StudentId {StudentId}", id);
             return BadRequest("Student could not be deleted.");
+        }
+
+        // Also delete the student's login account, so they can no longer log in.
+        // Seeded students have no account (IdentityUserId is null).
+        if (student.IdentityUserId is not null)
+        {
+            var user = await _userManager.FindByIdAsync(student.IdentityUserId);
+            if (user is not null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                {
+                    _logger.LogError("[StudentController] Login account could not be deleted for StudentId {StudentId}", id);
+                }
+            }
         }
 
         _logger.LogInformation("[StudentController] Student {StudentId} deleted", id);

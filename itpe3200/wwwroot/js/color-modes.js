@@ -2,7 +2,7 @@
  * Color mode toggler, adapted from Bootstrap's docs (https://getbootstrap.com/docs/5.3/customize/color-modes/)
  * Copyright 2011-2026 The Bootstrap Authors
  * Licensed under the Creative Commons Attribution 3.0 Unported License.
- * Simplified for this project: light/dark only, light as default.
+ * Simplified for this project: one button that toggles between light and dark, light as default.
  */
 
 (() => {
@@ -29,38 +29,20 @@
     // Set theme right away before page is drawn
     setTheme(getPreferredTheme())
 
-    // Mark the button for the active theme
-    const showActiveTheme = theme => {
-        const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
+    // When the page has loaded: switch theme each time the button is clicked
+    window.addEventListener('DOMContentLoaded', () => {
+        const toggle = document.getElementById('theme-toggle')
 
-        // Stop if page has no theme buttons
-        if (!btnToActive) {
+        // Stop if the page has no theme button
+        if (!toggle) {
             return
         }
-        
-        // Remove marking from all buttons
-        document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-            element.classList.remove('active')
-            element.setAttribute('aria-pressed', 'false')
+
+        toggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-bs-theme')
+            const next = current === 'dark' ? 'light' : 'dark'
+            setStoredTheme(next)
+            setTheme(next)
         })
-
-        // Mark the active one
-        btnToActive.classList.add('active')
-        btnToActive.setAttribute('aria-pressed', 'true')
-    }
-
-    // When the page has loaded: mark the active button and listen for clicks on the theme buttons
-    window.addEventListener('DOMContentLoaded', () => {
-        showActiveTheme(getPreferredTheme())
-
-        document.querySelectorAll('[data-bs-theme-value]')
-            .forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const theme = toggle.getAttribute('data-bs-theme-value')
-                    setStoredTheme(theme)
-                    setTheme(theme)
-                    showActiveTheme(theme)
-                })
-            })
     })
 })()

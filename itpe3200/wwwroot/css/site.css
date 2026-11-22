@@ -123,7 +123,7 @@ Our own variables are for everything else.
     --btn-primary-hover-text: var(--accent-ink);
     --btn-secondary-bg: #2E3040;
     --btn-secondary-hover-bg: #3F3A6E;
-    --btn-secondary-text: #E9E9ED;
+    --btn-secondary-text: #E9E9ED;        
 
     /* Danger button */
     --btn-danger-color: #F08A9B;
@@ -145,6 +145,13 @@ Our own variables are for everything else.
 /* ========================================================================
     3. GENERAL STYLING
 ===========================================================================  */
+
+/* Color mode button: only show the icon of the mode you switch to */
+[data-bs-theme="light"] .theme-icon-sun,
+[data-bs-theme="dark"]  .theme-icon-moon {
+    display: none;
+}
+
 .site-navbar {
     background-color: var(--card-bg);
 }
@@ -343,14 +350,20 @@ p,
     }
 }
 
-/* ----- Teacher dashboard: carousel ----- */
+/* ----- Teacher homepage: carousel ----- */
 
 .carousel-inner {
     border-radius: 15px;
 }
 
+/* Carousel uses the same fixed lavender colors as .join-card, so both highlighted cards look alike in light and dark mode */
 .carousel-item {
-    background-color: var(--primary-accent);
+    background-color: #CFC9F3;
+}
+
+.item-content h2,
+.item-content p {
+    color: #1C1840;
 }
 
 .carousel-indicators {
@@ -358,8 +371,8 @@ p,
 }
 
 .carousel-indicators [data-bs-target] {
-    background-color: var(--accent-ink);
-    opacity: 0.4;
+    background-color: #534AB7;
+    opacity: 0.35;
     height: 5px;
     border-radius: 7px / 12px;
 }
@@ -368,9 +381,9 @@ p,
     opacity: 1;
 }
 
-/* Bootstrap's arrows are white images: invert them for dark theme only */
-[data-bs-theme="dark"] .carousel-control-prev-icon,
-[data-bs-theme="dark"] .carousel-control-next-icon {
+/* Bootstrap's arrow icons are white, so they are inverted to dark in both themes (the light lavender background needs dark arrows) */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
     filter: invert(1);
 }
 
@@ -386,19 +399,50 @@ p,
     }
 }
 
-.item-content h2 {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-    color: var(--accent-ink);
-}
-
-.item-content p {
-    margin-bottom: 1rem;
-    color: var(--accent-ink);
-}
-
-/* Button inside the carousel */
+/* Button inside the carousel: fixed purple, so it stays visible on lavender in both themes */
 .item-content .btn {
+    --bs-btn-color: #FFFFFF;
+    --bs-btn-bg: #534AB7;
+    --bs-btn-border-color: #534AB7;
+    --bs-btn-hover-color: #FFFFFF;
+    --bs-btn-hover-bg: #3C3489;
+    --bs-btn-hover-border-color: #3C3489;
+    --bs-btn-active-color: #FFFFFF;
+    --bs-btn-active-bg: #3C3489;
+    --bs-btn-active-border-color: #3C3489;
+}
+/* ---- Student homepage: join card ---- */
+
+.join-card {
+    background-color: #CFC9F3;
+    border-color: #CFC9F3;
+    color: #1C1840; 
+    --focus-ring: rgba(28, 24, 64, 0.45);    /* adding new value to focus-ring just for this card */
+    --bs-danger-rgb: 158, 35, 70;              /* adding darker red for better readability on lavender background: used for errors and alerts */
+}
+
+.join-group-row {
+    background-color: #EEEDFE;
+    border-radius: 9px;
+    padding: 0.5rem 0.75rem;
+}
+
+.join-card h2,
+.join-card p {
+    color: #1C1840;
+}
+
+.join-card .join-code-input {
+    background-color: transparent;
+    color: #1C1840;
+    --bs-secondary-color: #6B6880;    /* the underline color, see .join-code-input */
+}
+
+.join-card .join-code-input:focus {
+    border-color: #534AB7;
+}
+
+[data-bs-theme="dark"] .join-card .btn {
     --bs-btn-color: var(--primary-accent);
     --bs-btn-bg: var(--accent-ink);
     --bs-btn-border-color: var(--accent-ink);
@@ -410,7 +454,22 @@ p,
     --bs-btn-active-border-color: var(--accent-deep);
 }
 
-/* ----- Teacher dashboard: session cards ----- */
+/* ---- Join flow: progress bar ---- */
+
+/* Bootstrap's progress bar in our colors */
+.progress {
+    --bs-progress-height: 6px;
+    --bs-progress-bg: var(--dividers);
+    --bs-progress-bar-bg: var(--primary-accent);
+}
+
+/* The label for the current step */
+.join-step-active {
+    color: var(--primary-accent);
+    font-weight: 500;
+}
+
+/* ----- Teacher homepage: session cards ----- */
 
 /*Padding around the session overview in the teacher view*/
 @media (min-width: 768px) {

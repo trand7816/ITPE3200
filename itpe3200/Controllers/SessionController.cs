@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace itpe3200.Controllers;
 
+// Switching to role based authorization on class level, instead of on method level like the demo, as read should also be teacher-only
+// Join is the exception (using [AllowAnonymous]), so students can enter a join code.
+[Authorize(Roles = "Teacher")]
 public class SessionController : Controller
 {
     private readonly ICourseRepository _repo;
@@ -31,12 +34,14 @@ public class SessionController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Join()
     {
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Join(string joinCode)
     {
         if (string.IsNullOrWhiteSpace(joinCode))
@@ -58,7 +63,6 @@ public class SessionController : Controller
     }
 
     [HttpPost]
-    [Authorize]
     public async Task<IActionResult> Create(SessionCreateViewModel model)
     {
         if (!ModelState.IsValid)
@@ -87,7 +91,6 @@ public class SessionController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public IActionResult Create()
     {
         return View(new SessionCreateViewModel());
@@ -153,120 +156,116 @@ public class SessionController : Controller
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
-    var session = await _repo.GetSessionById(id);
+        var session = await _repo.GetSessionById(id);
 
-    if (session is null)
-    {
-        _logger.LogWarning(
-            "[SessionController] Session not found when updating SessionId {SessionId}",
-            id);
+        if (session is null)
+        {
+            _logger.LogWarning(
+                "[SessionController] Session not found when updating SessionId {SessionId}",
+                id);
 
-        return NotFound("Course session not found.");
-    }
+            return NotFound("Course session not found.");
+        }
 
-    var model = new SessionUpdateViewModel
-    {
-        Id = session.Id,
-        Name = session.Name,
-        MaxGroups = session.MaxGroups,
-        RandomAssignment = session.RandomAssignment
-    };
-
-    return View(model);
-   }
-
-   [HttpPost]
-   [Authorize]
-   public async Task<IActionResult> Update(SessionUpdateViewModel model)
-   {
-    if (!ModelState.IsValid)
-    {
-        _logger.LogWarning(
-            "[SessionController] Session update failed validation for SessionId {SessionId}",
-            model.Id);
+        var model = new SessionUpdateViewModel
+        {
+            Id = session.Id,
+            Name = session.Name,
+            MaxGroups = session.MaxGroups,
+            RandomAssignment = session.RandomAssignment
+        };
 
         return View(model);
     }
 
-    var session = await _repo.GetSessionById(model.Id);
-
-    if (session is null)
+    [HttpPost]
+    public async Task<IActionResult> Update(SessionUpdateViewModel model)
     {
-        _logger.LogWarning(
-            "[SessionController] Session not found when updating SessionId {SessionId}",
-            model.Id);
+        if (!ModelState.IsValid)
+        {
+            _logger.LogWarning(
+                "[SessionController] Session update failed validation for SessionId {SessionId}",
+                model.Id);
 
-        return NotFound("Course session not found.");
+            return View(model);
+        }
+
+        var session = await _repo.GetSessionById(model.Id);
+
+        if (session is null)
+        {
+            _logger.LogWarning(
+                "[SessionController] Session not found when updating SessionId {SessionId}",
+                model.Id);
+
+            return NotFound("Course session not found.");
+        }
+
+        session.Name = model.Name.Trim();
+        session.MaxGroups = model.MaxGroups;
+        session.RandomAssignment = model.RandomAssignment;
+
+        if (!await _repo.UpdateSession(session))
+        {
+            _logger.LogError(
+                "[SessionController] Session update failed for SessionId {SessionId}",
+                model.Id);
+
+            ModelState.AddModelError("", "Could not update the course session.");
+            return View(model);
+        }
+
+        _logger.LogInformation(
+            "[SessionController] Session {SessionId} updated",
+            session.Id);
+
+        return RedirectToAction(nameof(Details), new { id = session.Id });
     }
 
-    session.Name = model.Name.Trim();
-    session.MaxGroups = model.MaxGroups;
-    session.RandomAssignment = model.RandomAssignment;
-
-    if (!await _repo.UpdateSession(session))
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
     {
-        _logger.LogError(
-            "[SessionController] Session update failed for SessionId {SessionId}",
-            model.Id);
+        var session = await _repo.GetSessionById(id);
 
-        ModelState.AddModelError("", "Could not update the course session.");
+        if (session is null)
+        {
+            _logger.LogWarning(
+                "[SessionController] Session not found when deleting SessionId {SessionId}",
+                id);
+
+            return NotFound("Course session not found.");
+        }
+
+        var model = new SessionDeleteViewModel
+        {
+            Id = session.Id,
+            Name = session.Name,
+            JoinCode = session.JoinCode
+        };
+
         return View(model);
     }
 
-    _logger.LogInformation(
-        "[SessionController] Session {SessionId} updated",
-        session.Id);
-
-    return RedirectToAction(nameof(Details), new { id = session.Id });
-   }
-
-   [HttpGet]
-   [Authorize]
-   public async Task<IActionResult> Delete(int id)
-   {
-    var session = await _repo.GetSessionById(id);
-
-    if (session is null)
+    [HttpPost]
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        _logger.LogWarning(
-            "[SessionController] Session not found when deleting SessionId {SessionId}",
+        var deleted = await _repo.DeleteSession(id);
+
+        if (!deleted)
+        {
+            _logger.LogError(
+                "[SessionController] Session deletion failed for SessionId {SessionId}",
+                id);
+
+            return BadRequest("Course session could not be deleted.");
+        }
+
+        _logger.LogInformation(
+            "[SessionController] Session {SessionId} deleted",
             id);
 
-        return NotFound("Course session not found.");
+        return RedirectToAction(nameof(Index));
     }
-
-    var model = new SessionDeleteViewModel
-    {
-        Id = session.Id,
-        Name = session.Name,
-        JoinCode = session.JoinCode
-    };
-
-    return View(model);
-   }
-
-   [HttpPost]
-   [Authorize]
-   public async Task<IActionResult> DeleteConfirmed(int id)
-   {
-    var deleted = await _repo.DeleteSession(id);
-
-    if (!deleted)
-    {
-        _logger.LogError(
-            "[SessionController] Session deletion failed for SessionId {SessionId}",
-            id);
-
-        return BadRequest("Course session could not be deleted.");
-    }
-
-    _logger.LogInformation(
-        "[SessionController] Session {SessionId} deleted",
-        id);
-
-    return RedirectToAction(nameof(Index));
-   }
 }
