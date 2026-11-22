@@ -1,4 +1,4 @@
-@model itpe3200.Models.Group
+@model itpe3200.ViewModels.GroupDetailsViewModel
 
 @{
     ViewData["Title"] = "Group details";
@@ -11,21 +11,21 @@
 @* Display group information as a definition list. *@
 <dl class="row">
     <dt class="col-sm-3">Group name</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
+    <dd class="col-sm-9">@Model.Group.Name</dd>
 
     <dt class="col-sm-3">Course session</dt>
     @* ?. prevents an error if the group has no related course session. *@
-    <dd class="col-sm-9">@Model.CourseSession?.Name</dd>
+    <dd class="col-sm-9">@Model.Group.CourseSession?.Name</dd>
 
     <dt class="col-sm-3">Members</dt>
     @* Show the current number of members compared with the maximum size. *@
-    <dd class="col-sm-9">@Model.Members.Count / @Model.MaxSize</dd>
+    <dd class="col-sm-9">@Model.Group.Members.Count / @Model.Group.MaxSize</dd>
 </dl>
 
 <h2>Students</h2>
 
 @* Show a message when the group has no students. *@
-@if (!Model.Members.Any())
+@if (!Model.Group.Members.Any())
 {
     <p>No students have joined this group yet.</p>
 }
@@ -34,7 +34,7 @@ else
     <ul>
         @* Create one list item for each student in the group. *@
         @* Each member is a GroupMember row, so the name comes from member.Student. *@
-        @foreach (var member in Model.Members)
+        @foreach (var member in Model.Group.Members)
         {
             <li>@member.Student?.Name</li>
         }
@@ -45,7 +45,7 @@ else
 {
     <h2>Assign student to group</h2>
     <form asp-action="AssignStudent" method="post">
-        <input type="hidden" name="groupId" value="@Model.Id">
+        <input type="hidden" name="groupId" value="@Model.Group.Id">
 
         <div class="form-group mb-3">
             <label for="studentId">Select student</label>
@@ -53,7 +53,7 @@ else
             <select name="studentId" id="studentId" class="form-select" required>
                 <option value="">-- Select student --</option>
 
-                @foreach (var student in ViewBag.Students)
+                @foreach (var student in Model.Students)
                 {
                     <option value="@student.Id">@student.Name</option>
                 }
@@ -76,4 +76,5 @@ else
 else
 {
     <a asp-controller="Home" asp-action="Student" class="btn btn-secondary">Home</a>
+    <a asp-action="Leave" asp-route-id="@Model.Group.Id" class="btn btn-outline-danger">Leave group</a>
 }

@@ -30,6 +30,7 @@ public interface ICourseRepository
     // ---------------- Group members ----------------
     // student a member of the group. adds a GroupMember row
     Task<GroupJoinResult> AssignStudentToGroup(int studentId, int groupId);
+    Task<(GroupJoinResult Result, int? GroupId)> AssignStudentRandomly (int studentId, int sessionId);
     Task<bool> RemoveStudentFromGroup(int studentId, int groupId);
     Task<bool?> IsStudentInSession(int studentId, int sessionId);
 }

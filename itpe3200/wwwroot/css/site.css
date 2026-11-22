@@ -44,6 +44,11 @@ Our own variables are for everything else.
     --accent-ink: #FFFFFF;          /* text on the accent color */
     --accent-deep: #EEEDFE;         /* soft accent background */
 
+    /* Highlighted surfaces: cards, carousel, join pages */
+    --highlight-bg: #CFC9F3;
+    --highlight-text: #1C1840;
+    --highlight-row-bg:#EEEDFE;
+
     /* Links */
     --bs-link-color: #534AB7;
     --bs-link-color-rgb: 83, 74, 183;
@@ -103,6 +108,11 @@ Our own variables are for everything else.
     --primary-accent: #CFC9F3;
     --accent-ink: #1C1840;
     --accent-deep: #2D2752;
+
+    /* Highlighted surfaces */
+    --highlight-bg: #2D2752;
+    --highlight-text: #E9E9ED;
+    --highlight-row-bg: #3F3A6E;
 
     /* Links */
     --bs-link-color: #CFC9F3;
@@ -166,8 +176,20 @@ p,
     color: var(--bs-body-color);
 }
 
+/* ---- Subheadings ---- */
+
+/* regular subheading in muted color */
 .subheading {
     color: var(--subheading);
+}
+
+/* Uppercase and with accent color */
+.eyebrow,
+.join-page .eyebrow {
+    color: var(--primary-accent);
+    font-size: small;
+    letter-spacing: 0.04rem;
+    text-transform: uppercase;
 }
 
 /* Cards (used on the group and session pages) */
@@ -328,16 +350,6 @@ p,
    6. CUSTOM COMPONENTS
    ======================================================================== */
 
-/*---- Pills ----*/
-
-/* Small pill badge */
-.stat-pill {
-    background-color: var(--accent-deep);
-    color: var(--primary-accent);
-    padding: 0.2rem 0.75rem;
-    border-radius: 999px;
-}
-
 /*---- Teacher Dashboard Greeting ----*/
 .greeting-text {
     text-align: left;
@@ -358,33 +370,34 @@ p,
 
 /* Carousel uses the same fixed lavender colors as .join-card, so both highlighted cards look alike in light and dark mode */
 .carousel-item {
-    background-color: #CFC9F3;
+    background-color: var(--highlight-bg);
 }
 
 .item-content h2,
 .item-content p {
-    color: #1C1840;
+    color: var(--highlight-text);
 }
 
 .carousel-indicators {
     margin-bottom: 0.3rem;
 }
 
-.carousel-indicators [data-bs-target] {
-    background-color: #534AB7;
-    opacity: 0.35;
+[data-bs-theme] .carousel .carousel-indicators [data-bs-target] {
+    background-color: var(--primary-accent);
     height: 5px;
     border-radius: 7px / 12px;
 }
 
-.carousel-indicators .active {
-    opacity: 1;
+/* Bootstrap's arrow icons are white: inverted to dark on light background in light mode */
+[data-bs-theme="light"] .carousel-control-prev-icon,
+[data-bs-theme="light"] .carousel-control-next-icon {
+    filter: invert(1);
 }
 
-/* Bootstrap's arrow icons are white, so they are inverted to dark in both themes (the light lavender background needs dark arrows) */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    filter: invert(1);
+/* Bootstrap darkens the arrows in dark mode (made for light images): keep them white on the deep purple carousel */
+[data-bs-theme="dark"] .carousel .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel .carousel-control-next-icon {
+    filter: none;
 }
 
 .item-content {
@@ -399,59 +412,51 @@ p,
     }
 }
 
-/* Button inside the carousel: fixed purple, so it stays visible on lavender in both themes */
-.item-content .btn {
-    --bs-btn-color: #FFFFFF;
-    --bs-btn-bg: #534AB7;
-    --bs-btn-border-color: #534AB7;
-    --bs-btn-hover-color: #FFFFFF;
-    --bs-btn-hover-bg: #3C3489;
-    --bs-btn-hover-border-color: #3C3489;
-    --bs-btn-active-color: #FFFFFF;
-    --bs-btn-active-bg: #3C3489;
-    --bs-btn-active-border-color: #3C3489;
+/*---- Pills ----*/
+
+.stat-pill {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
 }
+
+.item-content .stat-pill {
+    background-color: var(--highlight-row-bg);
+}
+
 /* ---- Student homepage: join card ---- */
 
 .join-card {
-    background-color: #CFC9F3;
-    border-color: #CFC9F3;
-    color: #1C1840; 
-    --focus-ring: rgba(28, 24, 64, 0.45);    /* adding new value to focus-ring just for this card */
-    --bs-danger-rgb: 158, 35, 70;              /* adding darker red for better readability on lavender background: used for errors and alerts */
+    background-color: var(--highlight-bg);
+    border-color: var(--highlight-bg);
+    color: var(--highlight-text); 
+}
+
+ /* Darker red for alerts on lavender background */
+[data-bs-theme="light"] .join-card {
+    --bs-danger-rgb: 158, 35, 70;
 }
 
 .join-group-row {
-    background-color: #EEEDFE;
+    background-color: var(--highlight-row-bg);
     border-radius: 9px;
     padding: 0.5rem 0.75rem;
 }
 
 .join-card h2,
 .join-card p {
-    color: #1C1840;
+    color: var(--highlight-text);
 }
 
 .join-card .join-code-input {
     background-color: transparent;
-    color: #1C1840;
-    --bs-secondary-color: #6B6880;    /* the underline color, see .join-code-input */
+    color: var(--highlight-text);
+    --bs-secondary-color: var(--input-fields);    /* the underline color, see .join-code-input */
 }
 
 .join-card .join-code-input:focus {
-    border-color: #534AB7;
-}
-
-[data-bs-theme="dark"] .join-card .btn {
-    --bs-btn-color: var(--primary-accent);
-    --bs-btn-bg: var(--accent-ink);
-    --bs-btn-border-color: var(--accent-ink);
-    --bs-btn-hover-color: var(--primary-accent);
-    --bs-btn-hover-bg: var(--accent-deep);
-    --bs-btn-hover-border-color: var(--accent-deep);
-    --bs-btn-active-color: var(--primary-accent);
-    --bs-btn-active-bg: var(--accent-deep);
-    --bs-btn-active-border-color: var(--accent-deep);
+    border-color: var(--primary-accent);
 }
 
 /* ---- Join flow: progress bar ---- */
@@ -467,6 +472,56 @@ p,
 .join-step-active {
     color: var(--primary-accent);
     font-weight: 500;
+}
+
+/* ---- Join Flow: full-page color background---- */
+
+/* The join pages get the highlight color on the whole page: set with ViewData["BodyClass"] in the view*/
+.join-page {
+    background-color: var(--highlight-bg);
+    color: var(--highlight-text);
+}
+
+.join-page .join-card {
+    background-color: var(--highlight-row-bg);
+    border: 0;
+    text-align: center;
+}
+
+.join-card .h4{
+    font-size: 3rem;
+}
+
+.join-page .join-card .join-group-row {
+    background-color: var(--highlight-bg);
+}
+.join-page .join-card .join-code-input {
+    background-color: var(--accent-deep);
+    margin-top: 1rem;
+}
+/* Removes box around join code input for the join page */
+/* .join-page .join-code-input {
+    --code-gap: 1.5ch;
+    border: 0;
+    font-size: 1.5rem;
+    padding-top: 1rem;
+    letter-spacing: var(--code-gap);
+    padding-left: calc(50% - (6 * (1ch + var(--code-gap)) - var(--code-gap)) / 2);
+    background-image: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch calc(1ch + var(--code-gap)));
+    background-size: calc(6 * (1ch + var(--code-gap))) 2px;
+}
+
+@media (min-width: 1200px) {
+    .join-page .join-code-input {
+        font-size: 3rem;
+        --code-gap: 1.5ch;
+    }
+} */
+
+/* Makes the underlines get accent color while typing */
+ .join-page .join-code-input:focus {
+    box-shadow: none;
+    --bs-secondary-color: var(--primary-accent);
 }
 
 /* ----- Teacher homepage: session cards ----- */
@@ -540,3 +595,21 @@ p,
     background-repeat: no-repeat;
 }
 
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-bottom: 0.75rem;
+    border-radius: 9px;
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+}
+
+.feature-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+    stroke-width: 0.4px;
+}

@@ -8,5 +8,8 @@ public enum GroupJoinResult
     StudentNotFound, 
     GroupFull, 
     AlreadyInSession, 
+
+    //Random assignment: every group in the session is full
+    SessionFull,
     DatabaseError
 }
