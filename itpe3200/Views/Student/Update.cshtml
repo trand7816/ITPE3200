@@ -1,26 +1,33 @@
 @model itpe3200.ViewModels.StudentUpdateViewModel
 
 @{
-    ViewData["Title"] = "Update student";
+    ViewData["Title"] = "Edit student";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <a asp-action="Index" class="d-inline-block mb-3">
+            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to students
+        </a>
+        <div class="card p-4">
+            <p class="eyebrow mb-1">Students</p>
+            <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+            <form asp-action="Update" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Update" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label><span class="text-danger">*</span>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label><span class="text-danger">*</span>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save changes</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </form>
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

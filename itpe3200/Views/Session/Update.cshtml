@@ -1,38 +1,47 @@
 @model itpe3200.ViewModels.SessionUpdateViewModel
 
 @{
-    ViewData["Title"] = "Update session";
+    ViewData["Title"] = "Edit session";
 }
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <a asp-action="Index" class="d-inline-block mb-3">
+            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to sessions
+        </a>
+        <div class="card p-4">
+            <p class="eyebrow mb-1">Sessions</p>
+            <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+            <form asp-action="Update" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<h1>@ViewData["Title"]</h1>
+                <input type="hidden" asp-for="Id" />
 
-<form asp-action="Update" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
 
-    <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label asp-for="MaxGroups" class="form-label">Maximum groups</label>
+                    <input asp-for="MaxGroups" class="form-control" type="number" min="0" />
+                    <span asp-validation-for="MaxGroups" class="text-danger"></span>
+                </div>
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+                <div class="form-check mb-3">
+                    <input asp-for="RandomAssignment" class="form-check-input" />
+                    <label asp-for="RandomAssignment" class="form-check-label">
+                        Randomly assign students to groups
+                    </label>
+                </div>
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="MaxGroups" class="form-label">Maximum groups</label>
-        <input asp-for="MaxGroups" class="form-control" type="number" min="0" />
-        <span asp-validation-for="MaxGroups" class="text-danger"></span>
-    </div>
-
-    <div class="form-check mb-3">
-        <input asp-for="RandomAssignment" class="form-check-input" />
-        <label asp-for="RandomAssignment" class="form-check-label">
-            Randomly assign students to groups
-        </label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save changes</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

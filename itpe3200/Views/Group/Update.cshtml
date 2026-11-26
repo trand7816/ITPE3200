@@ -1,29 +1,44 @@
 @model itpe3200.ViewModels.GroupUpdateViewModel
 
-@{ViewData["Title"] = "Update Group";}
-
-<h1>@ViewData["Title"]</h1>
-
-<form asp-action="Update" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id">
-
-    <div class="form-group">
-        <label asp-for="Name">Change Group Name</label>
-        <input asp-for="Name" class="form-control">
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="MaxSize">Change Group Size</label><span class="text-danger">*</span>
-        <input asp-for="MaxSize" class="form-control" type="number">
-        <span asp-validation-for="MaxSize" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a asp-action="Table" class="btn btn-secondary">Cancel</a>
-</form>
-
-@section Scripts{
-    <partial name="_ValidationScriptsPartial"></partial>
+@{
+    ViewData["Title"] = "Edit group";
 }
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <a asp-action="Table" class="d-inline-block mb-3">
+            <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to groups
+        </a>
+        <div class="card p-4">
+            <p class="eyebrow mb-1">Groups</p>
+            <h1 class="h3 mb-1">@ViewData["Title"]</h1>
+            <form asp-action="Update" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id">
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label""></label>
+                    <input asp-for=" Name" class="form-control"/>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+    
+                <div class="mb-3">
+                    <label asp-for="MaxSize" class="form-label"></label><span class="text-danger">*</span>
+                    <input asp-for="MaxSize" class="form-control" type="number" aria-describedby="maxsize-help">
+                    <div id="maxsize-help" class="form-text">
+                        Can't be lower than the number of members already in the group
+                    </div>
+                    <span asp-validation-for="MaxSize" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <a asp-action="Table" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial"></partial>
+        }
