@@ -9,9 +9,10 @@
         <h1 class="mb-2">Welcome!</h1>
         <p class="mb-4">Create course sessions and organize students into groups.</p>
     </header>
-    <div class="card join-card p-4">
-        <div class="row g-3">
-            <div class="col-md-6">
+    
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card join-card p-4">
                 <h2 class="h5">For Teachers</h2>
                 <ol class="list-unstyled mb-0">
                     <li class="join-group-row mb-2"><strong>1</strong> • Create a course session</li>
@@ -19,7 +20,9 @@
                     <li class="join-group-row"><strong>3</strong> • Watch the groups fill up!</li>
                 </ol>
             </div>
-            <div class="col-md-6">
+        </div>
+        <div class="col-md-6">
+            <div class="card join-card p-4">
                 <h2 class="h5">For Students</h2>
                 <ol class="list-unstyled mb-0">
                     <li class="join-group-row mb-2"><strong>1</strong> • Enter a join code</li>
@@ -27,20 +30,18 @@
                     <li class="join-group-row"><strong>3</strong> • Get to work!</li>
                 </ol>
             </div>
-            <div class="d-flex gap-2 mt-3">
-                <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Log in</a>
-                <a asp-controller="Account" asp-action="Register" class="btn btn-secondary">Register</a>
-            </div>
         </div>
     </div>
-        
-        
+
+    <div class="d-flex gap-2 mt-3">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Log in</a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-secondary">Register</a>
+    </div>
 
     @*Feature Cards*@
-
     <div class="row row-cols-1 row-cols-md-3 g-3 mt-5">
         <div class="col">
-            <div class="card h-100 m-0 p-3">
+            <div class="card h-100 m-0 p-3 py-4">
                 <span class="feature-icon" aria-hidden="true">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-clock-history" viewBox="0 0 16 16">
