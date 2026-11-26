@@ -2,79 +2,134 @@
 
 @{
     ViewData["Title"] = "Group details";
+
+    bool isTeacher = User.IsInRole("Teacher");
+
+    //Which view (Table / Grid) the teacher came from is sent in the url
+    //and used to determine what the back to groups button should send back to - added for consistency
+    //Anything besides grid falls back to table
+    var from = Context.Request.Query["from"].ToString();
+    var backTo = from == "Grid" ? "Grid" : "Table";
 }
 
-@* Display the page heading. *@
-<h1>@ViewData["Title"]</h1>
-<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
 
-@* Display group information as a definition list. *@
-<dl class="row">
-    <dt class="col-sm-3">Group name</dt>
-    <dd class="col-sm-9">@Model.Group.Name</dd>
-
-    <dt class="col-sm-3">Course session</dt>
-    @* ?. prevents an error if the group has no related course session. *@
-    <dd class="col-sm-9">@Model.Group.CourseSession?.Name</dd>
-
-    <dt class="col-sm-3">Members</dt>
-    @* Show the current number of members compared with the maximum size. *@
-    <dd class="col-sm-9">@Model.Group.Members.Count / @Model.Group.MaxSize</dd>
-</dl>
-
-<h2>Students</h2>
-
-@* Show a message when the group has no students. *@
-@if (!Model.Group.Members.Any())
-{
-    <p>No students have joined this group yet.</p>
-}
-else
-{
-    <ul>
-        @* Create one list item for each student in the group. *@
-        @* Each member is a GroupMember row, so the name comes from member.Student. *@
-        @foreach (var member in Model.Group.Members)
+        @* Teachers: Return to the group table. *@
+        @* Students: Return to homepage. *@
+        @if (isTeacher)
         {
-            <li>@member.Student?.Name</li>
+            <a asp-action="@backTo" class="d-inline-block mb-5">
+                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to groups
+            </a>
         }
-    </ul>
-}
-@* Allows student assignment to group if the user has a Teacher role *@
-@if (User.IsInRole("Teacher"))
-{
-    <h2>Assign student to group</h2>
-    <form asp-action="AssignStudent" method="post">
-        <input type="hidden" name="groupId" value="@Model.Group.Id">
+        else
+        {
+            <a asp-controller="Home" asp-action="Student" class="d-inline-block mb-3">
+                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to home
+            </a>
+        }
 
-        <div class="form-group mb-3">
-            <label for="studentId">Select student</label>
+        @* Header: group name and actions on the group *@
+        <header class="d-flex justify-content-between align-items-start gap-3 mb-4">
 
-            <select name="studentId" id="studentId" class="form-select" required>
-                <option value="">-- Select student --</option>
-
-                @foreach (var student in Model.Students)
+            <div>
+                <p class="eyebrow mb-1">Details</p>
+                <h1 class="h3 mb-0">@Model.Group.Name</h1>
+            </div>
+            <div class="d-flex gap-1 flex-shrink-0">
+                @if (isTeacher)
                 {
-                    <option value="@student.Id">@student.Name</option>
+                    <a asp-action="Update" asp-route-id="@Model.Group.Id" class="btn btn-sm btn-outline-secondary"
+                       aria-label="Edit @Model.Group.Name" title="Edit group">
+                        <i class="bi bi-pencil" aria-hidden="true"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Group.Id" class="btn btn-sm btn-outline-danger"
+                       aria-label="Delete @Model.Group.Name" title="Delete group">
+                        <i class="bi bi-trash3" aria-hidden="true"></i>
+                    </a>
                 }
-            </select>
+                else
+                {
+                    <a asp-action="Leave" asp-route-id="@Model.Group.Id" class="btn btn-sm btn-outline-danger">
+                        Leave group
+                    </a>
+                }
+            </div>
+        </header>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* Display group information as a definition list. *@
+            <dl class="row g-0 mb-4 detail-list">
+                <dt class="col-sm-4 eyebrow">Course session</dt>
+                @* ?. prevents an error if the group has no related course session. *@
+                <dd class="col-sm-8">@Model.Group.CourseSession?.Name</dd>
+
+                <dt class="col-sm-4 eyebrow">Members</dt>
+                @* Show the current number of members compared with the maximum size. *@
+                <dd class="col-sm-8">
+                    <span class="stat-pill">@Model.Group.Members.Count / @Model.Group.MaxSize</span>
+                </dd>
+            </dl>
+
+            @* Group card: information, members and assign form *@
+        <div class="card p-4">
+            <h2 class="h5 mt-0 mb-2">Students</h2>
+
+            @* Show a message when the group has no students. *@
+            @if (!Model.Group.Members.Any())
+            {
+                <p class="mb-0">No students have joined this group yet.</p>
+            }
+            else
+            {
+                <ul class="list-unstyled mb-0">
+
+                    @foreach (var member in Model.Group.Members)
+                    {
+                        <li class="d-flex justify-content-between align-items-center py-2">
+                            @member.Student?.Name
+
+                            @* Teacher can remove student from group - confirmation not added first, because a student can be added back in*@
+                            @if (isTeacher)
+                            {
+                                <form asp-action="RemoveMember" method="post">
+                                    <input type="hidden" name="groupId" value="@Model.Group.Id" />
+                                    <input type="hidden" name="studentId" value="@member.StudentId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            aria-label="Remove @member.Student?.Name from the group" title="Remove from group">
+                                        <i class="bi bi-x-lg" aria-hidden="true"></i>
+                                    </button>
+                                </form>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+
+            @* Teacher can assign student to group, separated from the member list by a line *@
+            @if (isTeacher)
+            {
+                <form asp-action="AssignStudent" method="post" class="border-top pt-3 mt-3">
+                    <input type="hidden" name="groupId" value="@Model.Group.Id">
+                    <label for="studentId" class="form-label">Add a student</label>
+                    <div class="d-flex gap-2">
+                        <select name="studentId" id="studentId" class="form-select" required>
+                            <option value="">-- Select student --</option>
+
+                            @foreach (var student in Model.Students)
+                            {
+                                <option value="@student.Id">@student.Name</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary flex-shrink-0">
+                            Add Student
+                        </button>
+                    </div>
+                </form>
+            }
         </div>
-        <button type="submit" class="btn btn-primary">
-            Add Student
-        </button>
-    </form>
-}
 
-@* Teachers: Return to the group table. *@
-@* Students: Return to homepage. *@
-
-@if (User.IsInRole("Teacher"))
-{
-    <a asp-action="Table" class="btn btn-secondary">Back to groups</a>
-
-}
-else
-{
-    <a asp-controller="Home" asp-action="Student" class="btn btn-secondary">Home</a>
-    <a asp-action="Leave" asp-route-id="@Model.Group.Id" class="btn btn-outline-danger">Leave group</a>
-}
+    </div>
+</div>

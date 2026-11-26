@@ -1,13 +1,57 @@
 @model itpe3200.Models.Group
 
+@* One row in the groups table (Group/Table.cshtml). The d-none/d-*-table-cell classes
+   on the cells must match the headers in that view so the information stays in the correct columns on smaller screens *@
 <tr>
-    <td>@Model.Name</td>
-    <td>@Model.CourseSession?.Name</td>
-    <td>@Model.Members.Count</td>
-    <td>@Model.MaxSize</td>
+    @* Opens and closes the member row below *@
+    <td class="col-fit">
+        <button class="btn btn-sm members-toggle" title="Group Details" type="button" data-bs-toggle="collapse"
+                data-bs-target="#members-@Model.Id" aria-expanded="false" aria-controls="members-@Model.Id"
+                aria-labels="Show members of @Model.Name">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+        </button>
+    </td>
     <td>
-        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">Details</a>
-        <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary">Update</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+        @* Below sm (576px) the course session column is hidden and shown under group name instead to reduce scrolling *@
+        <a asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a>
+        <div class="small text-muted d-sm-none">@Model.CourseSession?.Name</div>
+    </td>
+    <td class="d-none d-sm-table-cell">@Model.CourseSession?.Name</td>
+    <td>
+        <span class="stat-pill">@Model.Members.Count / @Model.MaxSize</span>
+    </td>
+    <td class="col-fit">
+        @* Keeps buttons stacked below sm (576px) with either all or none wrapping *@
+        <div class="d-flex justify-content-end gap-1">
+            @* Icon buttons: title shows a tooltip on hover*@
+            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary"
+               aria-label="Edit @Model.Name" title="Edit group"><i class="bi bi-pencil"></i></a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger"
+               aria-label="Delete @Model.Name" title="Delete group"><i class="bi bi-trash3"></i></a>
+        </div>
+    </td>
+</tr>
+@* Hidden row with group members - only one can be open at a time *@
+@* Only one can open at a time - using data-bs-parent to set parent #group-rows (tbody's Id) as parent, *@
+<tr class="collapse member-row" id="members-@Model.Id" data-bs-parent="#group-rows">
+    <td colspan="6">
+        <p class="small text-uppercase text-muted mb-2">Members</p>
+
+        @if (!Model.Members.Any())
+        {
+            <p class="mb-0">No members yet.</p>
+        }
+        else
+        {
+            <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
+                @foreach (var member in Model.Members)
+                {
+                    <li class="stat-pill">@member.Student?.Name</li>
+                }
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus" aria-hidden="true"></i> Add member
+                </a>
+            </ul>
+        }
     </td>
 </tr>

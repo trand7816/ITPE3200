@@ -192,15 +192,37 @@ p,
     text-transform: uppercase;
 }
 
+/* Labels above form fields: A bit heavier and darker than the body text so it is easier to read*/
+.form-label {
+    font-weight: 500;
+    font-size: small;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    color: var(--bs-body-color);
+}
+
 /* Cards (used on the group and session pages) */
 .card {
-    padding: 20px;
-    margin: 10px;
-    background-color: var(--card-bg);
-    color: var(--bs-heading-color);
-    border-radius: 15px;
-    justify-content: center;
+    --bs-card-bg: var(--card-bg);
+    --bs-card-color: var(--bs-heading-color);
+    --bs-card-border-color: var(--bs-border-color);
+    --bs-card-border-radius: 1rem;
 }
+
+/* Definition list on details pages: label and value with a line under each row */
+.detail-list dt,
+.detail-list dd {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.detail-list dt {
+    padding-right: 1rem;
+}
+
+/* ---- Table ----*/
 
 .table,
 .table th,
@@ -208,6 +230,62 @@ p,
     background-color: var(--card-bg);
     color: var(--bs-body-color);
     padding: 15px;
+}
+
+/* Table card: puts table in a frame with rounded corners and with a border */
+.table-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 1rem;
+}
+
+.table-card .table {
+    margin-bottom: 0;
+    --bs-table-border-color: var(--dividers);
+}
+
+/* No line under the last row, would clash with border */
+.table-card tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Column headings: small muted text, uppercase to match eyebrow / subheading style */
+.table-card th {
+    color: var(--primary-accent);
+    font-size: small;
+    font-weight: 500;
+    letter-spacing: 0.04rem;
+    text-transform: uppercase;
+}
+
+.table-card .col-fit {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* ---- Members dropdown: group table ---- */
+
+.member-row.collapsing {
+    transition: none;
+}
+.members-toggle .bi{
+    display: inline-block;
+    transition: transform 0.15s ease;
+}
+
+/* Arrow toggle in active state */
+/* Bootstrap sets aria-expanded="true" - use that state to style */
+.members-toggle[aria-expanded="true"] .bi {
+    transform: rotate(90deg);
+}
+
+.group-row:has(+ .member-row.show) td,
+.member-row td {
+    background-color: var(--bs-body-bg);
+}
+
+.group-row:has(+ .member-row.show) td {
+    border-bottom: 0;
 }
 
 .footer {
@@ -232,7 +310,6 @@ p,
 
 /* All buttons: compact size, rounded corners and our focus ring */
 .btn {
-    margin-top: 7px;
     padding: 2px 10px;
     border-radius: 7px;
     --bs-btn-focus-box-shadow: 0 0 0 0.25rem var(--focus-ring);
@@ -499,24 +576,6 @@ p,
     background-color: var(--accent-deep);
     margin-top: 1rem;
 }
-/* Removes box around join code input for the join page */
-/* .join-page .join-code-input {
-    --code-gap: 1.5ch;
-    border: 0;
-    font-size: 1.5rem;
-    padding-top: 1rem;
-    letter-spacing: var(--code-gap);
-    padding-left: calc(50% - (6 * (1ch + var(--code-gap)) - var(--code-gap)) / 2);
-    background-image: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch calc(1ch + var(--code-gap)));
-    background-size: calc(6 * (1ch + var(--code-gap))) 2px;
-}
-
-@media (min-width: 1200px) {
-    .join-page .join-code-input {
-        font-size: 3rem;
-        --code-gap: 1.5ch;
-    }
-} */
 
 /* Makes the underlines get accent color while typing */
  .join-page .join-code-input:focus {

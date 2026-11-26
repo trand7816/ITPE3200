@@ -10,28 +10,33 @@
     <section class="row g-3">
         <header class="greeting col-lg-5">
             <div class="greeting-text">
-                <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM",System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
+                <span id="date" class="p d-inline-block mb-1">@DateTime.Now.ToString("dddd d MMMM", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</span> <br />
                 <h1 class="mb-3"> @Model.Greeting, @Model.StudentName!</h1>
            
                 <div id="update d-flex gap-2">
                     <span class="p stat-pill d-inline-block mb-4"> @Model.Groups.Count @(Model.Groups.Count == 1 ?
-                                      "group" : "groups")</span>
+                                                              "group" : "groups")</span>
                     </div>
                     <div class="d-flex gap-2">
                         <a href="#my-groups" class="btn btn-primary"> See your groups</a>
                     </div>
                 </div>
             </header>
-
+            @* Steps for joining a session, same style as on the welcome page - leads to step 1 of the join flow(Group/Join) *@
             <div class="col-lg-7 mt-lg-5">
-                <div class="card join-card">
-                    <h2 class="h4">Join a session</h2>
-                    <p>Got a join code from your teacher?</p>
-                    <partial name="_JoinForm" model="new itpe3200.ViewModels.JoinViewModel()" />
+                <div class="card join-card p-4">
+                    <h2 class="h4">Join a session </h2>
+                    <ol class="list-unstyled mb-3">
+                        <li class="join-group-row mb-2"><strong>1</strong> • Enter a join code</li>
+                        <li class="join-group-row mb-2"><strong>2</strong> • Choose a group</li>
+                        <li class="join-group-row"><strong>3</strong> • Get to work!</li>
+                    </ol>
+                    <a asp-controller="Group" asp-action="Join" class="btn btn-primary align-self-start">
+                        Start<i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+                    </a>
                 </div>
-                <partial name="_JoinProgress" model="1" />
             </div>
-        </section>
+    </section>
 
-        <partial name="_MyGroups" model="Model.Groups" />
-    </main>
+    <partial name="_MyGroups" model="Model.Groups" />
+</main>

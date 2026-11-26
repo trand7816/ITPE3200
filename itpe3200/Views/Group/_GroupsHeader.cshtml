@@ -1,0 +1,80 @@
+@model itpe3200.ViewModels.GroupsViewModel
+
+@* Header, search, session filter and view toggle for the group overview. Used by both Group/Table and Group/Grid *@
+
+@{
+    //currentView uses the name of the current action (Table or Grid) to decide where the search is sent
+    var currentView = ViewContext.RouteData.Values["action"]?.ToString() ?? "Table";
+    bool isTable = currentView == "Table";
+
+    //Variables created based on isTable to decide which toggle button should show as active
+    var tableActive = isTable ? "active" : "";
+    var gridActive = isTable ? "" : "active";
+}
+
+@* Header style to match the teacher homepage: eyebrow, title, short description *@
+<header class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <p class="eyebrow mb-1">Overview</p>
+        <h1 class="mb-1">@ViewData["Title"]</h1>
+        <p class="mb-2">All groups across all your sessions</p>
+        <span class="stat-pill">@Model.Groups.Count() @(Model.Groups.Count() == 1 ? "group" : "groups")</span>
+        <span class="stat-pill">@Model.CourseSessions.Count() @(Model.CourseSessions.Count() == 1 ? "session" :
+              "sessions")</span>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Create" class="btn btn-primary">Create group</a>
+        </div>
+    </header>
+
+    <form asp-action="@currentView" method="get" class="row g-2 mb-4">
+        <div class="col-md-5">
+            <label asp-for="Search" class="form-label">Search</label>
+            <input asp-for="Search" class="form-control" placeholder="Group or course session name" />
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="SessionId" class="form-label">Course session</label>
+            <select asp-for="SessionId" class="form-select">
+                <option value="">All course sessions</option>
+
+                @foreach (var session in Model.CourseSessions)
+                {
+                    <option value="@session.Id">@session.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end gap-2">
+            <button type="submit" class="btn btn-primary">
+                Search
+            </button>
+
+            <a asp-action="@currentView" class="btn btn-outline-secondary">
+                Clear
+            </a>
+            <div class="btn-group ms-auto" role="group" aria-label="choose view">
+                <a asp-action="Table" class="btn btn-outline-secondary @tableActive" asp-route-search="@Model.Search" asp-route-sessionId="@Model.SessionId" aria-label="Table view"
+                   title="Table view"><i class="bi bi-list-ul" aria-hidden="true"></i></a>
+                <a asp-action="Grid" class="btn btn-outline-secondary @gridActive" asp-route-search="@Model.Search" asp-route-sessionId="@Model.SessionId" aria-label="Grid view"
+                   title="Grid view"><i class="bi bi-grid" aria-hidden="true"></i></a>
+            </div>
+        </div>
+    </form>
+
+    @*Shown when the group list is empty: either no existing groups or to search / filter does not match any exisitng results*@
+    @if (!Model.Groups.Any())
+    {
+        bool isFiltered = !string.IsNullOrWhiteSpace(Model.Search) || Model.SessionId.HasValue;
+
+        if (isFiltered)
+        {
+            <div class="alert alert-info">
+                No groups match your search. <a asp-action="Table" class="alert-link">Show all groups</a>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No groups have been created yet.</div>
+        }
+    }

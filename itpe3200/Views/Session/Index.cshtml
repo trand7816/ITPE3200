@@ -1,13 +1,22 @@
 @model IEnumerable<itpe3200.Models.CourseSession>
 
 @{
-    ViewData["Title"] = "Course Sessions";
+    ViewData["Title"] = "Course sessions";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>@ViewData["Title"]</h1>
-    <a asp-action="Create" class="btn btn-primary">Create session</a>
-</div>
+<div class="col-xl-11 mx-auto">
+    @* Header: same layout as the Groups overview *@
+    <header class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <p class="eyebrow mb-1">Overview</p>
+            <h1 class="h3 mb-2">@ViewData["Title"]</h1>
+            <p class="mb-2">All your course sessions</p>
+            <span class="stat-pill">@Model.Count() @(Model.Count() == 1 ? "session" : "sessions")</span>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Create session
+        </a>
+    </header>
 
 @if (!Model.Any())
 {
@@ -17,42 +26,11 @@ else
 {
     <div class="row g-3">
         @foreach (var session in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <h2 class="h5 card-title">@session.Name</h2>
-
-                        <p class="card-text mb-1">
-                            Join code: <strong>@session.JoinCode</strong>
-                        </p>
-
-                        <p class="card-text">
-                            Created: @session.CreatedAt.ToLocalTime().ToString("g")
-                        </p>
-
-                        <div class="mt-3">
-                            <a asp-action="Details"
-                               asp-route-id="@session.Id"
-                               class="btn btn-sm btn-outline-primary">
-                                Details
-                            </a>
-
-                            <a asp-action="Update"
-                               asp-route-id="@session.Id"
-                               class="btn btn-sm btn-outline-secondary">
-                                Update
-                            </a>
-
-                            <a asp-action="Delete"
-                               asp-route-id="@session.Id"
-                               class="btn btn-sm btn-outline-danger">
-                                Delete
-                            </a>
-                        </div>
-                    </div>
+            {
+                <div class="col-sm-6 col-xl-4"> 
+                    <partial name="_SessionOverviewCard" model="session" />
                 </div>
-            </div>
-        }
+            }
     </div>
 }
+</div>

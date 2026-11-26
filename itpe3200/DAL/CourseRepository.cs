@@ -133,6 +133,7 @@ public class CourseRepository : ICourseRepository
             return await _db.Groups
                 .Include(g => g.CourseSession)
                 .Include(g => g.Members)
+                    .ThenInclude(m => m.Student) //Loads the student for each member
                 .ToListAsync();
         }
         catch (Exception e)
