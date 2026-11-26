@@ -13,18 +13,18 @@ public class AccountController : Controller
     private readonly UserManager<IdentityUser> _userManager;
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly ILogger<AccountController> _logger;
-    private readonly AppDbContext _db;
+    private readonly ICourseRepository _repo;
 
     public AccountController(
         UserManager<IdentityUser> userManager,
         SignInManager<IdentityUser> signInManager,
         ILogger<AccountController> logger,
-        AppDbContext db)
+        ICourseRepository repo)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _logger = logger;
-        _db = db;
+        _repo = repo;
     }
 
     // GET: /Account/Register
@@ -32,51 +32,71 @@ public class AccountController : Controller
     public IActionResult Register() => View();
 
     // POST: /Account/Register
+    // Registration has three steps: create the login account, give it the Student role,
+    // and create the linked student profile. If step 2 or 3 fails, the account is deleted
+    // again, so we never end up with an account that has no role or no student profile.
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            return View(model);
+        }
 
-            //If account creation succeeds, the user is automatically assigned a Student role
-            //(Does not apply to excisting accounts)
-            if (result.Succeeded)
-            {
-                var roleResult = await _userManager.AddToRoleAsync(user, "Student");
-                if (!roleResult.Succeeded)
-                {
-                    foreach (var error in roleResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    return View(model);
-                }
-                _logger.LogInformation("[AccountController] New user registered: {Email}", model.Email);
+        // Step 1: create the login account
+        var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+        var result = await _userManager.CreateAsync(user, model.Password);
 
-                //Create the student profile, linked to the login account through IdentityUserId
-                var student = new Student
-                {
-                    Name = model.Name.Trim(),
-                    IdentityUserId = user.Id
-                };
-                
-                _db.Students.Add(student);
-                await _db.SaveChangesAsync();
-
-                // Log the new user in straight away
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-            }
-
+        if (!result.Succeeded)
+        {
             // Show Identity's own messages (weak password, email already taken, and so on)
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
             _logger.LogWarning("[AccountController] Registration failed for {Email}", model.Email);
+            return View(model);
         }
+
+        // Step 2: all new users get the Student role (teachers are seeded, not registered)
+        var roleResult = await _userManager.AddToRoleAsync(user, "Student");
+        if (!roleResult.Succeeded)
+        {
+            _logger.LogError("[AccountController] Could not give the Student role to {Email}", model.Email);
+            return await UndoRegistration(user, model);
+        }
+
+        // Step 3: create the student profile, linked to the login account through IdentityUserId
+        var student = new Student
+        {
+            Name = model.Name.Trim(),
+            IdentityUserId = user.Id
+        };
+
+        // AddStudent has its own try/catch and logging, and returns false on failure
+        if (!await _repo.AddStudent(student))
+        {
+            _logger.LogError("[AccountController] Could not create a student profile for {Email}", model.Email);
+            return await UndoRegistration(user, model);
+        }
+
+        _logger.LogInformation("[AccountController] New user registered: {Email}", model.Email);
+
+        // Log the new user in straight away
+        await _signInManager.SignInAsync(user, isPersistent: false);
+        return RedirectToAction("Index", "Home");
+    }
+
+    // Deletes a half-finished account so the user can try to register again with the same email
+    private async Task<IActionResult> UndoRegistration(IdentityUser user, RegisterViewModel model)
+    {
+        var deleteResult = await _userManager.DeleteAsync(user);
+        if (!deleteResult.Succeeded)
+        {
+            _logger.LogError("[AccountController] Could not remove incomplete account {Email}", model.Email);
+        }
+
+        ModelState.AddModelError(string.Empty, "Registration could not be completed. Please try again.");
         return View(model);
     }
 
