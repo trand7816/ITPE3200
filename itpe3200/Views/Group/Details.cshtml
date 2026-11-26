@@ -31,12 +31,26 @@
 }
 else
 {
-    <ul>
-        @* Create one list item for each student in the group. *@
-        @* Each member is a GroupMember row, so the name comes from member.Student. *@
+    <ul class="list-unstyled">
+
         @foreach (var member in Model.Group.Members)
         {
-            <li>@member.Student?.Name</li>
+            <li class="d-flex justify-content-between align-items-center mb-2">
+                @member.Student?.Name
+
+                @* Teacher can remove student from group - confirmation not added first, because a student can be added back in*@
+                @if (User.IsInRole("Teacher"))
+                {
+                    <form asp-action="RemoveMember" method="post">
+                        <input type="hidden" name="groupId" value="@Model.Group.Id" />
+                        <input type="hidden" name="studentId" value="@member.StudentId" />
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                aria-label="Remove @member.Student?.Name from the group" title="Remove from group">
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                }
+            </li>
         }
     </ul>
 }
@@ -70,7 +84,8 @@ else
 
 @if (User.IsInRole("Teacher"))
 {
-    //Which view (Table / Grid) the teacher came from is sent in the url and used to determine what the back to groups button should send back to - added for consistency
+    //Which view (Table / Grid) the teacher came from is sent in the url
+    //and used to determine what the back to groups button should send back to - added for consistency
     //Anything besides grid falls back to table
     var from = Context.Request.Query["from"].ToString();
     var backTo = from == "Grid" ? "Grid" : "Table";

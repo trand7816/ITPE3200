@@ -360,6 +360,21 @@ public class GroupController : Controller
         return RedirectToAction("Student", "Home", null, "my-groups");
     }
 
+    //POST: Group/RemoveMember - the teacher removes a student from a group  
+    [HttpPost]
+    [Authorize(Roles = "Teacher")]
+    public async Task<IActionResult> RemoveMember(int groupId, int studentId)
+    {
+        //Returns false if student is not a member of the group
+        if (!await _repo.RemoveStudentFromGroup(studentId, groupId))
+        {
+            _logger.LogWarning("[GroupController] Student {StudentId} could not be removed from group {GroupId:0000}", studentId, groupId);
+            return BadRequest("Could not be removed from group");
+        }
+        _logger.LogInformation("[GroupController] Student {StudentId} was removed from group {GroupId:0000} by a teacher", studentId, groupId);
+        return RedirectToAction(nameof(Details), new { id = groupId});
+    }
+
     [HttpPost]
     [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> AssignStudent(int studentId, int groupId)
