@@ -17,15 +17,13 @@ public class GroupController : Controller
 {
     private readonly ICourseRepository _repo;
     private readonly ILogger<GroupController> _logger;
-    private readonly AppDbContext _db;
     private readonly UserManager<IdentityUser> _userManager;
 
-    //gir tilgang til repository og logging. All databasetilgang går gjennom repositoryet
-    public GroupController(ICourseRepository repo, ILogger<GroupController> logger, AppDbContext db, UserManager<IdentityUser> userManager)
+    // Gives access to the repository, logging and the logged-in user. All database access goes through the repository
+    public GroupController(ICourseRepository repo, ILogger<GroupController> logger, UserManager<IdentityUser> userManager)
     {
         _repo = repo;
         _logger = logger;
-        _db = db;
         _userManager = userManager;
 
     }
