@@ -64,9 +64,32 @@ public class GroupControllerTests
         Assert.Equal(500, problemResult.StatusCode);
     }
 
+    // Positive test: Create redirects to Table when the form is valid and the group is saved
     [Fact]
-    public async Task Create_WhenGroupIsValid_RedirectsToTable ()
+    public async Task Create_WhenGroupIsValid_RedirectsToTable()
     {
-        
+        // Arrange
+        var model = new GroupCreateViewModel
+        {
+            Name = "Group A",
+            MaxSize = 4,
+            CourseSessionId = 1
+        };
+
+        var courseSession = new CourseSession { Id = 1, Name = "ITPE3200", JoinCode = "ABC123" };
+
+        var mockRepository = Substitute.For<ICourseRepository>();
+        mockRepository.GetSessionById(1).Returns(courseSession);
+        mockRepository.CreateGroup(Arg.Any<Group>()).Returns(true);
+
+        var mockLogger = Substitute.For<ILogger<GroupController>>();
+        var groupController = new GroupController(mockRepository, mockLogger, null!);
+
+        // Act
+        var result = await groupController.Create(model);
+
+        // Assert
+        var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+        Assert.Equal("Table", redirectResult.ActionName);
     }
 }
