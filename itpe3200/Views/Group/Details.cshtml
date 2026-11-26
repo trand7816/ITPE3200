@@ -61,14 +61,14 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             @* Display group information as a definition list. *@
-            <dl class="row g-0 mb-4">
-                <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Course session</dt>
+            <dl class="row g-0 mb-4 detail-list">
+                <dt class="col-sm-4 eyebrow">Course session</dt>
                 @* ?. prevents an error if the group has no related course session. *@
-                <dd class="col-sm-8 py-2 border-bottom mb-0">@Model.Group.CourseSession?.Name</dd>
+                <dd class="col-sm-8">@Model.Group.CourseSession?.Name</dd>
 
-                <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Members</dt>
+                <dt class="col-sm-4 eyebrow">Members</dt>
                 @* Show the current number of members compared with the maximum size. *@
-                <dd class="col-sm-8 py-2 border-bottom mb-0">
+                <dd class="col-sm-8">
                     <span class="stat-pill">@Model.Group.Members.Count / @Model.Group.MaxSize</span>
                 </dd>
             </dl>

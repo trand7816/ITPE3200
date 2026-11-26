@@ -209,6 +209,19 @@ p,
     --bs-card-border-radius: 1rem;
 }
 
+/* Definition list on details pages: label and value with a line under each row */
+.detail-list dt,
+.detail-list dd {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+.detail-list dt {
+    padding-right: 1rem;
+}
+
 /* ---- Table ----*/
 
 .table,
@@ -222,11 +235,11 @@ p,
 /* Table card: puts table in a frame with rounded corners and with a border */
 .table-card {
     background-color: var(--card-bg);
-    border: 1px solide var(--bs-border-color);
+    border: 1px solid var(--bs-border-color);
     border-radius: 1rem;
 }
 
-.table-card, .table {
+.table-card .table {
     margin-bottom: 0;
     --bs-table-border-color: var(--dividers);
 }
@@ -245,21 +258,11 @@ p,
     text-transform: uppercase;
 }
 
-/* Remoes margin from global button rule */
-.table-card btn {
-    margin-top: 0;
-}
-
 .table-card .col-fit {
     width: 1%;
     white-space: nowrap;
 }
 
-.form-card {
-    background-color: var(--card-bg);
-    border: 1px solide var(--bs-border-color);
-    border-radius: 1rem;
-}
 /* ---- Members dropdown: group table ---- */
 
 .member-row.collapsing {
@@ -573,24 +576,6 @@ p,
     background-color: var(--accent-deep);
     margin-top: 1rem;
 }
-/* Removes box around join code input for the join page */
-/* .join-page .join-code-input {
-    --code-gap: 1.5ch;
-    border: 0;
-    font-size: 1.5rem;
-    padding-top: 1rem;
-    letter-spacing: var(--code-gap);
-    padding-left: calc(50% - (6 * (1ch + var(--code-gap)) - var(--code-gap)) / 2);
-    background-image: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch calc(1ch + var(--code-gap)));
-    background-size: calc(6 * (1ch + var(--code-gap))) 2px;
-}
-
-@media (min-width: 1200px) {
-    .join-page .join-code-input {
-        font-size: 3rem;
-        --code-gap: 1.5ch;
-    }
-} */
 
 /* Makes the underlines get accent color while typing */
  .join-page .join-code-input:focus {

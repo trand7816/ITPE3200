@@ -29,20 +29,20 @@
         </header>
 
         @* Session information as a definition list. g-0 removes the row gutters so the lines align with the text *@
-        <dl class="row g-0 mb-4">
-            <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Join code</dt>
-            <dd class="col-sm-8 py-2 border-bottom mb-0">
+        <dl class="row g-0 mb-4 detail-list">
+            <dt class="col-5 col-sm-4 eyebrow"">Join code</dt>
+            <dd class="col-7 col-sm-8">
                 <div class="d-flex align-items-center gap-2 mb-0">
                     <p class="mb-0">@Model.JoinCode</p>
                     @* Fullscreen join-code *@
-                    <button type="button" class="btn btn-outline-secondary session-fullscreen-btn flex-shrink-0 mt-0"
+                    <button type="button" class="btn btn-outline-secondary session-fullscreen-btn flex-shrink-0"
                             data-bs-toggle="modal" data-bs-target="#codeModal-@Model.Id"
                             aria-label="Show join code in full screen" title="Show join code">
                         <i class="bi bi-fullscreen" aria-hidden="true"></i>
                     </button>
             </dd>
-            <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Groups</dt>
-            <dd class="col-sm-8 py-2 border-bottom mb-0">
+            <dt class="col-5 col-sm-4 eyebrow">Groups</dt>
+            <dd class="col-7 col-sm-8">
                 @* Same rule as the session cards: show "x / y" only if the session has a max *@
                 @if (Model.MaxGroups > 0)
                 {
@@ -54,11 +54,11 @@
                 }
             </dd>
 
-            <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Random assignment</dt>
-            <dd class="col-sm-8 py-2 border-bottom mb-0">@(Model.RandomAssignment ? "Yes" : "No")</dd>
+            <dt class="col-5 col-sm-4 eyebrow">Random assignment</dt>
+            <dd class="col-7 col-sm-8">@(Model.RandomAssignment ? "Yes" : "No")</dd>
 
-            <dt class="col-sm-4 eyebrow py-2 border-bottom mb-0">Created</dt>
-            <dd class="col-sm-8 py-2 border-bottom mb-0">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</dd>
+            <dt class="col-5 col-sm-4 eyebrow">Created</dt>
+            <dd class="col-7 col-sm-8">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</dd>
         </dl>
 
         @* Group Details: using collapsible row as in Group/Table*@
