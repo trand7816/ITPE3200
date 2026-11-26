@@ -9,7 +9,7 @@ public class SessionCreateViewModel
     public string Name { get; set; } = string.Empty;
 
     //Groups set to 10 as default value
-    [Range(1, 20, ErrorMessage = "Number of groups must be between 1 and 50")]
+    [Range(1, 20, ErrorMessage = "Number of groups must be between 1 and 20")]
     [Display(Name = "Number of groups")]
     public int MaxGroups { get; set; } = 10;
 
