@@ -4,7 +4,7 @@ namespace itpe3200.Tests.Models;
 
 public class CourseSessionTests
 {
-    // Positive: AddEmptyGroups adds the given number of groups with the given max size
+    // Positive test: AddEmptyGroups adds the given number of groups with the given max size
     [Fact]
     public void AddEmptyGroups_WhenValuesAreValid_AddsGroups ()
     {
@@ -21,7 +21,7 @@ public class CourseSessionTests
 
     }
 
-    // Negative: AddEmptyGroups throws an exception when the number of groups is 0
+    // Negative test: AddEmptyGroups throws an exception when the number of groups is 0
     [Fact]
     public void AddEmptyGroups_WhenCountIsZero_ThrowsException ()
     {
