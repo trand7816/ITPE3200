@@ -243,6 +243,36 @@ p,
     margin-top: 0;
 }
 
+.table-card .col-fit {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* ---- Members dropdown: group table ---- */
+
+.member-row.collapsing {
+    transition: none;
+}
+.members-toggle .bi{
+    display: inline-block;
+    transition: transform 0.15s ease;
+}
+
+/* Arrow toggle in active state */
+/* Bootstrap sets aria-expanded="true" - use that state to style */
+.members-toggle[aria-expanded="true"] .bi {
+    transform: rotate(90deg);
+}
+
+.group-row:has(+ .member-row.show) td,
+.member-row td {
+    background-color: var(--bs-body-bg);
+}
+
+.group-row:has(+ .member-row.show) td {
+    border-bottom: 0;
+}
+
 .footer {
     border-top-color: var(--dividers) !important;
 }

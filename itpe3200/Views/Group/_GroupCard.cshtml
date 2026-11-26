@@ -12,9 +12,8 @@
             Members: @Model.Members.Count / @Model.MaxSize
         </p>
 
-        <a asp-action="Details"
-          asp-route-id="@Model.Id"
-          class="btn btn-primary">
+        @* asp-route-from is added to help identify where the teacher came from if they use a "Back to Groups" button later *@
+        <a asp-action="Details" asp-route-id="@Model.Id" asp-route-from="Grid" class="btn btn-primary">
            Details
         </a>
     </div>

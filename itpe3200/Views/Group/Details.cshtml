@@ -70,7 +70,11 @@ else
 
 @if (User.IsInRole("Teacher"))
 {
-    <a asp-action="Table" class="btn btn-secondary">Back to groups</a>
+    //Which view (Table / Grid) the teacher came from is sent in the url and used to determine what the back to groups button should send back to - added for consistency
+    //Anything besides grid falls back to table
+    var from = Context.Request.Query["from"].ToString();
+    var backTo = from == "Grid" ? "Grid" : "Table";
+    <a asp-action="@backTo" class="btn btn-secondary">Back to groups</a>
 
 }
 else

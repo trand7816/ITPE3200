@@ -435,53 +435,11 @@ public class GroupController : Controller
     [Authorize(Roles = "Teacher")]
     public async Task<IActionResult> Table(string? search, int? sessionId)
     {
-        var groups = await _repo.GetAllGroups();
-
-        if (groups is null)
+        var model = await BuildFilteredGroupOverview(search, sessionId);
+        if (model is null)
         {
-            _logger.LogError("[GroupController] Could not load groups for table");
             return Problem("Could not load groups.");
         }
-
-        var sessions = await _repo.GetAllSessions();
-
-        if (sessions is null)
-        {
-            _logger.LogError("[GroupController] Could not load course sessions for group filters");
-            return Problem("Could not load course sessions.");
-        }
-
-        var filteredGroups = groups.AsEnumerable();
-
-        if (!string.IsNullOrWhiteSpace(search))
-        {
-            var searchText = search.Trim();
-
-            filteredGroups = filteredGroups.Where(group =>
-                (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
-                || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
-        }
-
-        if (sessionId.HasValue)
-        {
-            filteredGroups = filteredGroups
-                .Where(group => group.CourseSessionId == sessionId.Value);
-        }
-
-        var model = new GroupsViewModel
-        {
-            Groups = filteredGroups.ToList(),
-            Search = search?.Trim() ?? "",
-            SessionId = sessionId,
-            CourseSessions = sessions
-                .Select(session => new CourseSessionViewModel
-                {
-                    Id = session.Id,
-                    Name = session.Name
-                })
-                .ToList()
-        };
-
         return View(model);
     }
 
@@ -521,21 +479,13 @@ public class GroupController : Controller
     // GET: Group/Grid – shows a grid of all groups
     [HttpGet]
     [Authorize(Roles = "Teacher")]
-    public async Task<IActionResult> Grid()
+    public async Task<IActionResult> Grid(string? search, int? sessionId)
     {
-        var groups = await _repo.GetAllGroups();
-
-        if (groups is null)
+        var model = await BuildFilteredGroupOverview(search, sessionId);
+        if (model is null)
         {
-            _logger.LogError("[GroupController] Could not load groups for grid");
             return Problem("Could not load groups.");
         }
-
-        var model = new GroupsViewModel
-        {
-            Groups = groups
-        };
-
         return View(model);
     }
 
@@ -561,4 +511,56 @@ public class GroupController : Controller
         GroupJoinResult.GroupNotFound => "Group not found.",
         _ => "Could not join the group."
     };
+
+    //Used by Table and Grid view: returns groups matching the search text and/or session
+    private async Task<GroupsViewModel?> BuildFilteredGroupOverview(string? search, int? sessionId)
+    {
+        var groups = await _repo.GetAllGroups();
+
+        if (groups is null)
+        {
+            _logger.LogError("[GroupController] Could not load groups for group overview.");
+            return null;
+        }
+
+        var sessions = await _repo.GetAllSessions();
+
+        if (sessions is null)
+        {
+            _logger.LogError("[GroupController] Could not load course sessions for group filters");
+            return null;
+        }
+
+        var filteredGroups = groups.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchText = search.Trim();
+
+            filteredGroups = filteredGroups.Where(group =>
+                (group.Name?.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false)
+                || (group.CourseSession?.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase) ?? false));
+        }
+
+        if (sessionId.HasValue)
+        {
+            filteredGroups = filteredGroups
+                .Where(group => group.CourseSessionId == sessionId.Value);
+        }
+
+        return new GroupsViewModel
+        {
+            Groups = filteredGroups.ToList(),
+            Search = search?.Trim() ?? "",
+            SessionId = sessionId,
+            CourseSessions = sessions
+                .Select(session => new CourseSessionViewModel
+                {
+                    Id = session.Id,
+                    Name = session.Name
+                })
+                .ToList()
+        };
+
+    }
 }
