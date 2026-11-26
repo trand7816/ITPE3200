@@ -85,6 +85,13 @@ Groups and members:
 - Elev1, Ola, Kari and Per are in groups in two different sessions (many-to-many).
 - Lukas Moen is not in any group.
 
+## Running the unit tests
+
+```bash
+cd itpe3200.Tests
+dotnet test
+```
+
 ## Features
 
 - Create course sessions with a name, maximum group count and a random-assignment setting. A unique 6-character join code is generated automatically.
