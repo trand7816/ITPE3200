@@ -92,4 +92,36 @@ public class GroupControllerTests
         var redirectResult = Assert.IsType<RedirectToActionResult>(result);
         Assert.Equal("Table", redirectResult.ActionName);
     }
+
+    // Negative test: Create returns the form view with the model when the group could not be saved
+    [Fact]
+    public async Task Create_WhenCreationFailed_ReturnsViewResultWithModel()
+    {
+        // Arrange
+        var model = new GroupCreateViewModel
+        {
+            Name = "Group A",
+            MaxSize = 4,
+            CourseSessionId = 1
+        };
+
+        var courseSession = new CourseSession { Id = 1, Name = "ITPE3200", JoinCode = "ABC123" };
+
+        var mockRepository = Substitute.For<ICourseRepository>();
+        mockRepository.GetSessionById(1).Returns(courseSession);
+        mockRepository.CreateGroup(Arg.Any<Group>()).Returns(false);
+
+        mockRepository.GetAllSessions().Returns(new List<CourseSession> { courseSession });
+
+        var mockLogger = Substitute.For<ILogger<GroupController>>();
+        var groupController = new GroupController(mockRepository, mockLogger, null!);
+
+        // Act
+        var result = await groupController.Create(model);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        var viewModel = Assert.IsAssignableFrom<GroupCreateViewModel>(viewResult.ViewData.Model);
+        Assert.Equal(model, viewModel);
+    }
 }
