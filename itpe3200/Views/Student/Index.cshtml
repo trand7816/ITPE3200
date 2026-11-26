@@ -4,45 +4,56 @@
     ViewData["Title"] = "Students";
 }
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <h1>@ViewData["Title"]</h1>
-    <a asp-action="Create" class="btn btn-primary">Add student</a>
-</div>
+<div class="col-xl-11 mx-auto">
+    @* Header: same layout as the Groups overview *@
+    <header class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+        <div>
+            <p class="eyebrow mb-1">Overview</p>
+            <h1 class="h3 mb-2">@ViewData["Title"]</h1>
+            <p class="mb-2">All students across all course sessions</p>
+            <span class="stat-pill">@Model.Count() @(Model.Count() == 1 ? "student" : "students")</span>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add student
+        </a>
+    </header>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">No students have been registered yet.</div>
-}
-else
-{
-    @* table-responsive: table scrolls sideways instead of making page wider on small screens*@
-    <div class="table-responsive table-card">
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Groups</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var student in Model)
-                {
+    @if (!Model.Any())
+    {
+        <div class="mb-0">No students have been registered yet.</div>
+    }
+    else
+    {
+        @* table-responsive: table scrolls sideways instead of making page wider on small screens*@
+        <div class="table-responsive table-card">
+            <table class="table align-middle">
+                <thead>
                     <tr>
-                        <td>@student.Name</td>
-                        <td><span class="stat-pill">@student.GroupCount</span></td>
-                        <td>
-                            <div class="d-flex flex-column flex-sm-row align-items-start gap-1">
-                            <a asp-action="Details" asp-route-id="@student.Id"
-                               class="btn btn-sm btn-outline-primary">Details</a>
-                            <a asp-action="Update" asp-route-id="@student.Id"
-                               class="btn btn-sm btn-outline-secondary">Update</a>
-                            <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                            </div>
-                        </td>
+                        <th>Name</th>
+                        <th class="text-end">Groups</th>
+                        <th class="text-end">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+                </thead>
+                <tbody>
+                    @foreach (var student in Model)
+                    {
+                        <tr>
+                            <td><a asp-action="Details" asp-route-id="@student.Id">@student.Name</a></td>
+                            <td class="text-end"><span class="stat-pill">@student.GroupCount</span></td>
+                            <td class="text-end text-nowrap">
+                                <a asp-action="Update" asp-route-id="@student.Id" class="btn btn-sm btn-outline-secondary"
+                                   aria-label="Edit @student.Name" title="Edit student">
+                                    <i class="bi bi-pencil" aria-hidden="true"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-sm btn-outline-danger"
+                                   aria-label="Delete @student.Name" title="Delete student">
+                                    <i class="bi bi-trash3" aria-hidden="true"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
