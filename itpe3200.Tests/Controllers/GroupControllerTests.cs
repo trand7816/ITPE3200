@@ -45,4 +45,28 @@ public class GroupControllerTests
         Assert.Equal(groupList, groupsViewModel.Groups);
     }
 
+    // Negative test: Table returns a Problem result when groups can't be loaded
+    [Fact]
+    public async Task Table_WhenGroupsAreNull_ReturnsProblem()
+    {
+        // Arrange
+        var mockRepository = Substitute.For<ICourseRepository>();
+        mockRepository.GetAllGroups().Returns((IEnumerable<Group>?)null);
+        var mockLogger = Substitute.For<ILogger<GroupController>>();
+
+        var groupController = new GroupController(mockRepository, mockLogger, null!);
+
+        // Act
+        var result = await groupController.Table(null, null);
+
+        // Assert
+        var problemResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(500, problemResult.StatusCode);
+    }
+
+    [Fact]
+    public async Task Create_WhenGroupIsValid_RedirectsToTable ()
+    {
+        
+    }
 }
