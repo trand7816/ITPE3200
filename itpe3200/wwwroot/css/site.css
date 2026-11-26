@@ -192,14 +192,21 @@ p,
     text-transform: uppercase;
 }
 
+/* Labels above form fields: A bit heavier and darker than the body text so it is easier to read*/
+.form-label {
+    font-weight: 500;
+    font-size: small;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    color: var(--bs-body-color);
+}
+
 /* Cards (used on the group and session pages) */
 .card {
-    padding: 20px;
-    margin: 10px;
-    background-color: var(--card-bg);
-    color: var(--bs-heading-color);
-    border-radius: 15px;
-    justify-content: center;
+    --bs-card-bg: var(--card-bg);
+    --bs-card-color: var(--bs-heading-color);
+    --bs-card-border-color: var(--bs-border-color);
+    --bs-card-border-radius: 1rem;
 }
 
 /* ---- Table ----*/
@@ -248,6 +255,11 @@ p,
     white-space: nowrap;
 }
 
+.form-card {
+    background-color: var(--card-bg);
+    border: 1px solide var(--bs-border-color);
+    border-radius: 1rem;
+}
 /* ---- Members dropdown: group table ---- */
 
 .member-row.collapsing {
@@ -295,7 +307,6 @@ p,
 
 /* All buttons: compact size, rounded corners and our focus ring */
 .btn {
-    margin-top: 7px;
     padding: 2px 10px;
     border-radius: 7px;
     --bs-btn-focus-box-shadow: 0 0 0 0.25rem var(--focus-ring);

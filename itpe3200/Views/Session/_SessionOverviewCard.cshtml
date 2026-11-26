@@ -1,0 +1,25 @@
+@model itpe3200.Models.CourseSession
+ 
+@* One session card on the Course Sessions overview, same as _GroupCard *@
+<article class="card h-100">
+    <div class="card-body">
+        <h2 class="h5 mb-0 text-break">@Model.Name</h2>
+
+    <div class="my-3">
+        @* Same rule as the other session pills: show "x / y" only if the session has a max *@
+        @if (Model.MaxGroups > 0)
+        {
+            <span class="stat-pill">@Model.Groups.Count / @Model.MaxGroups groups</span>
+        }
+        else
+        {
+            <span class="stat-pill">@Model.Groups.Count @(Model.Groups.Count == 1 ? "group" : "groups")</span>
+        }
+    </div>
+
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">
+        View details<i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+    </a>
+    </div>
+
+</article>
