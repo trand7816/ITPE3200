@@ -6,8 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace itpe3200.Controllers;
 
-// Switching to role based authorization on class level, instead of on method level like the demo, as read should also be teacher-only
-// Join is the exception (using [AllowAnonymous]), so students can enter a join code.
+// Switching to role based authorization on class level, instead of on method level like the demo, as read should also be teacher-only.
 [Authorize(Roles = "Teacher")]
 public class SessionController : Controller
 {
@@ -31,35 +30,6 @@ public class SessionController : Controller
         }
 
         return View(sessions);
-    }
-
-    [HttpGet]
-    [AllowAnonymous]
-    public IActionResult Join()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    [AllowAnonymous]
-    public async Task<IActionResult> Join(string joinCode)
-    {
-        if (string.IsNullOrWhiteSpace(joinCode))
-        {
-            _logger.LogWarning("[SessionController] Join attempted without a join code");
-            ModelState.AddModelError(nameof(joinCode), "Join code is required.");
-            return View();
-        }
-
-        var session = await _repo.GetSessionByJoinCode(joinCode.Trim().ToUpperInvariant());
-        if (session is null)
-        {
-            _logger.LogWarning("[SessionController] No session found for JoinCode {JoinCode}", joinCode);
-            ModelState.AddModelError(nameof(joinCode), "No course session was found for that join code.");
-            return View();
-        }
-
-        return RedirectToAction("Join", "Group", new { joinCode = session.JoinCode });
     }
 
     [HttpPost]
