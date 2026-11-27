@@ -14,7 +14,9 @@
     <p class="session-code mt-3">@Model.JoinCode</p>
 
     @* Stretched link makes entire card clickable *@
-    <a asp-controller="Session" asp-action="Details" asp-route-id="@Model.Id" class="stretched-link session-link"></a>
+    <a asp-controller="Session" asp-action="Details" asp-route-id="@Model.Id" class="stretched-link session-link">
+        <span class="visually-hidden">Open session @Model.Name</span>
+    </a>
     @* Number of groups + max if the session has one *@
     @if (Model.MaxGroups > 0)
     {
