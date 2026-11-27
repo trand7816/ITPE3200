@@ -638,9 +638,7 @@ p,
     color: var(--primary-accent);
 }
 
-.feature-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    stroke: currentColor;
-    stroke-width: 0.4px;
+.feature-icon .bi {
+    font-size: 1.5rem;
+    line-height: 1;
 }

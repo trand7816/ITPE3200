@@ -28,39 +28,40 @@
         </header>
         <dl class="row g-0 mb-4 detail-list">
             <dt class="col-sm-4 eyebrow">Member of</dt>
-            <dd class="col-sm-8">@Model.Groups.Count @(Model.Groups.Count == 1 ? "group" :
-                       "groups")</dd>
-            </dl>
+            <dd class="col-sm-8">@Model.Groups.Count @(Model.Groups.Count == 1 ? "group" : "groups")</dd>
+        </dl>
 
-            @if (!Model.Groups.Any())
-            {
-                <p>This student is not currently a member of any group.</p>
-            }
-            else
-            {
-                <div class="table-responsive table-card">
-                    <table class="table align-middle">
-                        <thead>
+        @if (!Model.Groups.Any())
+        {
+            <p>This student is not currently a member of any group.</p>
+        }
+        else
+        {
+            <div class="table-responsive table-card">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                            <th>Course session</th>
+                            <th>Joined</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var group in Model.Groups)
+                        {
                             <tr>
-                                <th>Group</th>
-                                <th>Course session</th>
-                                <th>Joined</th>
+                                <td>
+                                    <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
+                                        @group.Name
+                                    </a>
+                                </td>
+                                <td>@group.SessionName</td>
+                                <td>@group.JoinedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var group in Model.Groups)
-                            {
-                                <tr>
-                                    <td>
-                                        <a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">
-                                            @group.Name
-                                        </a>
-                                    </td>
-                                    <td>@group.SessionName</td>
-                                    <td>@group.JoinedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
