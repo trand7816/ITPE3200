@@ -386,7 +386,20 @@ p,
    6. CUSTOM COMPONENTS
    ======================================================================== */
 
-/*---- Teacher Dashboard Greeting ----*/
+   /*---- Pills ----*/
+
+.stat-pill {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+}
+
+.item-content .stat-pill {
+    background-color: var(--highlight-row-bg);
+}
+
+/*---- Homepage Dashboard Greeting ----*/
 .greeting-text {
     text-align: left;
     padding: 2rem;
@@ -448,113 +461,6 @@ p,
     }
 }
 
-/*---- Pills ----*/
-
-.stat-pill {
-    background-color: var(--accent-deep);
-    color: var(--primary-accent);
-    padding: 0.2rem 0.75rem;
-    border-radius: 999px;
-}
-
-.item-content .stat-pill {
-    background-color: var(--highlight-row-bg);
-}
-
-/* ---- Student homepage: join card ---- */
-
-.join-card {
-    background-color: var(--highlight-bg);
-    border-color: var(--highlight-bg);
-    color: var(--highlight-text);
-}
-
-/* Darker red for validation text on lavender background */
-[data-bs-theme="light"] .join-card {
-    --bs-danger-rgb: 176, 42, 55;
-}
-
-.join-group-row {
-    background-color: var(--highlight-row-bg);
-    border-radius: 9px;
-    padding: 0.5rem 0.75rem;
-}
-
-
-/* Join step 2: groups fill each column top to bottom (6 per column), then a new column starts.
-   Done in CSS instead of Razor so it is easier to reuse in Subapp 2 */
-@media (min-width: 768px) {
-
-    .join-group-list {
-        display: grid;
-        grid-template-rows: repeat(6, auto);
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
-        gap: 0.5rem;
-    }
-
-}
-
-.join-card h2,
-.join-card p {
-    color: var(--highlight-text);
-}
-
-.join-card .join-code-input {
-    background-color: transparent;
-    color: var(--highlight-text);
-    --bs-secondary-color: var(--input-fields);
-    /* the underline color, see .join-code-input */
-}
-
-.join-card .join-code-input:focus {
-    border-color: var(--primary-accent);
-}
-
-/* ---- Join flow: progress bar ---- */
-
-/* Bootstrap's progress bar in our colors */
-.progress {
-    --bs-progress-height: 6px;
-    --bs-progress-bg: var(--dividers);
-    --bs-progress-bar-bg: var(--primary-accent);
-}
-
-/* The label for the current step */
-.join-step-active {
-    color: var(--primary-accent);
-    font-weight: 500;
-}
-
-/* ---- Join Flow: full-page color background---- */
-
-/* The join pages get the highlight color on the whole page: set with ViewData["BodyClass"] in the view*/
-.join-page {
-    background-color: var(--highlight-bg);
-    color: var(--highlight-text);
-}
-
-.join-page .join-card {
-    background-color: var(--highlight-row-bg);
-    border: 0;
-    text-align: center;
-}
-
-.join-page .join-card .join-group-row {
-    background-color: var(--card-bg);
-}
-
-.join-page .join-card .join-code-input {
-    background-color: var(--accent-deep);
-    margin-top: 1rem;
-}
-
-/* Makes the underlines get accent color while typing */
-.join-page .join-code-input:focus {
-    box-shadow: none;
-    --bs-secondary-color: var(--primary-accent);
-}
-
 /* ----- Teacher homepage: session cards ----- */
 
 /*Padding around the session overview in the teacher view*/
@@ -609,6 +515,24 @@ p,
     color: var(--primary-accent);
 }
 
+/* ---- Join Card: student homepage and join flow ---- */
+
+.join-card {
+    background-color: var(--highlight-bg);
+    border-color: var(--highlight-bg);
+    color: var(--highlight-text);
+}
+
+/* Darker red for validation text on lavender background */
+[data-bs-theme="light"] .join-card {
+    --bs-danger-rgb: 176, 42, 55;
+}
+
+.join-card h2,
+.join-card p {
+    color: var(--highlight-text);
+}
+
 /* ----- Join form: join code input ----- */
 
 /*Join code input field styled with a line under each character. Technique based on Ana Tudor, 
@@ -624,6 +548,93 @@ p,
     background-origin: content-box;
     background-position: left bottom;
     background-repeat: no-repeat;
+}
+
+.join-card .join-code-input {
+    background-color: transparent;
+    color: var(--highlight-text);
+    --bs-secondary-color: var(--input-fields);
+    /* the underline color, see .join-code-input */
+}
+
+.join-card .join-code-input:focus {
+    border-color: var(--primary-accent);
+}
+
+/* ---- Join Flow: group rows and list ---- */
+
+.join-group-row {
+    background-color: var(--highlight-row-bg);
+    border-radius: 9px;
+    padding: 0.5rem 0.75rem;
+}
+
+
+/* Join step 2: groups fill each column top to bottom (6 per column), then a new column starts.
+   Done in CSS instead of Razor so it is easier to reuse in Subapp 2 */
+@media (min-width: 768px) {
+
+    .join-group-list {
+        display: grid;
+        grid-template-rows: repeat(6, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+}
+
+/* ---- Join flow: progress bar ---- */
+
+/* Bootstrap's progress bar in our colors */
+.progress {
+    --bs-progress-height: 6px;
+    --bs-progress-bg: var(--dividers);
+    --bs-progress-bar-bg: var(--primary-accent);
+}
+
+/* The label for the current step */
+.join-step-active {
+    color: var(--primary-accent);
+    font-weight: 500;
+}
+/* ---- Join Flow: full-page color background---- */
+
+/* The join pages get the highlight color on the whole page: set with ViewData["BodyClass"] in the view*/
+.join-page {
+    background-color: var(--highlight-bg);
+    color: var(--highlight-text);
+}
+
+/* Light mode: darker accent for the active step label, so it has enough contrast on the lavender page */
+[data-bs-theme="light"] .join-page .join-step-active {
+    color: var(--bs-link-hover-color);
+}
+
+/* Adding contrast to footer text: Bootstrap's text-muted is too light on the lavender background */
+.join-page .footer {
+    --bs-secondary-color: var(--highlight-text);
+}
+
+.join-page .join-card {
+    background-color: var(--highlight-row-bg);
+    border: 0;
+    text-align: center;
+}
+
+.join-page .join-card .join-group-row {
+    background-color: var(--card-bg);
+}
+
+.join-page .join-card .join-code-input {
+    background-color: var(--accent-deep);
+    margin-top: 1rem;
+}
+
+/* Makes the underlines get accent color while typing */
+.join-page .join-code-input:focus {
+    box-shadow: none;
+    --bs-secondary-color: var(--primary-accent);
 }
 
 .feature-icon {
