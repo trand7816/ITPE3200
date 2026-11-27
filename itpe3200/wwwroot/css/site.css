@@ -41,13 +41,15 @@ Our own variables are for everything else.
 
     /* Accents */
     --primary-accent: #534AB7;
-    --accent-ink: #FFFFFF;          /* text on the accent color */
-    --accent-deep: #EEEDFE;         /* soft accent background */
+    --accent-ink: #FFFFFF;
+    /* text on the accent color */
+    --accent-deep: #EEEDFE;
+    /* soft accent background */
 
     /* Highlighted surfaces: cards, carousel, join pages */
     --highlight-bg: #CFC9F3;
     --highlight-text: #1C1840;
-    --highlight-row-bg:#EEEDFE;
+    --highlight-row-bg: #EEEDFE;
 
     /* Links */
     --bs-link-color: #534AB7;
@@ -133,7 +135,7 @@ Our own variables are for everything else.
     --btn-primary-hover-text: var(--accent-ink);
     --btn-secondary-bg: #2E3040;
     --btn-secondary-hover-bg: #3F3A6E;
-    --btn-secondary-text: #E9E9ED;        
+    --btn-secondary-text: #E9E9ED;
 
     /* Danger button */
     --btn-danger-color: #F08A9B;
@@ -158,7 +160,7 @@ Our own variables are for everything else.
 
 /* Color mode button: only show the icon of the mode you switch to */
 [data-bs-theme="light"] .theme-icon-sun,
-[data-bs-theme="dark"]  .theme-icon-moon {
+[data-bs-theme="dark"] .theme-icon-moon {
     display: none;
 }
 
@@ -174,6 +176,12 @@ Our own variables are for everything else.
 p,
 .p {
     color: var(--bs-body-color);
+}
+
+/* Removes bullet points from validation error messages, because they break design */
+.validation-summary-errors ul {
+    list-style: none;
+    padding-left: 0;
 }
 
 /* ---- Subheadings ---- */
@@ -268,7 +276,8 @@ p,
 .member-row.collapsing {
     transition: none;
 }
-.members-toggle .bi{
+
+.members-toggle .bi {
     display: inline-block;
     transition: transform 0.15s ease;
 }
@@ -507,10 +516,10 @@ p,
 .join-card {
     background-color: var(--highlight-bg);
     border-color: var(--highlight-bg);
-    color: var(--highlight-text); 
+    color: var(--highlight-text);
 }
 
- /* Darker red for alerts on lavender background */
+/* Darker red for alerts on lavender background */
 [data-bs-theme="light"] .join-card {
     --bs-danger-rgb: 158, 35, 70;
 }
@@ -521,6 +530,20 @@ p,
     padding: 0.5rem 0.75rem;
 }
 
+
+/* Join step 2: as many columns as can fit. Added through css instead of razor to make it easier to reuse in subapp 2*/
+@media (min-width: 768px) {
+
+    .join-group-list {
+        display: grid;
+        grid-template-rows: repeat(6, auto);
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+}
+
 .join-card h2,
 .join-card p {
     color: var(--highlight-text);
@@ -529,7 +552,8 @@ p,
 .join-card .join-code-input {
     background-color: transparent;
     color: var(--highlight-text);
-    --bs-secondary-color: var(--input-fields);    /* the underline color, see .join-code-input */
+    --bs-secondary-color: var(--input-fields);
+    /* the underline color, see .join-code-input */
 }
 
 .join-card .join-code-input:focus {
@@ -565,20 +589,21 @@ p,
     text-align: center;
 }
 
-.join-card .h4{
+.join-card .h4 {
     font-size: 3rem;
 }
 
 .join-page .join-card .join-group-row {
-    background-color: var(--highlight-bg);
+    background-color: var(--card-bg);
 }
+
 .join-page .join-card .join-code-input {
     background-color: var(--accent-deep);
     margin-top: 1rem;
 }
 
 /* Makes the underlines get accent color while typing */
- .join-page .join-code-input:focus {
+.join-page .join-code-input:focus {
     box-shadow: none;
     --bs-secondary-color: var(--primary-accent);
 }
