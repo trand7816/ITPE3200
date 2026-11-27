@@ -76,21 +76,10 @@ Our own variables are for everything else.
     --btn-secondary-hover-bg: #CBC5EE;
     --btn-secondary-text: #1C1840;
 
-    /* Danger button (delete) */
-    --btn-danger-color: #C4325A;
-    --btn-danger-hover-color: #9E2346;
-    --btn-danger-text: #FFFFFF;
-    --bs-danger-rgb: 196, 50, 90;
-
     /* Warning alerts (e.g. alert boxes) */
     --bs-warning-text-emphasis: #7A4E00;
     --bs-warning-bg-subtle: #FFF4DC;
     --bs-warning-border-subtle: #F0D49A;
-
-    /* Danger alerts (e.g. error boxes) */
-    --bs-danger-text-emphasis: #9E2346;
-    --bs-danger-bg-subtle: #FCE8EE;
-    --bs-danger-border-subtle: #F2B8C8;
 }
 
 /* Dark Theme */
@@ -137,21 +126,10 @@ Our own variables are for everything else.
     --btn-secondary-hover-bg: #3F3A6E;
     --btn-secondary-text: #E9E9ED;
 
-    /* Danger button */
-    --btn-danger-color: #F08A9B;
-    --btn-danger-hover-color: #F7B0BC;
-    --btn-danger-text: #1C1840;
-    --bs-danger-rgb: 240, 138, 155;
-
     /* Warning alerts */
     --bs-warning-text-emphasis: #F2C46B;
     --bs-warning-bg-subtle: var(--bs-body-bg);
     --bs-warning-border-subtle: #6B5420;
-
-    /* Danger alerts */
-    --bs-danger-text-emphasis: #F08A9B;
-    --bs-danger-bg-subtle: var(--bs-body-bg);
-    --bs-danger-border-subtle: #6E2E40;
 }
 
 /* ========================================================================
@@ -215,6 +193,7 @@ p,
     --bs-card-color: var(--bs-heading-color);
     --bs-card-border-color: var(--bs-border-color);
     --bs-card-border-radius: 1rem;
+    --bs-card-inner-border-radius: calc(1rem - 1px); /* Matches header corners to the card */
 }
 
 /* Definition list on details pages: label and value with a line under each row */
@@ -306,10 +285,6 @@ p,
     border-left: 4px solid var(--bs-warning-text-emphasis);
 }
 
-.alert-danger {
-    border-left: 4px solid var(--bs-danger-text-emphasis);
-}
-
 /* =================================================================================
     4. BUTTONS
     Bootstrap's buttons read their colors from --bs-btn-* variables in every state
@@ -379,31 +354,6 @@ p,
     --bs-btn-active-border-color: var(--btn-secondary-hover-bg);
 }
 
-/* Dangerous action, filled: for the final "Delete" on the confirmation pages */
-.btn-danger {
-    --bs-btn-color: var(--btn-danger-text);
-    --bs-btn-bg: var(--btn-danger-color);
-    --bs-btn-border-color: var(--btn-danger-color);
-    --bs-btn-hover-color: var(--btn-danger-text);
-    --bs-btn-hover-bg: var(--btn-danger-hover-color);
-    --bs-btn-hover-border-color: var(--btn-danger-hover-color);
-    --bs-btn-active-color: var(--btn-danger-text);
-    --bs-btn-active-bg: var(--btn-danger-hover-color);
-    --bs-btn-active-border-color: var(--btn-danger-hover-color);
-}
-
-/* Dangerous action, outline: for "Delete" in tables and lists */
-.btn-outline-danger {
-    --bs-btn-color: var(--btn-danger-color);
-    --bs-btn-border-color: var(--btn-danger-color);
-    --bs-btn-hover-color: var(--btn-danger-text);
-    --bs-btn-hover-bg: var(--btn-danger-color);
-    --bs-btn-hover-border-color: var(--btn-danger-color);
-    --bs-btn-active-color: var(--btn-danger-text);
-    --bs-btn-active-bg: var(--btn-danger-color);
-    --bs-btn-active-border-color: var(--btn-danger-color);
-}
-
 /* =========================================================================
     5. FORMS
    ========================================================================= */
@@ -454,7 +404,7 @@ p,
     border-radius: 15px;
 }
 
-/* Carousel uses the same fixed lavender colors as .join-card, so both highlighted cards look alike in light and dark mode */
+/* Carousel uses the same highlight color as .join-card, so the highlighted cards look alike */
 .carousel-item {
     background-color: var(--highlight-bg);
 }
@@ -519,9 +469,9 @@ p,
     color: var(--highlight-text);
 }
 
-/* Darker red for alerts on lavender background */
+/* Darker red for validation text on lavender background */
 [data-bs-theme="light"] .join-card {
-    --bs-danger-rgb: 158, 35, 70;
+    --bs-danger-rgb: 176, 42, 55;
 }
 
 .join-group-row {
@@ -531,7 +481,8 @@ p,
 }
 
 
-/* Join step 2: as many columns as can fit. Added through css instead of razor to make it easier to reuse in subapp 2*/
+/* Join step 2: groups fill each column top to bottom (6 per column), then a new column starts.
+   Done in CSS instead of Razor so it is easier to reuse in Subapp 2 */
 @media (min-width: 768px) {
 
     .join-group-list {
@@ -587,10 +538,6 @@ p,
     background-color: var(--highlight-row-bg);
     border: 0;
     text-align: center;
-}
-
-.join-card .h4 {
-    font-size: 3rem;
 }
 
 .join-page .join-card .join-group-row {
