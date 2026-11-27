@@ -386,7 +386,20 @@ p,
    6. CUSTOM COMPONENTS
    ======================================================================== */
 
-/*---- Teacher Dashboard Greeting ----*/
+   /*---- Pills ----*/
+
+.stat-pill {
+    background-color: var(--accent-deep);
+    color: var(--primary-accent);
+    padding: 0.2rem 0.75rem;
+    border-radius: 999px;
+}
+
+.item-content .stat-pill {
+    background-color: var(--highlight-row-bg);
+}
+
+/*---- Homepage Dashboard Greeting ----*/
 .greeting-text {
     text-align: left;
     padding: 2rem;
@@ -448,17 +461,58 @@ p,
     }
 }
 
-/*---- Pills ----*/
+/* ----- Teacher homepage: session cards ----- */
 
-.stat-pill {
-    background-color: var(--accent-deep);
-    color: var(--primary-accent);
-    padding: 0.2rem 0.75rem;
-    border-radius: 999px;
+/*Padding around the session overview in the teacher view*/
+@media (min-width: 768px) {
+    .session-overview {
+        padding: 2rem 4rem;
+    }
 }
 
-.item-content .stat-pill {
-    background-color: var(--highlight-row-bg);
+/*Card for sessions in teacher view*/
+.session-card {
+    background: var(--card-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+/* Lifts the card on mouse hover, or when something inside it has keyboard focus. */
+.session-card:hover,
+.session-card:has(:focus-visible) {
+    transform: translateY(-3px);
+    border-color: var(--primary-accent);
+}
+
+/*Join code on the session card*/
+.session-code {
+    font-family: monospace;
+    font-size: 1.5rem;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
+    margin-bottom: 1rem;
+}
+
+/*Keeps fullscreen button clickable on top of card's stretched link*/
+.session-fullscreen-btn {
+    position: relative;
+    z-index: 2;
+}
+
+/* ----- Fullscreen join code view (modal) ----- */
+
+.code-modal {
+    background: var(--bs-body-bg);
+    color: var(--bs-heading-color);
+}
+
+.code-modal-code {
+    font-family: monospace;
+    font-size: 50px;
+    letter-spacing: 0.3ch;
+    color: var(--primary-accent);
 }
 
 /* ---- Join Card: student homepage and join flow ---- */
@@ -477,6 +531,23 @@ p,
 .join-card h2,
 .join-card p {
     color: var(--highlight-text);
+}
+
+/* ----- Join form: join code input ----- */
+
+/*Join code input field styled with a line under each character. Technique based on Ana Tudor, 
+"Input field with underline under each character", https://codepen.io/thebabydino/pen/mRrPwB (accessed 14 Nov 2026).*/
+.join-code-input {
+    font-family: monospace;
+    font-size: 2rem;
+    letter-spacing: 1ch;
+    width: 100%;
+    padding: 0.75rem 0 0.75rem calc(50% - 5.5ch);
+    background: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch 2ch);
+    background-size: 12ch 2px;
+    background-origin: content-box;
+    background-position: left bottom;
+    background-repeat: no-repeat;
 }
 
 .join-card .join-code-input {
@@ -564,77 +635,6 @@ p,
 .join-page .join-code-input:focus {
     box-shadow: none;
     --bs-secondary-color: var(--primary-accent);
-}
-
-/* ----- Teacher homepage: session cards ----- */
-
-/*Padding around the session overview in the teacher view*/
-@media (min-width: 768px) {
-    .session-overview {
-        padding: 2rem 4rem;
-    }
-}
-
-/*Card for sessions in teacher view*/
-.session-card {
-    background: var(--card-bg);
-    border: 1px solid var(--bs-border-color);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    transition: transform 0.15s ease, border-color 0.15s ease;
-}
-
-/* Lifts the card on mouse hover, or when something inside it has keyboard focus. */
-.session-card:hover,
-.session-card:has(:focus-visible) {
-    transform: translateY(-3px);
-    border-color: var(--primary-accent);
-}
-
-/*Join code on the session card*/
-.session-code {
-    font-family: monospace;
-    font-size: 1.5rem;
-    letter-spacing: 0.3ch;
-    color: var(--primary-accent);
-    margin-bottom: 1rem;
-}
-
-/*Keeps fullscreen button clickable on top of card's stretched link*/
-.session-fullscreen-btn {
-    position: relative;
-    z-index: 2;
-}
-
-/* ----- Fullscreen join code view (modal) ----- */
-
-.code-modal {
-    background: var(--bs-body-bg);
-    color: var(--bs-heading-color);
-}
-
-.code-modal-code {
-    font-family: monospace;
-    font-size: 50px;
-    letter-spacing: 0.3ch;
-    color: var(--primary-accent);
-}
-
-/* ----- Join form: join code input ----- */
-
-/*Join code input field styled with a line under each character. Technique based on Ana Tudor, 
-"Input field with underline under each character", https://codepen.io/thebabydino/pen/mRrPwB (accessed 14 Nov 2026).*/
-.join-code-input {
-    font-family: monospace;
-    font-size: 2rem;
-    letter-spacing: 1ch;
-    width: 100%;
-    padding: 0.75rem 0 0.75rem calc(50% - 5.5ch);
-    background: repeating-linear-gradient(90deg, var(--bs-secondary-color) 0 1ch, transparent 1ch 2ch);
-    background-size: 12ch 2px;
-    background-origin: content-box;
-    background-position: left bottom;
-    background-repeat: no-repeat;
 }
 
 .feature-icon {
