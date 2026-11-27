@@ -59,7 +59,9 @@ public class CourseRepository : ICourseRepository
     {
         try
         {
-            return await _db.CourseSessions.FirstOrDefaultAsync(s => s.JoinCode == joinCode);
+            // Codes are stored in upper case, so the input is trimmed and changed to upper case before lookup
+            var code = joinCode.Trim().ToUpperInvariant();
+            return await _db.CourseSessions.FirstOrDefaultAsync(s => s.JoinCode == code);
         }
         catch (Exception e)
         {
