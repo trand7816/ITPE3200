@@ -16,9 +16,9 @@ public static class DbInit
         // only add test data when the database is empty
         if (!db.CourseSessions.Any())
         {
-            var itpe = new CourseSession { Name = "ITPE3200", JoinCode = "ABC123" };
-            var data = new CourseSession { Name = "DATA1700", JoinCode = "XYZ789" };
-            var dape = new CourseSession { Name = "DAPE1400", JoinCode = "DEF456" };
+            var itpe = new CourseSession { Name = "ITPE3200", JoinCode = "ABC123", MaxGroups = 3 };
+            var data = new CourseSession { Name = "DATA1700", JoinCode = "XYZ789", MaxGroups = 2 };
+            var dape = new CourseSession { Name = "DAPE1400", JoinCode = "DEF456", MaxGroups = 1 };
             db.CourseSessions.AddRange(itpe, data, dape);
             db.SaveChanges();
 
