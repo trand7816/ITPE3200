@@ -548,6 +548,8 @@ p,
     background-origin: content-box;
     background-position: left bottom;
     background-repeat: no-repeat;
+    /* Shows the code in upper case like on the teacher's screen. The server also changes it to upper case */
+    text-transform: uppercase;
 }
 
 .join-card .join-code-input {
