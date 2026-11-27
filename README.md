@@ -4,7 +4,7 @@ This is Subapp 1 (ASP.NET Core MVC) of the exam group project.
 
 ## Group members
 
-- Miriam Wang (mijit7782)
+- Miriam Ariya-Jitchatree Wang (mijit7782)
 - Johannes Jonssønn Skramstad (joskr6803)
 - Kaya Rabino Baksaas (kabak8529)
 - Truls Andreassen (trand7816)
