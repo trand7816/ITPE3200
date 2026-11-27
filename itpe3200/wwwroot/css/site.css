@@ -461,7 +461,7 @@ p,
     background-color: var(--highlight-row-bg);
 }
 
-/* ---- Student homepage: join card ---- */
+/* ---- Join Card: student homepage and join flow ---- */
 
 .join-card {
     background-color: var(--highlight-bg);
@@ -473,6 +473,24 @@ p,
 [data-bs-theme="light"] .join-card {
     --bs-danger-rgb: 176, 42, 55;
 }
+
+.join-card h2,
+.join-card p {
+    color: var(--highlight-text);
+}
+
+.join-card .join-code-input {
+    background-color: transparent;
+    color: var(--highlight-text);
+    --bs-secondary-color: var(--input-fields);
+    /* the underline color, see .join-code-input */
+}
+
+.join-card .join-code-input:focus {
+    border-color: var(--primary-accent);
+}
+
+/* ---- Join Flow: group rows and list ---- */
 
 .join-group-row {
     background-color: var(--highlight-row-bg);
@@ -495,22 +513,6 @@ p,
 
 }
 
-.join-card h2,
-.join-card p {
-    color: var(--highlight-text);
-}
-
-.join-card .join-code-input {
-    background-color: transparent;
-    color: var(--highlight-text);
-    --bs-secondary-color: var(--input-fields);
-    /* the underline color, see .join-code-input */
-}
-
-.join-card .join-code-input:focus {
-    border-color: var(--primary-accent);
-}
-
 /* ---- Join flow: progress bar ---- */
 
 /* Bootstrap's progress bar in our colors */
@@ -525,13 +527,22 @@ p,
     color: var(--primary-accent);
     font-weight: 500;
 }
-
 /* ---- Join Flow: full-page color background---- */
 
 /* The join pages get the highlight color on the whole page: set with ViewData["BodyClass"] in the view*/
 .join-page {
     background-color: var(--highlight-bg);
     color: var(--highlight-text);
+}
+
+/* Light mode: darker accent for the active step label, so it has enough contrast on the lavender page */
+[data-bs-theme="light"] .join-page .join-step-active {
+    color: var(--bs-link-hover-color);
+}
+
+/* Adding contrast to footer text: Bootstrap's text-muted is too light on the lavender background */
+.join-page .footer {
+    --bs-secondary-color: var(--highlight-text);
 }
 
 .join-page .join-card {
