@@ -19,18 +19,18 @@
                 @* Actions on session: edit, delete *@
                 <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-secondary"
                    aria-label="Edit @Model.Name" title="Edit session">
-                   <i class="bi bi-pencil" aria-hidden="true"></i>
+                    <i class="bi bi-pencil" aria-hidden="true"></i>
                 </a>
                 <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-danger"
                    aria-label="Delete @Model.Name" title="Delete session">
-                   <i class="bi bi-trash3" aria-hidden="true"></i>
+                    <i class="bi bi-trash3" aria-hidden="true"></i>
                 </a>
             </div>
         </header>
 
         @* Session information as a definition list. g-0 removes the row gutters so the lines align with the text *@
         <dl class="row g-0 mb-4 detail-list">
-            <dt class="col-5 col-sm-4 eyebrow"">Join code</dt>
+            <dt class="col-5 col-sm-4 eyebrow">Join code</dt>
             <dd class="col-7 col-sm-8">
                 <div class="d-flex align-items-center gap-2 mb-0">
                     <p class="mb-0">@Model.JoinCode</p>
@@ -40,6 +40,7 @@
                             aria-label="Show join code in full screen" title="Show join code">
                         <i class="bi bi-fullscreen" aria-hidden="true"></i>
                     </button>
+                </div>
             </dd>
             <dt class="col-5 col-sm-4 eyebrow">Groups</dt>
             <dd class="col-7 col-sm-8">
@@ -72,7 +73,7 @@
                 <table class="table align-middle">
                     <thead>
                         <tr>
-                            <th style="width: 1%"><span class="visually-hidden">Show members</span></th>
+                            <th class="col-fit"><span class="visually-hidden">Show members</span></th>
                             <th>Group</th>
                             <th class="text-end">Members</th>
                         </tr>
@@ -93,53 +94,49 @@
                                 </td>
                                 <td><a asp-controller="Group" asp-action="Details" asp-route-id="@group.Id">@group.Name</a></td>
                                 <td class="text-end"><span class="stat-pill">@group.MemberCount / @group.MaxSize</span></td>
-                                </tr>
+                            </tr>
 
-                                @* Hidden member row. data-bs-parent="#session-groups" keeps only one open at a time *@
-                                <tr class="collapse member-row" id="session-group-@group.Id" data-bs-parent="#session-groups">
-                                    <td colspan="3">
-                                        <p class="small text-uppercase text-muted mb-2">Members</p>
+                            @* Hidden member row. data-bs-parent="#session-groups" keeps only one open at a time *@
+                            <tr class="collapse member-row" id="session-group-@group.Id" data-bs-parent="#session-groups">
+                                <td colspan="3">
+                                    <p class="small text-uppercase text-muted mb-2">Members</p>
 
-                                        @if (!group.Members.Any())
-                                        {
-                                            <p class="mb-0">No members yet.</p>
-                                        }
-                                        else
-                                        {
-                                            <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
-                                                @foreach (var member in group.Members)
-                                                {
-                                                    <li class="stat-pill">@member</li>
-                                                }
-                                            </ul>
-                                        }
-                                    </td>
-                            
-                                </tr>
-                            }
-                        
-                        </tbody>
-
-                    </table>
-                </div>
-            }
-        </div>
+                                    @if (!group.Members.Any())
+                                    {
+                                        <p class="mb-0">No members yet.</p>
+                                    }
+                                    else
+                                    {
+                                        <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
+                                            @foreach (var member in group.Members)
+                                            {
+                                                <li class="stat-pill">@member</li>
+                                            }
+                                        </ul>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
+</div>
 
-    @* Fullscreen modal *@
-    <div class="modal fade" id="codeModal-@Model.Id" tabindex="-1" aria-labelledby="codeModalLabel-@Model.Id"
-         aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content code-modal">
-                <div class="modal-header border-0">
-                    <h2 class="modal-title fs-5" id="codeModalLabel-@Model.Id">@Model.Name</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                    </button>
-                </div>
-                <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
-                    <p class="fs-3">Join @Model.Name with this code:</p>
-                    <p class="code-modal-code">@Model.JoinCode</p>
-                </div>
+@* Fullscreen modal *@
+<div class="modal fade" id="codeModal-@Model.Id" tabindex="-1" aria-labelledby="codeModalLabel-@Model.Id" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content code-modal">
+            <div class="modal-header border-0">
+                <h2 class="modal-title fs-5" id="codeModalLabel-@Model.Id">@Model.Name</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column justify-content-center align-items-center text-center">
+                <p class="fs-3">Join @Model.Name with this code:</p>
+                <p class="code-modal-code">@Model.JoinCode</p>
             </div>
         </div>
     </div>
+</div>
