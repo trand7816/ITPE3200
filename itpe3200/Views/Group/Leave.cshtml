@@ -5,19 +5,26 @@
 }
 
 @* Confirmation page before a student leaves a group *@
-<div class="card border-danger mx-auto mt-4" style="max-width: 600px;">
-    <div class="card-header bg-danger text-white">
-        <h2 class="h4 mb-0">Leave group</h2>
-    </div>
-    <div class="card-body">
-        <p class="lead">Are you sure you want to leave group @Model.Name?</p>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger">
+                <h1 class="h4 mb-0 text-white">Leave group</h1>
+            </div>
+            <div class="card-body p-4">
+                <p class="lead">Are you sure you want to leave @Model.Name?</p>
 
-        <p>You will lose your place in group @Model.Name (@Model.CourseSession?.Name). You can join the session again with the join code.</p>
+                <div class="alert alert-warning">
+                    You will lose your place in group @Model.Name (@Model.CourseSession?.Name).
+                        You can join the session again with the join code.
+                    </div>
 
-        <form asp-action="LeaveConfirmed" method="post" class="d-flex gap-2">
-            <input type="hidden" name="groupId" value="@Model.Id" />
-            <button type="submit" class="btn btn-danger">Leave group</button>
-            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
-        </form>
+                    <form asp-action="LeaveConfirmed" method="post" class="d-flex gap-2">
+                        <input type="hidden" name="groupId" value="@Model.Id" />
+                        <button type="submit" class="btn btn-danger">Leave group</button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
