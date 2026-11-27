@@ -9,18 +9,19 @@
 }
 
 @if (Model?.Groups != null)
-{
+{  
     @* Step 2 of the join flow: choose a group in the session *@    
     <div class="row justify-content-center mt-4">
         <div class="col-md-6">
             <div class="card join-card p-4 m-0">
-                <h2 class="h4 text-center mb-3">Choose a group in @Model.CourseSessionName</h2>
+                <p class="eyebrow">Choose a group in</p>
+                <h1 class="display-6 fw-medium mb-3">@Model.CourseSessionName</h1>
                 @* Errors from JoinGroup, e.g. "The group is full" *@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                @foreach (var group in Model.Groups)
+            <div class="join-group-list">
+                @foreach (var group in Model.Groups.OrderBy(g => g.Id))
                 {
-                    <div class="join-group-row d-flex justify-content-between align-items-center mb-2">
+                    <div class="join-group-row d-flex justify-content-between align-items-center mb-2 mb-md-0">
                         <span><strong>@group.Name</strong> · @group.Members.Count / @group.MaxSize</span>
 
                         @if (group.Members.Count >= group.MaxSize)
@@ -38,6 +39,7 @@
                     </div>
                 }
             </div>
+            </div>
             <partial name="_JoinProgress" model="2" />
         </div>
     </div>
@@ -49,7 +51,7 @@ else
         <div class="col-md-10 col-lg-8">
             <div class="card join-card p-4">
                 <p class="eyebrow">Ready to join a session?</p>
-                <h2 class="h4">Enter Code</h2>
+                <h1 class="display-6 fw-medium">Enter Code</h1>
                 <partial name="_JoinForm" model="Model" />
             </div>
             <partial name="_JoinProgress" model="1" />

@@ -4,28 +4,35 @@
     ViewData["Title"] = "Delete session";
 }
 
-<h1>@ViewData["Title"]</h1>
+@* Confirmation page before a course session is deleted *@
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger">
+                <h1 class="h4 mb-0 text-white">Delete session</h1>
+            </div>
+            <div class="card-body p-4">
+                <p class="lead">Are you sure you want to delete this session?</p>
+                <dl class="row g-0 mb-4 detail-list">
+                    <dt class="col-5 col-sm-4 eyebrow">Name</dt>
+                    <dd class="col-7 col-sm-8">@Model.Name</dd>
 
-<div class="alert alert-warning">
-    Are you sure you want to delete this course session?
+                    <dt class="col-5 col-sm-4 eyebrow">Join code</dt>
+                    <dd class="col-7 col-sm-8">@Model.JoinCode</dd>
+                </dl>
+                <div class="alert alert-warning">Deleting this session means all groups will be deleted as well. </div>
+                <form asp-action="DeleteConfirmed" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger">
+                        Delete
+                    </button>
+
+                    <a asp-action="Index" class="btn btn-secondary">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-
-<dl class="row">
-    <dt class="col-sm-3">Name</dt>
-    <dd class="col-sm-9">@Model.Name</dd>
-
-    <dt class="col-sm-3">Join code</dt>
-    <dd class="col-sm-9">@Model.JoinCode</dd>
-</dl>
-
-<form asp-action="DeleteConfirmed" method="post">
-    <input type="hidden" asp-for="Id" />
-
-    <button type="submit" class="btn btn-danger">
-        Delete
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">
-        Cancel
-    </a>
-</form>

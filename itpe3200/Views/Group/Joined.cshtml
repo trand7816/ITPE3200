@@ -8,19 +8,21 @@
 }
 
 @* Step 3 of the join flow: confirmation with the group's members *@
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-6">
-            <div class="card join-card p-4 m-0 text-center">
-                <h2 class="h4 mb-1">You joined @Model.Name</h2>
-                <p class="mb-3">@Model.CourseSession?.Name · @Model.Members.Count / @Model.MaxSize members</p>
-                <div class="join-group-row text-start">
-                    @foreach (var member in Model.Members)
-                    {
-                        <div>@member.Student?.Name</div>
-                    }
-                </div>
-                    <a asp-controller="Home" asp-action="Student" asp-fragment="my-groups" class="btn btn-primary mt-3">Go to homepage</a>
-                </div>
-                <partial name="_JoinProgress" model="3" />
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card join-card p-4 m-0 text-center">
+            <p class="eyebrow">You joined</p>
+            <h1 class="display-6 fw-medium">@Model.Name</h1>
+            <p class="mb-3">@Model.CourseSession?.Name · @Model.Members.Count / @Model.MaxSize members</p>
+            <ul class="list-unstyled d-flex flex-wrap justify-content-center gap-2 join-group-row mb-0">
+                @foreach (var member in Model.Members)
+                {
+                    <li class="stat-pill text-break">@member.Student?.Name</li>
+                }
+            </ul>
+            <a asp-controller="Home" asp-action="Student" asp-fragment="my-groups" class="btn btn-primary mt-3">Go to
+                homepage</a>
             </div>
+            <partial name="_JoinProgress" model="3" />
         </div>
+    </div>
